@@ -1,8 +1,8 @@
 #'
 #' @export
 
-get_file <- function(file = NULL, project_number = NULL, project = NULL,
-                             index = NULL, url = NULL, ...){
+get_file <- function(file = NULL, project = NULL, # let file be char (filename) or numeric(index); same with project (full name vs number)
+                    url = NULL, data_type, ...){
   if(!is.null(url)){
     GET_header <- httr::GET(url)
 
@@ -22,11 +22,16 @@ get_file <- function(file = NULL, project_number = NULL, project = NULL,
 
   } else{
 
-    if(is.null(project_number)){
-      projects <- matos_projects()
-      project_number <- sub('.*detail/', '',
-                            projects[projects$name == tolower(project),]$url)
+    if(is.null(project_number) & is.null(project)){
+      stop('Need a URL, project number, or project name.')
     }
+
+    if(is.null(project_number)){
+      project_number <- get_project_number()
+    }
+
+
+
   }
 }
 
