@@ -3,28 +3,16 @@
 
 project_files <- function(project_number = NULL, project = NULL){
   if(is.null(project_number)){
-    projects <- matos_projects()
-    project_number <- sub('.*detail/', '',
-                          projects[projects$name == tolower(project),]$url)
+    project_number <- get_project_number(project)
   }
 
-  files_html <- httr::GET(
-    paste0('https://matos.asascience.com/project/downloadfiles/',
-           project_number)
-  )
+  files_html <- get_file_list(project_number, data_type = 'downloadfiles')
 
-  file_urls <- httr::content(files_html, 'parsed') %>%
-    rvest::html_node('body') %>%
-    rvest::html_nodes('a') %>%
-    rvest::html_attr('href') %>%
-    grep('projectfile', ., value = T)
+  file_urls <- scrape_file_urls(files_html)
 
-  files <- httr::content(files_html, 'parsed') %>%
-    rvest::html_nodes('.tableContent') %>%
-    rvest::html_table() %>%
-    data.frame()
+  files <- html_table_to_df(files_html)
 
-  files <- files[, -4] %>%
+  files <- files %>%
     cbind(url = paste0('https://matos.asascience.com', file_urls))
 
   files
