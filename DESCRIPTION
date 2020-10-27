@@ -7,12 +7,12 @@ Authors@R: person("Mike", "O'Brien", email = "obrien@umces.edu",
 Description: This package provides HTML-scaping functions to interact with the
   MATOS website (https://matos.asascience.com/). Functions will allow aggreation
   of data and the downloading and posting of files.
-License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
 Imports:
   httr,
   rvest
 Suggests:
   rstudioapi
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
 RoxygenNote: 7.1.1
