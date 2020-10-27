@@ -1,3 +1,5 @@
+#'
+#' @export
 matos_login <- function(){
   login_response <- httr::POST(
     'https://matos.asascience.com/account/login',
@@ -18,6 +20,8 @@ matos_login <- function(){
 
 }
 
+#'
+#' @export
 matos_projects <- function(){
   project_list <- httr::GET(
     'https://matos.asascience.com/project'

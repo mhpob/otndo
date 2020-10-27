@@ -8,8 +8,9 @@ Description: This package provides HTML-scaping functions to interact with the
   MATOS website (https://matos.asascience.com/). Functions will allow aggreation
   of data and the downloading and posting of files.
 Imports:
-  httr,
-  rvest
+    httr,
+    rvest,
+    magrittr
 Suggests:
   rstudioapi
 License: MIT + file LICENSE

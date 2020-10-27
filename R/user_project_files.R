@@ -1,5 +1,5 @@
 #'
-#'
+#' @export
 
 project_files <- function(project_number = NULL, project = NULL){
   if(is.null(project_number)){
@@ -22,15 +22,17 @@ project_files <- function(project_number = NULL, project = NULL){
   files <- httr::content(files_html, 'parsed') %>%
     rvest::html_nodes('.tableContent') %>%
     rvest::html_table() %>%
-    .[[1]] %>%
-    .[, -4] %>%
+    data.frame()
+
+  files <- files[, -4] %>%
     cbind(url = paste0('https://matos.asascience.com', file_urls))
 
   files
 }
 
 #'
-#'
+#' @export
+
 get_project_file <- function(file = NULL, project_number = NULL, project = NULL,
                              index = NULL, url = NULL, ...){
   if(!is.null(url)){
