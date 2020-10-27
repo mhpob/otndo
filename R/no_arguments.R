@@ -20,23 +20,5 @@ matos_login <- function(){
 
 }
 
-#'
-#' @export
-matos_projects <- function(){
-  project_list <- httr::GET(
-    'https://matos.asascience.com/project'
-  )
 
-  projects_info <- httr::content(project_list) %>%
-    rvest::html_node('.project_list') %>%
-    rvest::html_nodes('a')
-
-  projects <- data.frame(
-    name = tolower(rvest::html_text(projects_info, trim = T)),
-    url = paste0('https://matos.asascience.com',
-                 rvest::html_attr(projects_info, 'href'))
-  )
-
-  projects
-}
 
