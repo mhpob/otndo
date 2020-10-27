@@ -1,5 +1,5 @@
 matos_login <- function(){
-  login_response <- POST(
+  login_response <- httr::POST(
     'https://matos.asascience.com/account/login',
     body = list(
       UserName = rstudioapi::showPrompt(
@@ -19,18 +19,18 @@ matos_login <- function(){
 }
 
 matos_projects <- function(){
-  project_list <- GET(
+  project_list <- httr::GET(
     'https://matos.asascience.com/project'
   )
 
-  projects_info <- content(project_list) %>%
-    html_node('.project_list') %>%
-    html_nodes('a')
+  projects_info <- httr::content(project_list) %>%
+    rvest::html_node('.project_list') %>%
+    rvest::html_nodes('a')
 
   projects <- data.frame(
-    name = tolower(html_text(projects_info, trim = T)),
+    name = tolower(rvest::html_text(projects_info, trim = T)),
     url = paste0('https://matos.asascience.com',
-                 html_attr(projects_info, 'href'))
+                 rvest::html_attr(projects_info, 'href'))
   )
 
   projects
