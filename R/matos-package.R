@@ -2,6 +2,7 @@
 #' @docType package
 #'
 #' @importFrom magrittr "%>%"
+#' @importFrom utils unzip
 #' @keywords internal
 "_PACKAGE"
 
