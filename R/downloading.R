@@ -64,7 +64,7 @@ get_file <- function(file = NULL, project = NULL, url = NULL, data_type, ...){
                    nrow(file_table), '.'))
       }
 
-      file_url <- paste0('https://matos.asascience.com', file_table[file,]$url)
+      file_url <- file_table[file,]$url
 
       download_process(url = file_url)
 
@@ -78,8 +78,7 @@ get_file <- function(file = NULL, project = NULL, url = NULL, data_type, ...){
                     'double-check your file name.'))
       }
 
-      file_url <- paste0('https://matos.asascience.com',
-                         file_table[file_table$File.Name == file,]$url)
+      file_url <- file_table[file_table$File.Name == file,]$url
 
       download_process(url = file_url)
     }
