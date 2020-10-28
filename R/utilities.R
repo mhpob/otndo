@@ -41,6 +41,16 @@ matos_login <- function(){
 
 
 
+##' Create new MATOS project
+##'
+##' Somewhat useless function that just opens up the MATOS project creation page
+# Doesn't work.
+# matos_create <- function(){
+#   # matos_login()
+#   browseURL('http://matos.asascience.com/project/add')
+# }
+
+
 #' Internal functions used by \code{matos}
 #'
 #' Non-exported utility functions used by other functions in \code{matos}.
