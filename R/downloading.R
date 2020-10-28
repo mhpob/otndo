@@ -8,7 +8,8 @@
 #' @param project A character vector listing the full name of the project, or a
 #' numeric listing the project number.
 #' @param url The URL of the file to be downloaded.
-#' @param data_type FILL THIS IN!!!
+#' @param data_type one of "detection" or "project". Will call \code{detection_files} or
+#' \code{project_files}, respectively.
 #' @param ... Arguments passed to httr::write_disk.
 #'
 #' @export

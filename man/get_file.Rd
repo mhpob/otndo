@@ -15,7 +15,8 @@ numeric listing the project number.}
 
 \item{url}{The URL of the file to be downloaded.}
 
-\item{data_type}{FILL THIS IN!!!}
+\item{data_type}{one of "detection" or "project". Will call \code{detection_files} or
+\code{project_files}, respectively.}
 
 \item{...}{Arguments passed to httr::write_disk.}
 }
