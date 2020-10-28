@@ -9,13 +9,13 @@
 
 <!-- badges: end -->
 
-{matos} is a wrapper over a suite of [httr](https://httr.r-lib.org/) and
-[rvest](https://rvest.tidyverse.org/) functions made to interact with
-the [Mid-Atlantic Acoustic Telemetry Observing System
-website](https://matos.asascience.com/). Because of this, it’s not
-necessarily fast or the best way to do things – we’re just pinging the
-website back and forth. Additionally, an internet connection is needed
-for pretty much anything to work.
+{matos} is an API interface to the [Mid-Atlantic Acoustic Telemetry
+Observing System website](https://matos.asascience.com/), powered by a
+suite of [httr](https://httr.r-lib.org/) and
+[rvest](https://rvest.tidyverse.org/) functions. Because of this, it’s
+not necessarily fast or the best way to do things – we’re just pinging
+the website back and forth. Additionally, an internet connection is
+needed for pretty much anything to work.
 
 Please note that you will need a MATOS account, [which you can sign up
 for here](https://matos.asascience.com/account/signup), in order to
@@ -24,14 +24,15 @@ interface with any project-specific files.
 ## Installation
 
 This package is still in “throw things on the wall and see what sticks”
-phase. You can install the most-up-to-date version from GitHub:
+phase (*“this package is currently undergoing heavy development”*). You
+can install the most-up-to-date version from GitHub:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("mhpob/matos")
 ```
 
-## Quick start
+## Log in to MATOS
 
 The first thing you should do is log into your MATOS account. This can
 be done through the package, using the [RStudio
@@ -50,9 +51,9 @@ matos_login()
 #> NULL
 ```
 
-In addition to the above, there are/will be a few fucntions that take no
-arguments – their sole function is to ping the website and return the
-data to you. `matos_projects` returns the [project
+## List available files
+
+First, `matos_projects` returns the [project
 page](https://matos.asascience.com/project), which is useful to figure
 out what URLs are associated with each project. You do not need MATOS
 permissions in order to view this page.
@@ -70,13 +71,13 @@ head(all_projects)
 #> 6              cff black sea bass tagging     91  https://matos.asascience.com/project/detail/91
 ```
 
-Since I’m logged in, I can view the files that I’ve uploaded to my
-projects.
+After I’m logged in, I can view the files that I’ve uploaded to my
+projects using `list_files`.
 
 ``` r
-files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
+project_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
 
-head(files)
+head(project_files)
 #>                      File.Name                                File.Type Upload.Date
 #> 1 BOEM_metadata_deployment.xls Deployed Receivers – Deployment Metadata   3/30/2020
 #> 2  VR2AR_546455_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020
@@ -93,17 +94,7 @@ head(files)
 #> 6 https://matos.asascience.com/projectfile/download/1814
 ```
 
-And, I can download any of my choosing.
-
-``` r
-files$url[1]
-#> [1] "https://matos.asascience.com/projectfile/download/375"
-
-get_file(url = files$url[1])
-#> File saved to C:\Users\darpa2\Analysis\matos\BOEM_metadata_deployment.xls
-```
-
-I can also locate, download, and unzip *Data Extraction Files*.
+I can also list any of my OTN node *Data Extraction Files*.
 
 ``` r
 ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
@@ -125,9 +116,22 @@ head(ACT_MATOS_files)
 #> 6 https://matos.asascience.com/projectfile/downloadExtraction/87_6
 ```
 
-We can download by using an index from the table above, here the file on
-the second row. Note that this means we have to specify what kind of
-data we’re looking for.
+## Download project or data extraction files
+
+There are a few ways to download the different types of files held by
+MATOS. I can download directly if I know the URL of the file:
+
+``` r
+project_files$url[1]
+#> [1] "https://matos.asascience.com/projectfile/download/375"
+
+get_file(url = project_files$url[1])
+#> File saved to C:\Users\darpa2\Analysis\matos\BOEM_metadata_deployment.xls
+```
+
+I can download by using an index from the `ACT_MATOS_files` table above,
+here the file on the second row. Note that this means we have to specify
+what kind of data we’re looking for when identifying by index.
 
 ``` r
 get_file(file = 2, project = 'umces boem offshore wind energy', data_type = 'extraction')
@@ -135,8 +139,10 @@ get_file(file = 2, project = 'umces boem offshore wind energy', data_type = 'ext
 #> File unzipped to proj87_matched_detections_2018.csv
 ```
 
-I can also download using a file name. Since all data extraction files
-are zipped, the function assumes the correct data type.
+If I download using a file name, `get_file` will use the file extension
+to figure out what kind of data I want, so explicitly identifying the
+data type is not needed. Since all data extraction files are zipped, the
+function assumes the correct data type.
 
 ``` r
 get_file(file = 'proj87_matched_detections_2018.zip',
@@ -145,3 +151,25 @@ get_file(file = 'proj87_matched_detections_2018.zip',
 #> File saved to C:\Users\darpa2\Analysis\matos\proj87_matched_detections_2018.zip
 #> File unzipped to proj87_matched_detections_2018.csv
 ```
+
+## Search and download tag detections
+
+Using the `tag_search` function, I can interface with MATOS’ [tag search
+page](https://matos.asascience.com/search). Be very careful with this
+function – it can take a *very*, **VERY** long time to return your
+files. This function downloads the requested CSV into your working
+directory, and, if `import = T` is used, reads it into your R session.
+
+``` r
+my_detections <- tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
+                            start_date = '03/01/2016',
+                            end_date = '04/01/2016', 
+                            import = T)
+```
+
+## Development
+
+As is noted above, this package is undergoing a ton of development. If
+there’s something I missed, please [open an issue on
+GitHub](https://github.com/mhpob/matos/issues) or [email me
+directly](mailto:obrien@umces.edu).
