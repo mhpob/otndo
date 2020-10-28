@@ -65,8 +65,19 @@ project_files <- function(project = NULL){
   files
 }
 
+#' List all MATOS projects
+#'
+#' This function scrapes the table found at \url{https://matos.asascience.com/project}.
+#' This table provides not only the full name of the project, but also the MATOS
+#' project number and project page URL. You do not need to log in via \code{matos_login}
+#' or have any permissions to view/download this table.
 #'
 #' @export
+#' @example
+#' \dontrun{
+#' # Just type in the following...
+#' matos_projects()
+#' }
 matos_projects <- function(){
   project_list <- httr::GET(
     'https://matos.asascience.com/project'
@@ -76,10 +87,13 @@ matos_projects <- function(){
     rvest::html_node('.project_list') %>%
     rvest::html_nodes('a')
 
+  urls <- rvest::html_attr(projects_info, 'href')
+
   projects <- data.frame(
     name = tolower(rvest::html_text(projects_info, trim = T)),
+    number = gsub('.*detail/', '', urls),
     url = paste0('https://matos.asascience.com',
-                 rvest::html_attr(projects_info, 'href'))
+                 urls)
   )
 
   projects

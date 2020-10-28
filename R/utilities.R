@@ -85,7 +85,7 @@ get_file_list <- function(project_number, data_type){
 #'
 get_project_number <- function(project){
   projects <- matos_projects()
-  sub('.*detail/', '', projects[projects$name == tolower(project),]$url)
+  projects[projects$name == tolower(project)]$number
 }
 
 
