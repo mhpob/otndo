@@ -2,7 +2,8 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.Rmd. Please edit this file -->
+<!-- Very likely that you'll need to run rmarkdown::render('readme.rmd') rather than the knit button. -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -26,7 +27,7 @@ Please note that you will need a MATOS account, [which you can sign up for here]
 
 This package is still in "throw things on the wall and see what sticks" phase. You can install the most-up-to-date version from GitHub:
 
-``` r
+```{r eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("mhpob/matos")
 ```
@@ -52,7 +53,7 @@ head(all_projects)
 Since I'm logged in, I can view the files that I've uploaded to my projects.
 
 ```{r}
-files <- project_files(project = 'umces boem offshore wind energy')
+files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
 
 head(files)
 ```
@@ -62,6 +63,25 @@ And, I can download any of my choosing.
 ```{r}
 files$url[1]
 
-get_project_file(file = files$url[1])
+get_file(url = files$url[1])
+```
+
+I can also locate, download, and unzip *Data Extraction Files*.
+
+```{r}
+ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
+
+head(ACT_MATOS_files)
+```
+We can download by using an index from the table above, here the file on the second row. Note that this means we have to specify what kind of data we're looking for.
+```{r}
+get_file(file = 2, project = 'umces boem offshore wind energy', data_type = 'extraction')
+```
+
+I can also download using a file name. Since all data extraction files are zipped, the function assumes the correct data type.
+```{r}
+get_file(file = 'proj87_matched_detections_2018.zip',
+         project = 'umces boem offshore wind energy',
+         overwrite = T)
 ```
 
