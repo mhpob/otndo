@@ -40,12 +40,7 @@ detection_files <- function(project_number = NULL, project = NULL){
 
   files_html <- get_file_list(project_number, data_type = 'dataextractionfiles')
 
-  file_urls <- scrape_file_urls(files_html)
-
   files <- html_table_to_df(files_html)
-
-  files <- files %>%
-    cbind(url = paste0('https://matos.asascience.com', file_urls))
 
   files
 
@@ -63,12 +58,7 @@ project_files <- function(project_number = NULL, project = NULL){
 
   files_html <- get_file_list(project_number, data_type = 'downloadfiles')
 
-  file_urls <- scrape_file_urls(files_html)
-
   files <- html_table_to_df(files_html)
-
-  files <- files %>%
-    cbind(url = paste0('https://matos.asascience.com', file_urls))
 
   files
 }

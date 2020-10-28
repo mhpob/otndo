@@ -52,10 +52,9 @@ get_file <- function(file = NULL, project = NULL, url = NULL, data_type, ...){
       project <- get_project_number(project)
     }
 
-    file_html <- get_file_list(project, 'dataextractionfiles')
+    file_html <- get_file_list(project, 'downloadfiles')
 
-    file_table <- cbind(html_table_to_df(file_html),
-                        url = scrape_file_urls(file_html))
+    file_table <- html_table_to_df(file_html)
 
     if(is.numeric(file)){
       # Check that index exists in the table.

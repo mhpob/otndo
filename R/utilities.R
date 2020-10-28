@@ -18,11 +18,13 @@ get_file_list <- function(project_number, data_type){
 #'
 #'
 scrape_file_urls <- function(html_file_list){
-  httr::content(html_file_list, 'parsed') %>%
+  urls <- httr::content(html_file_list, 'parsed') %>%
     rvest::html_node('body') %>%
     rvest::html_nodes('a') %>%
     rvest::html_attr('href') %>%
     grep('projectfile', ., value = T)
+
+  paste0('https://matos.asascience.com', urls)
 }
 
 #'
@@ -33,7 +35,11 @@ html_table_to_df <- function(html_file_list){
     rvest::html_table() %>%
     data.frame()
 
-  df[, !names(df) %in% c('Download', 'Var.4')]
+  df <- df[, !names(df) %in% c('Download', 'Var.4')]
+
+  urls <- scrape_file_urls(html_file_list)
+
+  cbind(df, url = urls)
 }
 
 #'
