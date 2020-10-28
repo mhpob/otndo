@@ -74,7 +74,7 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
                  'data extraction files or project files. Providing an argument to',
                  '"data_type = ..." might fix this.'))
     }
-    if(is.character(file) && is.na(data.type)){
+    if(is.character(file) && is.na(data_type)){
       data_type <- ifelse(grepl('*.zip$', 'extraction', 'project'))
     }
 
