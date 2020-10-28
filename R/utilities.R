@@ -13,9 +13,11 @@
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' # Type:
 #' matos_login()
 #' # ...then follow the on-screen prompts
+#' }
 
 matos_login <- function(){
   login_response <- httr::POST(

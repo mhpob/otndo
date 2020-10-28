@@ -26,12 +26,14 @@
 #' @name list_files
 #' @export
 #' @examples
+#' \dontrun{
 #' # Select using project number
 #' detection_files(87)
 #' project_files(87)
 #'
 #' # Select using project name
 #' detection_files('umces boem offshore wind energy')
+#' }
 
 detection_files <- function(project_number = NULL, project = NULL){
   if(is.null(project_number)){

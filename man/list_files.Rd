@@ -40,10 +40,12 @@ uploaded by the user. These are the files listed on the *Project Files* page.
 }
 
 \examples{
+\dontrun{
 # Select using project number
 detection_files(87)
 project_files(87)
 
 # Select using project name
 detection_files('umces boem offshore wind energy')
+}
 }

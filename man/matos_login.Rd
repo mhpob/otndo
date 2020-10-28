@@ -19,7 +19,9 @@ will not be saved -- this was done intentionally so that you don't accidentally
 save credentials in a public script.
 }
 \examples{
+\dontrun{
 # Type:
 matos_login()
 # ...then follow the on-screen prompts
+}
 }
