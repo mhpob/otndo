@@ -82,7 +82,7 @@ get_file_list <- function(project_number, data_type){
 #'
 get_project_number <- function(project){
   projects <- matos_projects()
-  projects[projects$name == tolower(project)]$number
+  projects[projects$name == tolower(project),]$number
 }
 
 
