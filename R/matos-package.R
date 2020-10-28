@@ -3,6 +3,7 @@
 #'
 #' @importFrom magrittr "%>%"
 #' @importFrom utils unzip
+#' @importFrom utils read.csv
 #' @keywords internal
 "_PACKAGE"
 
