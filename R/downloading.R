@@ -14,7 +14,8 @@
 #'
 #' @export
 
-get_file <- function(file = NULL, project = NULL, url = NULL, data_type, ...){
+get_file <- function(file = NULL, project = NULL, url = NULL,
+                     data_type = c('extraction', 'project'), ...){
 
   # This function will do the downloading once we have a URL.
   download_process <- function(url){
@@ -44,15 +45,22 @@ get_file <- function(file = NULL, project = NULL, url = NULL, data_type, ...){
 
 # If providing a project name or number and a file/index instead of the URL:
 
+    # Check and repair data_type names
+    data_type <- gsub(' |file[s]?|data', '', data_type)
+    data_type <- match.arg(data_type)
+    data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
+                        'downloadfiles')
+
+    # Check that both file and project are provided
     if(is.null(file) | is.null(project)){
-      stop('Need a file name and its project name or number.')
+      stop('Need a file name/index and its project name/number.')
     }
 
     if(is.character(project)){
       project <- get_project_number(project)
     }
 
-    file_html <- get_file_list(project, 'downloadfiles')
+    file_html <- get_file_list(project, data_type)
 
     file_table <- html_table_to_df(file_html)
 
@@ -60,7 +68,7 @@ get_file <- function(file = NULL, project = NULL, url = NULL, data_type, ...){
       # Check that index exists in the table.
       if(file == 0 | file > nrow(file_table)){
         stop(paste0('There is no index matching what you have provided. ',
-                   'Try a file name or number from 1 to ',
+                   'Try a file name or index from 1 to ',
                    nrow(file_table), '.'))
       }
 
