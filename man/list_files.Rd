@@ -6,14 +6,14 @@
 \alias{project_files}
 \title{List MATOS project files}
 \usage{
-detection_files(project_number = NULL, project = NULL)
+detection_files(project = NULL)
 
-project_files(project_number = NULL, project = NULL)
+project_files(project = NULL)
 }
 \arguments{
 \item{project}{Either the project number (the number in your project page URL)
 or the full name of the project (the big name in bold on your project page,
-*not* the "Project Title")}
+*not* the "Project Title").}
 }
 \value{
 A data frame with columns of "File Name", "File Type", "Upload Date", and "url".

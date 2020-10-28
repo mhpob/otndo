@@ -20,7 +20,7 @@
 #'
 #' @param project Either the project number (the number in your project page URL)
 #'      or the full name of the project (the big name in bold on your project page,
-#'      *not* the "Project Title")
+#'      *not* the "Project Title").
 #' @return A data frame with columns of "File Name", "File Type", "Upload Date", and "url".
 #'
 #' @name list_files
@@ -35,12 +35,12 @@
 #' detection_files('umces boem offshore wind energy')
 #' }
 
-detection_files <- function(project_number = NULL, project = NULL){
-  if(is.null(project_number)){
-    project_number <- get_project_number(project)
+detection_files <- function(project = NULL){
+  if(is.character(project)){
+    project <- get_project_number(project)
   }
 
-  files_html <- get_file_list(project_number, data_type = 'dataextractionfiles')
+  files_html <- get_file_list(project, data_type = 'dataextractionfiles')
 
   files <- html_table_to_df(files_html)
 
@@ -53,12 +53,12 @@ detection_files <- function(project_number = NULL, project = NULL){
 #' @rdname list_files
 #' @export
 
-project_files <- function(project_number = NULL, project = NULL){
-  if(is.null(project_number)){
+project_files <- function(project = NULL){
+  if(is.character(project)){
     project_number <- get_project_number(project)
   }
 
-  files_html <- get_file_list(project_number, data_type = 'downloadfiles')
+  files_html <- get_file_list(project, data_type = 'downloadfiles')
 
   files <- html_table_to_df(files_html)
 
