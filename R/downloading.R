@@ -137,8 +137,8 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
 #'
 #' @export
 
-tags <- c('A69-1601-25468', 'A69-1601-25469')
-tags <- tags[1]
+tags <- paste0('A69-1601-254', seq(60, 90, 1))
+# tags <- tags[1]
 start_date = '03/01/2016'
 end_date = '04/01/2016'
 
@@ -146,6 +146,8 @@ tag_search <- function(tags, start_date, end_date){
 
   # Time of query (used to match MATOS naming convention)
   time_of_query <- as.POSIXlt(Sys.time())
+
+  cat('Downloading data. Please note that this can take a while!\n')
 
   search <- httr::POST(
     'https://matos.asascience.com/search/searchtags',
@@ -162,4 +164,8 @@ tag_search <- function(tags, start_date, end_date){
                            paste0(time_of_query$min, '.csv'),
                            sep = "_"))
   )
+
+  cat('File saved to', file.path(search$content))
 }
+
+tag_search(tags, start_date, end_date)
