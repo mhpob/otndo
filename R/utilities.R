@@ -111,8 +111,9 @@ scrape_file_urls <- function(html_file_list){
   urls <- httr::content(html_file_list, 'parsed') %>%
     rvest::html_node('body') %>%
     rvest::html_nodes('a') %>%
-    rvest::html_attr('href') %>%
-    grep('projectfile', ., value = T)
+    rvest::html_attr('href')
+
+  urls <- grep('projectfile', urls, value = T)
 
   paste0('https://matos.asascience.com', urls)
 }
