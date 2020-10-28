@@ -12,3 +12,9 @@ This table provides not only the full name of the project, but also the MATOS
 project number and project page URL. You do not need to log in via \code{matos_login}
 or have any permissions to view/download this table.
 }
+\examples{
+\dontrun{
+# Just type in the following...
+matos_projects()
+}
+}

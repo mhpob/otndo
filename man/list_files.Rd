@@ -2,21 +2,22 @@
 % Please edit documentation in R/listing.R
 \name{list_files}
 \alias{list_files}
-\alias{detection_files}
-\alias{project_files}
 \title{List MATOS project files}
 \usage{
-detection_files(project = NULL)
-
-project_files(project = NULL)
+list_files(project = NULL, data_type = c("extraction", "project"))
 }
 \arguments{
 \item{project}{Either the project number (the number in your project page URL)
 or the full name of the project (the big name in bold on your project page,
 *not* the "Project Title").}
+
+\item{data_type}{one of "extraction" (default), or "project", which will list
+the data extraction or project files, respectively. Partial matching
+is allowed, and will repair to the correct argument if spaces or the words
+"data"/"file(s)" are included.}
 }
 \value{
-A data frame with columns of "File Name", "File Type", "Upload Date", and "url".
+A data frame with columns of "File.Name", "File.Type", "Upload.Date", and "url".
 }
 \description{
 These functions list the file names, types, upload date, and URLs of MATOS
@@ -41,11 +42,13 @@ uploaded by the user. These are the files listed on the *Project Files* page.
 
 \examples{
 \dontrun{
-# Select using project number
-detection_files(87)
-project_files(87)
+# Select using project number, this defaults to grabbing the data extraction files
+list_files(87)
+
+# Or, grab the project files
+list_files(project = 87, data_type = 'project')
 
 # Select using project name
-detection_files('umces boem offshore wind energy')
+list_files('umces boem offshore wind energy')
 }
 }

@@ -19,20 +19,26 @@
 #' uploaded by the user. These are the files listed on the *Project Files* page.
 #'
 #' @param project Either the project number (the number in your project page URL)
-#'      or the full name of the project (the big name in bold on your project page,
-#'      *not* the "Project Title").
+#'     or the full name of the project (the big name in bold on your project page,
+#'     *not* the "Project Title").
+#' @param data_type one of "extraction" (default), or "project", which will list
+#'     the data extraction or project files, respectively. Partial matching
+#'     is allowed, and will repair to the correct argument if spaces or the words
+#'     "data"/"file(s)" are included.
 #'
-#' @return A data frame with columns of "File Name", "File Type", "Upload Date", and "url".
+#' @return A data frame with columns of "File.Name", "File.Type", "Upload.Date", and "url".
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' # Select using project number
-#' detection_files(87)
-#' project_files(87)
+#' # Select using project number, this defaults to grabbing the data extraction files
+#' list_files(87)
+#'
+#' # Or, grab the project files
+#' list_files(project = 87, data_type = 'project')
 #'
 #' # Select using project name
-#' detection_files('umces boem offshore wind energy')
+#' list_files('umces boem offshore wind energy')
 #' }
 
 list_files <- function(project = NULL, data_type = c('extraction', 'project')){
@@ -67,7 +73,7 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project')){
 #' or have any permissions to view/download this table.
 #'
 #' @export
-#' @example
+#' @examples
 #' \dontrun{
 #' # Just type in the following...
 #' matos_projects()

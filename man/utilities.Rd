@@ -19,10 +19,7 @@ scrape_file_urls(html_file_list)
 \arguments{
 \item{project_number}{Number of the project}
 
-\item{data_type}{one of "extraction" (default) or "project". Will call
-\code{detection_files} or \code{project_files}, respectively. Partial matching
-is allowed, and will repair to the correct argument if spaces or the words
-"data"/"file(s)" are included.}
+\item{data_type}{one of "dataextractionfiles" or "projectfiles".}
 
 \item{project}{Character string of the full MATOS project name. This will be the
 big name in bold at the top of your project page, not the "Project Title" below it.
