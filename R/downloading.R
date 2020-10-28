@@ -131,18 +131,28 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
 
 #' Search for tags on the MATOS website
 #'
-#' @param tags
-#' @param start_date MM/DD/YYYY format
-#' @param end_date
+#' This function is an interface to \href{https://matos.asascience.com/search}{MATOS' tag search page},
+#' with the result of a CSV downloaded into your working directory. Be aware: these
+#' downloads can take a *long* time, especially if you have many tags or are
+#' searching over a long period of time.
+#'
+#' @param tags Character vector of tags. Will be coerced into CSV when POSTing to
+#'     the website.
+#' @param start_date Character string listing the start date in MM/DD/YYYY format.
+#'     If no dates are provided, all tag detections are returned.
+#' @param end_date Character string listing the end date in MM/DD/YYYY format.
+#'     If no dates are provided, all tag detections are returned.
+#' @param import Should the downloaded data be imported into R as a data frame? Default is FALSE.
 #'
 #' @export
+#' @examples
+#' \dontrun{
+#' tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
+#'            start_date = '03/01/2016',
+#'            end_date = '04/01/2016')
+#' }
 
-tags <- paste0('A69-1601-254', seq(60, 90, 1))
-# tags <- tags[1]
-start_date = '03/01/2016'
-end_date = '04/01/2016'
-
-tag_search <- function(tags, start_date, end_date){
+tag_search <- function(tags, start_date, end_date, import = F){
 
   # Time of query (used to match MATOS naming convention)
   time_of_query <- as.POSIXlt(Sys.time())
@@ -165,7 +175,13 @@ tag_search <- function(tags, start_date, end_date){
                            sep = "_"))
   )
 
-  cat('File saved to', file.path(search$content))
-}
+  cat('Download complete. File saved to', file.path(search$content))
 
-tag_search(tags, start_date, end_date)
+  if(import == T){
+    cat('\nReading file into R...')
+
+    read.csv(file.path(search$content))
+
+    cat('\nCompleted!')
+  }
+}
