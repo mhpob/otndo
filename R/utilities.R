@@ -33,7 +33,7 @@ html_table_to_df <- function(html_file_list){
     rvest::html_table() %>%
     data.frame()
 
-  df[, !names(df) %in% 'Download']
+  df[, !names(df) %in% c('Download', 'Var.4')]
 }
 
 #'
