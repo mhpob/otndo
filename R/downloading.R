@@ -1,3 +1,15 @@
+#' Download files from the MATOS website
+#'
+#' \code{get_file} downloads files from the MATOS website. This is best-used in
+#' conjunction with \code{\link{detection_files}} or \code{\link{project_files}}.
+#'
+#' @param file A character vector listing the name of the file, or a numeric listing
+#' the index as found from \code{detection_files} or \code{project_files}.
+#' @param project A character vector listing the full name of the project, or a
+#' numeric listing the project number.
+#' @param url The URL of the file to be downloaded.
+#' @param data_type FILL THIS IN!!!
+#' @param ... Arguments passed to httr::write_disk.
 #'
 #' @export
 
