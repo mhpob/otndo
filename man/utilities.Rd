@@ -6,7 +6,7 @@
 \alias{get_project_number}
 \alias{html_table_to_df}
 \alias{scrape_file_urls}
-\title{Internal functions used by \code{matos}}
+\title{Create new MATOS project}
 \usage{
 get_file_list(project_number, data_type)
 
@@ -29,6 +29,10 @@ Will be coerced to all lower case, so capitalization doesn't matter.}
 \code{get_file_list}}
 }
 \description{
+Somewhat useless function that just opens up the MATOS project creation page
+Internal functions used by \code{matos}
+}
+\details{
 Non-exported utility functions used by other functions in \code{matos}.
 }
 \section{Details}{
