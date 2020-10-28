@@ -14,7 +14,7 @@ get_file(
 }
 \arguments{
 \item{file}{A character vector listing the name of the file, or a numeric listing
-the index as found from \code{detection_files} or \code{project_files}.}
+the index as found from \code{list_files}.}
 
 \item{project}{A character vector listing the full name of the project, or a
 numeric listing the project number.}
@@ -33,7 +33,7 @@ to the correct argument if spaces or the words "data"/"file(s)" are included.}
 }
 \description{
 \code{get_file} downloads files from the MATOS website. This is best-used in
-conjunction with \code{\link{detection_files}} or \code{\link{project_files}}.
+conjunction with \code{\link{list_files}}.
 }
 \examples{
 \dontrun{
