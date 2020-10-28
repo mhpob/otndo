@@ -1,3 +1,31 @@
+#' List personal MATOS projects
+#'
+#' This function lists the functions for which the logged-on user has permissions
+#'
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' # After logging in, just type the following:
+#' get_my_projects()
+#' }
+get_my_projects <- function(){
+  site <- httr::GET(
+    'https://matos.asascience.com/report/submit'
+  )
+
+  names <- httr::content(site) %>%
+    rvest::html_node(xpath = '//*[@id="selProject"]') %>%
+    rvest::html_nodes('option') %>%
+    rvest::html_text()
+
+  all_projects <- matos_projects()
+
+  all_projects[all_projects$name %in% tolower(names),]
+}
+
+
+
 #' List MATOS project files
 #'
 #' These functions list the file names, types, upload date, and URLs of MATOS
