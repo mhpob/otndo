@@ -4,7 +4,13 @@
 \alias{get_file}
 \title{Download files from the MATOS website}
 \usage{
-get_file(file = NULL, project = NULL, url = NULL, data_type, ...)
+get_file(
+  file = NULL,
+  project = NULL,
+  url = NULL,
+  data_type = c(NA, "extraction", "project"),
+  ...
+)
 }
 \arguments{
 \item{file}{A character vector listing the name of the file, or a numeric listing
@@ -15,12 +21,36 @@ numeric listing the project number.}
 
 \item{url}{The URL of the file to be downloaded.}
 
-\item{data_type}{one of "detection" or "project". Will call \code{detection_files} or
-\code{project_files}, respectively.}
+\item{data_type}{one of NA (default), "extraction", or "project". If NA, it
+will try to guess whether proejct files or data extraction files are desired
+from the file name. If the file index is provided, it cannot guess and will
+throw an error. If "extraction" or "project" is provided, it will call
+\code{detection_files} or \code{project_files}, respectively. Partial matching
+is allowed, and will repair to the correct argument if spaces or the words
+"data"/"file(s)" are included.}
 
 \item{...}{Arguments passed to httr::write_disk.}
 }
 \description{
 \code{get_file} downloads files from the MATOS website. This is best-used in
 conjunction with \code{\link{detection_files}} or \code{\link{project_files}}.
+}
+\examples{
+\dontrun{
+# If you know the direct URL to your file, you don't need the file or project names:
+get_file(url = 'https://matos.asascience.com/projectfile/download/327')
+
+# If you know the file name and your project ID (name or number), provide both.
+# This will guess that you want the data extraction file since the file name
+# ends in .zip.
+get_file(file = 'proj87_matched_detections_2017.zip',
+        'UMCES BOEM Offshore Wind Energy')
+
+# This won't work, as it can't guess whether you want project or data extraction
+#  files from the number "1".
+get_file(1, 87)
+
+# Need to provide a value to \code{data_type}.
+get_file(1, 87, data_type = 'extraction')
+}
 }

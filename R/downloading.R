@@ -8,14 +8,37 @@
 #' @param project A character vector listing the full name of the project, or a
 #' numeric listing the project number.
 #' @param url The URL of the file to be downloaded.
-#' @param data_type one of "detection" or "project". Will call \code{detection_files} or
-#' \code{project_files}, respectively.
+#' @param data_type one of NA (default), "extraction", or "project". If NA, it
+#' will try to guess whether proejct files or data extraction files are desired
+#' from the file name. If the file index is provided, it cannot guess and will
+#' throw an error. If "extraction" or "project" is provided, it will call
+#' \code{detection_files} or \code{project_files}, respectively. Partial matching
+#' is allowed, and will repair to the correct argument if spaces or the words
+#' "data"/"file(s)" are included.
 #' @param ... Arguments passed to httr::write_disk.
 #'
 #' @export
+#' @examples
+#' \dontrun{
+#' # If you know the direct URL to your file, you don't need the file or project names:
+#' get_file(url = 'https://matos.asascience.com/projectfile/download/327')
+#'
+#' # If you know the file name and your project ID (name or number), provide both.
+#' # This will guess that you want the data extraction file since the file name
+#' # ends in .zip.
+#' get_file(file = 'proj87_matched_detections_2017.zip',
+#'         'UMCES BOEM Offshore Wind Energy')
+#'
+#' # This won't work, as it can't guess whether you want project or data extraction
+#' #  files from the number "1".
+#' get_file(1, 87)
+#'
+#' # Need to provide a value to \code{data_type}.
+#' get_file(1, 87, data_type = 'extraction')
+#' }
 
 get_file <- function(file = NULL, project = NULL, url = NULL,
-                     data_type = c('extraction', 'project'), ...){
+                     data_type = c(NA, 'extraction', 'project'), ...){
 
   # This function will do the downloading once we have a URL.
   download_process <- function(url){
@@ -46,6 +69,15 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
 # If providing a project name or number and a file/index instead of the URL:
 
     # Check and repair data_type names
+    if(is.numeric(file) && is.na(data_type)){
+      stop(paste('Unable to figure out from the file index alone whether you want',
+                 'data extraction files or project files. Providing an argument to',
+                 '"data_type = ..." might fix this.'))
+    }
+    if(is.character(file) && is.na(data.type)){
+      data_type <- ifelse(grepl('*.zip$', 'extraction', 'project'))
+    }
+
     data_type <- gsub(' |file[s]?|data', '', data_type)
     data_type <- match.arg(data_type)
     data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
@@ -55,6 +87,8 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
     if(is.null(file) | is.null(project)){
       stop('Need a file name/index and its project name/number.')
     }
+
+
 
     if(is.character(project)){
       project <- get_project_number(project)
