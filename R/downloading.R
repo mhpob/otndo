@@ -128,3 +128,38 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
   }
 }
 
+
+#' Search for tags on the MATOS website
+#'
+#' @param tags
+#' @param start_date MM/DD/YYYY format
+#' @param end_date
+#'
+#' @export
+
+tags <- c('A69-1601-25468', 'A69-1601-25469')
+tags <- tags[1]
+start_date = '03/01/2016'
+end_date = '04/01/2016'
+
+tag_search <- function(tags, start_date, end_date){
+
+  # Time of query (used to match MATOS naming convention)
+  time_of_query <- as.POSIXlt(Sys.time())
+
+  search <- httr::POST(
+    'https://matos.asascience.com/search/searchtags',
+    body = list(
+      startDate = start_date,
+      endDate = end_date,
+      tagSearch = paste(tags, collapse = ',')
+    ),
+    httr::write_disk(paste('MATOS_Export',
+                           time_of_query$year + 1900,
+                           time_of_query$mon + 1,
+                           time_of_query$mday,
+                           time_of_query$hour,
+                           paste0(time_of_query$min, '.csv'),
+                           sep = "_"))
+  )
+}
