@@ -64,7 +64,7 @@ project_files <- list_files(project = 'umces boem offshore wind energy', data_ty
 #> Please log in.
 
 head(project_files)
-#>                      File.Name                                File.Type Upload.Date                                                    url
+#>                           name                                     type upload_date                                                    url
 #> 1 BOEM_metadata_deployment.xls Deployed Receivers – Deployment Metadata   3/30/2020  https://matos.asascience.com/projectfile/download/375
 #> 2  VR2AR_546455_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1810
 #> 3  VR2AR_546456_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1811
@@ -79,7 +79,7 @@ I can also list any of my OTN node *Data Extraction Files*.
 ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
 
 head(ACT_MATOS_files)
-#>                              File.Name            File.Type Upload.Date                                                              url
+#>                                   name                 type upload_date                                                              url
 #> 1   proj87_matched_detections_2017.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_1
 #> 2   proj87_matched_detections_2018.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_2
 #> 3   proj87_matched_detections_2019.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_3

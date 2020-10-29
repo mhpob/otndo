@@ -119,7 +119,11 @@ html_table_to_df <- function(html_file_list){
 
   urls <- scrape_file_urls(html_file_list)
 
-  cbind(df, url = urls)
+  df <- cbind(df, url = urls)
+
+  names(df) <- c('name', 'type', 'upload_date', 'url')
+
+  df
 }
 
 
