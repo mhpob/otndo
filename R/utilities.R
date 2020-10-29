@@ -20,13 +20,18 @@
 #' }
 
 matos_login <- function(){
+  credentials <- list(
+    UserName = rstudioapi::showPrompt(
+      title = "Username", message = "Please enter username.", default = ""
+    ),
+    Password = rstudioapi::askForPassword('Please enter password.')
+  )
+
+
   login_response <- httr::POST(
     'https://matos.asascience.com/account/login',
-    body = list(
-      UserName = rstudioapi::showPrompt(
-        title = "Username", message = "Please enter username.", default = ""),
-      Password = rstudioapi::askForPassword('Please enter password.')
-    )
+    body = credentials,
+    encode = 'form'
   )
 
   if(grepl('login', login_response)){
@@ -111,6 +116,13 @@ html_table_to_df <- function(html_file_list){
   cbind(df, url = urls)
 }
 
+
+#' @rdname utilities
+#'
+login_check <- function(url){
+  httr::HEAD(url)
+
+}
 
 #' @rdname utilities
 #'
