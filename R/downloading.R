@@ -37,8 +37,9 @@
 #' get_file(1, 87, data_type = 'extraction')
 #' }
 
-get_file <- function(file = NULL, project = NULL, url = NULL,
-                     data_type = c(NA, 'extraction', 'project'), ...){
+get_file <- function(file = NULL, project = NULL,
+                     data_type = c(NA, 'extraction', 'project'),
+                     url = NULL, ...){
 
   # This function will do the downloading once we have a URL.
   download_process <- function(url){
@@ -61,6 +62,8 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
 
 # If calling the URL directly:
   if(!is.null(url)){
+
+    login_check(url)
 
     download_process(url = url)
 
@@ -94,6 +97,7 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
       project <- get_project_number(project)
     }
 
+    # As well as getting the file list, this will call login_check() to check credentials
     file_html <- get_file_list(project, data_type)
 
     file_table <- html_table_to_df(file_html)
@@ -127,6 +131,7 @@ get_file <- function(file = NULL, project = NULL, url = NULL,
 
   }
 }
+
 
 
 #' Search for tags on the MATOS website
@@ -185,3 +190,8 @@ tag_search <- function(tags, start_date, end_date, import = F){
     cat('\nCompleted!')
   }
 }
+
+
+# OTN deployment data template
+
+# OTN tagging data template

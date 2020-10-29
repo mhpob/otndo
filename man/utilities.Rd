@@ -5,6 +5,7 @@
 \alias{get_file_list}
 \alias{get_project_number}
 \alias{html_table_to_df}
+\alias{login_check}
 \alias{scrape_file_urls}
 \title{Create new MATOS project}
 \usage{
@@ -13,6 +14,8 @@ get_file_list(project_number, data_type)
 get_project_number(project)
 
 html_table_to_df(html_file_list)
+
+login_check(url)
 
 scrape_file_urls(html_file_list)
 }
@@ -27,6 +30,8 @@ Will be coerced to all lower case, so capitalization doesn't matter.}
 
 \item{html_file_list}{Listed files in HTML form. Always the result of
 \code{get_file_list}}
+
+\item{url}{The (protected) URL that the overlapping function is trying to call.}
 }
 \description{
 Somewhat useless function that just opens up the MATOS project creation page
@@ -45,6 +50,9 @@ project by scraping the HTML of the main MATOS projects page.
 
 \code{html_table_to_df} converts the HTML table provided by \code{get_file_list}
 into a R-usable data frame.
+
+\code{login_check} pings protected URLs and calls \code{matos_login} when referred
+to the login page.
 
 \code{scrape_file_urls} is used internally by \code{html_table_to_df} to extract
 the URLs associates with each "Download" link.

@@ -20,13 +20,18 @@
 #' }
 
 matos_login <- function(){
+  credentials <- list(
+    UserName = rstudioapi::showPrompt(
+      title = "Username", message = "Please enter username.", default = ""
+    ),
+    Password = rstudioapi::askForPassword('Please enter password.')
+  )
+
+
   login_response <- httr::POST(
     'https://matos.asascience.com/account/login',
-    body = list(
-      UserName = rstudioapi::showPrompt(
-        title = "Username", message = "Please enter username.", default = ""),
-      Password = rstudioapi::askForPassword('Please enter password.')
-    )
+    body = credentials,
+    encode = 'form'
   )
 
   if(grepl('login', login_response)){
@@ -65,6 +70,9 @@ matos_login <- function(){
 #' \code{html_table_to_df} converts the HTML table provided by \code{get_file_list}
 #' into a R-usable data frame.
 #'
+#' \code{login_check} pings protected URLs and calls \code{matos_login} when referred
+#' to the login page.
+#'
 #' \code{scrape_file_urls} is used internally by \code{html_table_to_df} to extract
 #' the URLs associates with each "Download" link.
 #'
@@ -73,6 +81,7 @@ matos_login <- function(){
 #' @param project Character string of the full MATOS project name. This will be the
 #' big name in bold at the top of your project page, not the "Project Title" below it.
 #' Will be coerced to all lower case, so capitalization doesn't matter.
+#' @param url The (protected) URL that the overlapping function is trying to call.
 #' @param html_file_list Listed files in HTML form. Always the result of
 #' \code{get_file_list}
 #'
@@ -80,11 +89,14 @@ matos_login <- function(){
 #' @name utilities
 
 get_file_list <- function(project_number, data_type){
-  httr::GET(
-    paste('https://matos.asascience.com/project',
-          data_type,
-          project_number, sep = '/')
-  )
+
+  url <- paste('https://matos.asascience.com/project',
+               data_type,
+               project_number, sep = '/')
+
+  login_check(url)
+
+  httr::GET(url)
 }
 
 
@@ -111,6 +123,19 @@ html_table_to_df <- function(html_file_list){
   cbind(df, url = urls)
 }
 
+
+#' @rdname utilities
+#'
+login_check <- function(url){
+  check_response <- httr::HEAD(url)
+
+  if(nrow(check_response$cookies) == 1){
+    message('Please log in.')
+
+    matos_login()
+  }
+
+}
 
 #' @rdname utilities
 #'

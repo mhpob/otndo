@@ -7,8 +7,8 @@
 get_file(
   file = NULL,
   project = NULL,
-  url = NULL,
   data_type = c(NA, "extraction", "project"),
+  url = NULL,
   ...
 )
 }
@@ -19,8 +19,6 @@ the index as found from \code{list_files}.}
 \item{project}{A character vector listing the full name of the project, or a
 numeric listing the project number.}
 
-\item{url}{The URL of the file to be downloaded.}
-
 \item{data_type}{one of NA (default), "extraction", or "project"; used in a
 call to \code{list_files} under the hood. If NA, it will try to guess whether
 project files or data extraction files are desired from the file name. If
@@ -28,6 +26,8 @@ the file index is provided, it cannot guess and will throw an error. When
 "extraction" or "project" is provided, it will list the data extraction or
 project files, respectively. Partial matching is allowed, and will repair
 to the correct argument if spaces or the words "data"/"file(s)" are included.}
+
+\item{url}{The URL of the file to be downloaded.}
 
 \item{...}{Arguments passed to httr::write_disk.}
 }
