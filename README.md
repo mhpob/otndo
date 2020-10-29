@@ -42,6 +42,8 @@ out what URLs are associated with each project. You do not need MATOS
 permissions in order to view this page.
 
 ``` r
+library(matos)
+
 all_projects <- matos_projects()
 
 head(all_projects)
@@ -141,8 +143,8 @@ my_detections <- tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
 
 As is noted above, this package is undergoing a ton of development. If
 there’s something I missed, please [open an issue on
-GitHub](https://github.com/mhpob/matos/issues) or [email me
-directly](mailto:obrien@umces.edu).
+GitHub](https://github.com/mhpob/matos/issues) or [email me (Mike
+O’Brien: obrien@umces.edu) directly](mailto:obrien@umces.edu).
 
 ## Notes
 
