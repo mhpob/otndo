@@ -3,13 +3,15 @@
 
 <!-- Very likely that you'll need to run rmarkdown::render('readme.rmd') rather than the knit button. -->
 
+<!-- readme.html will be created and is unnecessary, so delete that. -->
+
 # matos
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-{matos} is an API interface to the [Mid-Atlantic Acoustic Telemetry
+{matos} is an attempt at an API to the [Mid-Atlantic Acoustic Telemetry
 Observing System website](https://matos.asascience.com/), powered by a
 suite of [httr](https://httr.r-lib.org/) and
 [rvest](https://rvest.tidyverse.org/) functions. Because of this, it’s
@@ -32,25 +34,6 @@ can install the most-up-to-date version from GitHub:
 remotes::install_github("mhpob/matos")
 ```
 
-## Log in to MATOS
-
-The first thing you should do is log into your MATOS account. This can
-be done through the package, using the [RStudio
-API](https://rstudio.github.io/rstudio-extensions/rstudioapi.html). This
-probably won’t work if you’re not using RStudio, so it will be changed
-in the future. A pop up will appear asking for your username and
-password. If everything works out, your credentials will be kept in the
-sessions’ cookies. Your username/password will not be saved – this was
-done intentionally so that you don’t accidentally save credentials in a
-public script.
-
-``` r
-library(matos)
-
-matos_login()
-#> NULL
-```
-
 ## List available files
 
 First, `matos_projects` returns the [project
@@ -71,27 +54,21 @@ head(all_projects)
 #> 6              cff black sea bass tagging     91  https://matos.asascience.com/project/detail/91
 ```
 
-After I’m logged in, I can view the files that I’ve uploaded to my
-projects using `list_files`.
+I can also view the files that I’ve uploaded to my projects using
+`list_files`, but that requires logging in first.
 
 ``` r
 project_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
+#> Please log in.
 
 head(project_files)
-#>                      File.Name                                File.Type Upload.Date
-#> 1 BOEM_metadata_deployment.xls Deployed Receivers – Deployment Metadata   3/30/2020
-#> 2  VR2AR_546455_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020
-#> 3  VR2AR_546456_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020
-#> 4  VR2AR_546457_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020
-#> 5  VR2AR_546458_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020
-#> 6  VR2AR_546459_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020
-#>                                                      url
-#> 1  https://matos.asascience.com/projectfile/download/375
-#> 2 https://matos.asascience.com/projectfile/download/1810
-#> 3 https://matos.asascience.com/projectfile/download/1811
-#> 4 https://matos.asascience.com/projectfile/download/1812
-#> 5 https://matos.asascience.com/projectfile/download/1813
-#> 6 https://matos.asascience.com/projectfile/download/1814
+#>                      File.Name                                File.Type Upload.Date                                                    url
+#> 1 BOEM_metadata_deployment.xls Deployed Receivers – Deployment Metadata   3/30/2020  https://matos.asascience.com/projectfile/download/375
+#> 2  VR2AR_546455_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1810
+#> 3  VR2AR_546456_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1811
+#> 4  VR2AR_546457_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1812
+#> 5  VR2AR_546458_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1813
+#> 6  VR2AR_546459_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1814
 ```
 
 I can also list any of my OTN node *Data Extraction Files*.
@@ -100,20 +77,13 @@ I can also list any of my OTN node *Data Extraction Files*.
 ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
 
 head(ACT_MATOS_files)
-#>                              File.Name            File.Type Upload.Date
-#> 1   proj87_matched_detections_2017.zip Data Extraction File   8/28/2020
-#> 2   proj87_matched_detections_2018.zip Data Extraction File   8/28/2020
-#> 3   proj87_matched_detections_2019.zip Data Extraction File   8/28/2020
-#> 4   proj87_matched_detections_2020.zip Data Extraction File   8/28/2020
-#> 5 proj87_qualified_detections_2016.zip Data Extraction File   8/28/2020
-#> 6 proj87_qualified_detections_2017.zip Data Extraction File   8/28/2020
-#>                                                                url
-#> 1 https://matos.asascience.com/projectfile/downloadExtraction/87_1
-#> 2 https://matos.asascience.com/projectfile/downloadExtraction/87_2
-#> 3 https://matos.asascience.com/projectfile/downloadExtraction/87_3
-#> 4 https://matos.asascience.com/projectfile/downloadExtraction/87_4
-#> 5 https://matos.asascience.com/projectfile/downloadExtraction/87_5
-#> 6 https://matos.asascience.com/projectfile/downloadExtraction/87_6
+#>                              File.Name            File.Type Upload.Date                                                              url
+#> 1   proj87_matched_detections_2017.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_1
+#> 2   proj87_matched_detections_2018.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_2
+#> 3   proj87_matched_detections_2019.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_3
+#> 4   proj87_matched_detections_2020.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_4
+#> 5 proj87_qualified_detections_2016.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_5
+#> 6 proj87_qualified_detections_2017.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_6
 ```
 
 ## Download project or data extraction files
@@ -173,3 +143,9 @@ As is noted above, this package is undergoing a ton of development. If
 there’s something I missed, please [open an issue on
 GitHub](https://github.com/mhpob/matos/issues) or [email me
 directly](mailto:obrien@umces.edu).
+
+## Notes
+
+  - Sessions expire more-frequently than we would like. Because of this,
+    you may often be prompted to log in. Just follow the instructions
+    and crunch away.

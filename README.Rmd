@@ -4,6 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit this file -->
 <!-- Very likely that you'll need to run rmarkdown::render('readme.rmd') rather than the knit button. -->
+<!-- readme.html will be created and is unnecessary, so delete that. -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-{matos} is an API interface to the [Mid-Atlantic Acoustic Telemetry Observing System website](https://matos.asascience.com/), powered by a suite of [httr](https://httr.r-lib.org/) and [rvest](https://rvest.tidyverse.org/) functions. Because of this, it's not necessarily fast or the best way to do things -- we're just pinging the website back and forth. Additionally, an internet connection is needed for pretty much anything to work.
+{matos} is an attempt at an API to the [Mid-Atlantic Acoustic Telemetry Observing System website](https://matos.asascience.com/), powered by a suite of [httr](https://httr.r-lib.org/) and [rvest](https://rvest.tidyverse.org/) functions. Because of this, it's not necessarily fast or the best way to do things -- we're just pinging the website back and forth. Additionally, an internet connection is needed for pretty much anything to work.
 
 Please note that you will need a MATOS account, [which you can sign up for here](https://matos.asascience.com/account/signup), in order to interface with any project-specific files.
 
@@ -30,15 +31,6 @@ This package is still in "throw things on the wall and see what sticks" phase (*
 ```{r eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("mhpob/matos")
-```
-## Log in to MATOS
-
-The first thing you should do is log into your MATOS account. This can be done through the package, using the [RStudio API](https://rstudio.github.io/rstudio-extensions/rstudioapi.html). This probably won't work if you're not using RStudio, so it will be changed in the future. A pop up will appear asking for your username and password. If everything works out, your credentials will be kept in the sessions' cookies. Your username/password will not be saved -- this was done intentionally so that you don't accidentally save credentials in a public script.
-
-```{r example}
-library(matos)
-
-matos_login()
 ```
 
 ## List available files
@@ -51,7 +43,7 @@ all_projects <- matos_projects()
 head(all_projects)
 ```
 
-After I'm logged in, I can view the files that I've uploaded to my projects using `list_files`.
+I can also view the files that I've uploaded to my projects using `list_files`, but that requires logging in first.
 
 ```{r}
 project_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
@@ -106,3 +98,7 @@ my_detections <- tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
 ## Development
 
 As is noted above, this package is undergoing a ton of development. If there's something I missed, please [open an issue on GitHub](https://github.com/mhpob/matos/issues) or [email me directly](mailto:obrien@umces.edu).
+
+## Notes
+
+- Sessions expire more-frequently than we would like. Because of this, you may often be prompted to log in. Just follow the instructions and crunch away.
