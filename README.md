@@ -9,6 +9,10 @@
 
 <!-- badges: start -->
 
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R build
+status](https://github.com/mhpob/matos/workflows/R-CMD-check/badge.svg)](https://github.com/mhpob/matos/actions)
 <!-- badges: end -->
 
 {matos} is an attempt at an API to the [Mid-Atlantic Acoustic Telemetry

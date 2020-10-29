@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 # matos
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R build status](https://github.com/mhpob/matos/workflows/R-CMD-check/badge.svg)](https://github.com/mhpob/matos/actions)
 <!-- badges: end -->
 
 {matos} is an attempt at an API to the [Mid-Atlantic Acoustic Telemetry Observing System website](https://matos.asascience.com/), powered by a suite of [httr](https://httr.r-lib.org/) and [rvest](https://rvest.tidyverse.org/) functions. Because of this, it's not necessarily fast or the best way to do things -- we're just pinging the website back and forth. Additionally, an internet connection is needed for pretty much anything to work.
