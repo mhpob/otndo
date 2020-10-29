@@ -15,7 +15,7 @@ get_project_number(project)
 
 html_table_to_df(html_file_list)
 
-login_check(url)
+login_check(url = "https://matos.asascience.com/report/submit")
 
 scrape_file_urls(html_file_list)
 }

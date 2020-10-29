@@ -140,7 +140,8 @@ html_table_to_df <- function(html_file_list){
 
 #' @rdname utilities
 #'
-login_check <- function(url){
+login_check <- function(url = 'https://matos.asascience.com/report/submit'){
+
   check_response <- httr::HEAD(url)
 
   if(nrow(check_response$cookies) == 1){
