@@ -4,6 +4,7 @@
 #' @importFrom magrittr "%>%"
 #' @importFrom utils unzip
 #' @importFrom utils read.csv
+#' @importFrom utils installed.packages
 #' @keywords internal
 "_PACKAGE"
 

@@ -20,10 +20,8 @@
 
 matos_login <- function(){
   credentials <- list(
-    UserName = rstudioapi::showPrompt(
-      title = "Username", message = "Please enter username.", default = ""
-    ),
-    Password = rstudioapi::askForPassword('Please enter password.')
+    UserName = getPass::getPass('Username:', noblank = T),
+    Password = getPass::getPass('Password:', noblank = T)
   )
 
 
@@ -33,14 +31,27 @@ matos_login <- function(){
     encode = 'form'
   )
 
-  if(grepl('login', login_response)){
-    rstudioapi::showDialog('Login unsuccessful :(',
-                           'Your username/password combination was not recognized. Re-run matos_login before continuing.')
+  if('rstudioapi' %in% installed.packages()){
+    if(grepl('login', login_response)){
+      rstudioapi::showDialog('Login unsuccessful :(',
+                             'Your username/password combination was not recognized.
+                             Please re-run the funtion and try again.')
+    } else{
+      rstudioapi::showDialog('Login successful!',
+                             'You are now logged into your MATOS profile.')
+    }
   } else{
-    rstudioapi::showDialog('Login successful!',
-                           'You are now logged into your MATOS profile.')
+    if(grepl('login', login_response)){
+      tcltk::tk_messageBox('ok',
+                           'Your username/password combination was not recognized.
+                           Please re-run the funtion and try again.',
+                           caption = 'Login unuccessful :(')
+    } else{
+      tcltk::tk_messageBox('ok',
+                           'You are now logged into your MATOS profile.',
+                           caption = 'Login unuccessful !')
+    }
   }
-
 }
 
 
