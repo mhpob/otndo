@@ -10,9 +10,11 @@
 #' get_my_projects()
 #' }
 get_my_projects <- function(){
-  site <- httr::GET(
-    'https://matos.asascience.com/report/submit'
-  )
+  url <- 'https://matos.asascience.com/report/submit'
+
+  login_check(url)
+
+  site <- httr::GET(url)
 
   names <- httr::content(site) %>%
     rvest::html_node(xpath = '//*[@id="selProject"]') %>%
@@ -83,6 +85,7 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project')){
   }
 
   # Scrape table and list files
+  # This calls login_check() under the hood
   files_html <- get_file_list(project, data_type = data_type)
 
   files <- html_table_to_df(files_html)
