@@ -42,9 +42,11 @@ post_file <- function(project, file,
   # Check that file exists
   file <- normalizePath(file, mustWork = F)
 
-  if(!file.exists(file)){
+  if(F %in% sapply(file, file.exists)){
 
-    stop(paste('Unable to find', file))
+    stop(paste('Unable to find',
+               paste(file[sapply(file, file.exists) == F],
+                     collapse = ', ')))
 
   }
 
