@@ -36,6 +36,8 @@ matos_login <- function(){
       rstudioapi::showDialog('Login unsuccessful :(',
                              'Your username/password combination was not recognized.
                              Please re-run the funtion and try again.')
+      stop('Login unsuccessful.')
+
     } else{
       rstudioapi::showDialog('Login successful!',
                              'You are now logged into your MATOS profile.')
@@ -46,6 +48,8 @@ matos_login <- function(){
                            'Your username/password combination was not recognized.
                            Please re-run the funtion and try again.',
                            caption = 'Login unuccessful :(')
+      stop('Login unsuccessful.')
+
     } else{
       tcltk::tk_messageBox('ok',
                            'You are now logged into your MATOS profile.',
