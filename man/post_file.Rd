@@ -14,7 +14,7 @@ post_file(
 \item{project}{The name (character) or number (numeric) of the project to which
 you wish post your file.}
 
-\item{file}{The file you wish to upload. If the file is located in your working
+\item{file}{The file(s) you wish to upload. If the file is located in your working
 directory, this can be just the filename and extension. You will need to
 provide the full file location if it is located elsewhere.}
 
@@ -33,6 +33,9 @@ and the type of file you want to upload (defaulting to VRL transmitter detection
     If data_type is "new_tags" or "receivers", only CSV and XLS/XLSX files are accepted;
     if "detections", only VRL and CSV files are accepted; if "events", only CSV is
     accepted.
+
+    Multiple files can be uploaded at once, but they must all be the same data type
+    and posted to the same project.
 }
 \examples{
 \dontrun{
