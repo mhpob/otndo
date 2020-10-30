@@ -5,6 +5,15 @@ post_file <- function(project, file,
                       file_type = c('receivers', 'new_tags', 'events',
                                     'csv_detections', 'vrl_detections')){
 
+  # Check that file exists
+  file <- normalizePath(file, mustWork = F)
+
+  if(!file.exists(file)){
+
+    stop(paste('Unable to find', file))
+
+  }
+
   # Check and repair file_type argument
   file_type <- match.arg(file_type)
 
@@ -49,7 +58,7 @@ post_file <- function(project, file,
     body = list(
       pid = project,
       df = file_num,
-      file = httr::upload_file(normalizePath(file))
+      file = httr::upload_file(file)
     ),
     encode = 'multipart'
   )
