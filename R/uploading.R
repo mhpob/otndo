@@ -91,17 +91,6 @@ post_file <- function(project, file,
 
   }
 
-  # Convert data_type to the expected input numbers
-  data_num <- sapply(data_type, function(x){
-    switch(x,
-           new_tags = 1,
-           receivers = 2,
-           csv_detections = 3,
-           events = 4,
-           vrl_detections = 5
-    )
-  }, USE.NAMES = F)
-
   # Convert project name to project number, if needed
   if(is.character(project)){
     project <- get_project_number(project)
@@ -111,14 +100,52 @@ post_file <- function(project, file,
   login_check()
 
   # Construct body of POST
-  ## List files to be uploaded
-  post_files <- lapply(file, httr::upload_file)
-  names(post_files) <- rep('file', times = length(post_files))
+  ## Function to construct body
+  construct_body <- function(file, project, data_num){
+    # List files to be uploaded
+    post_files <- lapply(file, httr::upload_file)
+    names(post_files) <- rep('file', times = length(post_files))
 
-  ## Combine with project and data_num to create full body
-  post_body <- c(list(pid = project,
-                      df = data_num),
-                 post_files)
+    # Combine with project and data_num to create full body
+    c(list(pid = project,
+           df = data_num),
+      post_files)
+  }
+
+  ## Convert data_type to the expected input numbers
+  data_num <- sapply(data_type, function(x){
+    switch(x,
+           new_tags = 1,
+           receivers = 2,
+           csv_detections = 3,
+           events = 4,
+           vrl_detections = 5
+    )
+  },
+  USE.NAMES = F)
+
+  ## Construct body
+  if(length(unique(data_num)) == 1){
+
+    post_body <- construct_body(file, project, unique(data_num))
+    post_body <- list(post_body)
+
+  } else{
+
+    # Split by file extension if trying to upload a mix of VRL and CSV detection files
+    post_body <- split(data.frame(file, data_num), file_extension)
+    names(post_body) <- NULL
+
+    post_body <- lapply(post_body,
+                        function(x){
+                          construct_body(x$file, project, unique(x$data_num))
+                        }
+    )
+
+  }
+
+
+
 
 
   # Upload.
@@ -130,22 +157,41 @@ post_file <- function(project, file,
     httr::HEAD('https://matos.asascience.com/report/submit')
   )
 
-  response <- httr::POST(
+  response <- lapply(post_body, function(x){
+    httr::POST(
     'https://matos.asascience.com/report/uploadReport',
-    body = post_body,
+    body = x,
     encode = 'multipart'
-  )
+    )
+  })
 
   # Check if upload was successful
-  response_content <- httr::content(response)
+  response_content <- lapply(response, httr::content)
 
-  if(length(response_content) == 0){
+  if(all(lapply(response_content, length) == 0)){
 
     cat('Upload successful!\n')
 
-  } else if(grepl('^Error', rvest::html_text(response_content, trim = T))){
+  } else if(
+    any(
+      grepl('^Error',
+            sapply(response_content,
+                   function(.) tryCatch(
+                     rvest::html_text(., trim = T),
+                     error = function(e) ''
+                   )
+            )
+      )
+    )
+  ){
 
-    stop(sub(' Error ', '', rvest::html_text(response_content)))
+    warning(
+      sapply(response_content, function(.) tryCatch(
+        rvest::html_text(., trim = T),
+        error = function(e) ''
+      )
+      )
+    )
 
   } else{
 
