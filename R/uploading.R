@@ -12,8 +12,7 @@
 #'     directory, this can be just the filename and extension. You will need to
 #'     provide the full file location if it is located elsewhere.
 #' @param data_type Character string. The data type that you are uploading. One of:
-#'     "new_tags" (default), "receivers", "vrl_detections", "csv_detections",
-#'     or "events".
+#'     "new_tags" (default), "receivers", "detections", or "events".
 #'
 #' @details
 #'     If data_type is "new_tags" or "receivers", CSV and XLS/XLSX files are accepted;
@@ -23,9 +22,15 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' # Tag detections, the default
-#' post_file(87, 'your_VRL_file.vrl')
-#' post_file('umces boem offshore wind energy', 'c:/wherever/your_CSV_detections.csv')
+#' # Newly tagged fish, the default
+#' post_file(87, 'your_tagged_fish.xls')
+#' post_file(87, 'your_tagged_fish.xls', 'new_tags')
+#'
+#' # Transmitter detections
+#' post_file('umces boem offshore wind energy', 'c:/wherever/your_CSV_detections.csv',
+#'      'detections')
+#' post_file('umces boem offshore wind energy', 'c:/wherever/your_VRL_detections.vrl',
+#'      'detections')
 #'
 #' # Receiver metadata
 #' post_file('umces boem offshore wind energy', 'your_receiver_metadata.xlsx', 'receivers')

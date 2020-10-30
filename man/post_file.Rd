@@ -7,7 +7,7 @@
 post_file(
   project,
   file,
-  file_type = c("vrl_detections", "csv_detections", "receivers", "new_tags", "events")
+  data_type = c("new_tags", "receivers", "vrl_detections", "csv_detections", "events")
 )
 }
 \arguments{
@@ -18,8 +18,8 @@ you wish post your file.}
 directory, this can be just the filename and extension. You will need to
 provide the full file location if it is located elsewhere.}
 
-\item{file_type}{One of: "vrl_detections" (default), "csv_detections", "receivers",
-"new_tags", or "events".}
+\item{data_type}{Character string. The data type that you are uploading. One of:
+"new_tags" (default), "receivers", "detections", or "events".}
 }
 \description{
 This function lets you post files to your projects. You will need to log in
@@ -27,11 +27,26 @@ before uploading.
 }
 \details{
 \code{post_file} takes a project name or number, the file you want to upload,
-and the type of file you want to upload (defaulting to receiver metadata).
+and the type of file you want to upload (defaulting to VRL transmitter detections).
 
-test, test
+
+    If data_type is "new_tags" or "receivers", CSV and XLS/XLSX files are accepted;
+    if "detections", only VRL and CSV files are accepted; if "events", only CSV is
+    accepted.
 }
 \examples{
+\dontrun{
+# Newly tagged fish, the default
+post_file(87, 'your_tagged_fish.xls')
+post_file(87, 'your_tagged_fish.xls', 'new_tags')
 
+# Transmitter detections
+post_file('umces boem offshore wind energy', 'c:/wherever/your_CSV_detections.csv',
+     'detections')
+post_file('umces boem offshore wind energy', 'c:/wherever/your_VRL_detections.vrl',
+     'detections')
 
+# Receiver metadata
+post_file('umces boem offshore wind energy', 'your_receiver_metadata.xlsx', 'receivers')
+}
 }
