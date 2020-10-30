@@ -8,7 +8,7 @@
 #'
 #' @param project The name (character) or number (numeric) of the project to which
 #'     you wish post your file.
-#' @param file The file you wish to upload. If the file is located in your working
+#' @param file The file(s) you wish to upload. If the file is located in your working
 #'     directory, this can be just the filename and extension. You will need to
 #'     provide the full file location if it is located elsewhere.
 #' @param data_type Character string. The data type that you are uploading. One of:
@@ -18,6 +18,9 @@
 #'     If data_type is "new_tags" or "receivers", only CSV and XLS/XLSX files are accepted;
 #'     if "detections", only VRL and CSV files are accepted; if "events", only CSV is
 #'     accepted.
+#'
+#'     Multiple files can be uploaded at once, but they must all be the same data type
+#'     and posted to the same project.
 #'
 #' @export
 #' @examples
@@ -38,20 +41,27 @@
 
 post_file <- function(project, file,
                       data_type = c('new_tags', 'receivers', 'detections', 'events')){
+  # CHECKS
+  ## Check that only one project and/or data_type are provided
+  if(length(project) > 1 | length(data_type) > 1){
+    stop('Only able to upload one type of data to one project at a time.')
+  }
 
-  # Check that file exists
+  ## Check that file exists
   file <- normalizePath(file, mustWork = F)
 
-  if(!file.exists(file)){
+  if(any(sapply(file, file.exists) == F)){
 
-    stop(paste('Unable to find', file))
+    stop(paste0('Unable to find:\n\n',
+               paste(file[sapply(file, file.exists) == F],
+                     collapse = '\n')))
 
   }
 
-  # Check and repair data_type argument
+  ## Check and repair data_type argument
   data_type <- match.arg(data_type)
 
-  # Distinguish between VRL and CSV detections if necessary
+  ### Distinguish between VRL and CSV detections if necessary
   file_extension <- tolower(tools::file_ext(file))
 
   if(data_type == 'detections'){
@@ -60,32 +70,29 @@ post_file <- function(project, file,
 
   }
 
-  # Check that file extensions match the expected file type.
+  ## Check that file extensions match the expected file type.
   if(data_type %in% c('receivers', 'new_tags') &&
-     !grepl('xls|csv', file_extension)){
+     any(grepl('xls|csv', file_extension) == F)){
 
-    stop('File is not saved as the correct type: should be CSV, XLS, or XLSX.')
+    stop(paste0('File is not saved as the correct type: should be CSV, XLS, or XLSX. Namely:\n\n',
+               paste(file[!grepl('xls|csv', file_extension)],
+                     collapse = '\n')))
 
   } else if(grepl('detections', data_type) &&
-            !grepl('vrl|csv', file_extension)){
+            any(grepl('vrl|csv', file_extension) == F)){
 
-    stop('File is not the correct type: should be VRL or CSV.')
+    stop(paste0('File is not the correct type: should be VRL or CSV. Namely:\n\n',
+               paste(file[!grepl('vrl|csv', file_extension)],
+                     collapse = '\n')))
 
   } else if(data_type == 'events' &&
-            file_extension != 'csv'){
+            any(file_extension != 'csv')){
 
-    stop('File is not saved as the correct type: should be CSV.')
+    stop(paste0('File is not saved as the correct type: should be CSV. Namely:\n\n',
+                paste(file[file_extension != 'csv'],
+                      collapse = '\n')))
 
   }
-
-  # Convert data_type to the expected input numbers
-  data_num <- switch(data_type,
-    new_tags = 1,
-    receivers = 2,
-    csv_detections = 3,
-    events = 4,
-    vrl_detections = 5
-  )
 
   # Convert project name to project number, if needed
   if(is.character(project)){
@@ -94,6 +101,54 @@ post_file <- function(project, file,
 
   # Log in.
   login_check()
+
+  # Construct body of POST
+  ## Function to construct body
+  construct_body <- function(file, project, data_num){
+    # List files to be uploaded
+    post_files <- lapply(file, httr::upload_file)
+    names(post_files) <- rep('file', times = length(post_files))
+
+    # Combine with project and data_num to create full body
+    c(list(pid = project,
+           df = data_num),
+      post_files)
+  }
+
+  ## Convert data_type to the expected input numbers
+  data_num <- sapply(data_type, function(x){
+    switch(x,
+           new_tags = 1,
+           receivers = 2,
+           csv_detections = 3,
+           events = 4,
+           vrl_detections = 5
+    )
+  },
+  USE.NAMES = F)
+
+  ## Construct body
+  if(length(unique(data_num)) == 1){
+
+    post_body <- construct_body(file, project, unique(data_num))
+    post_body <- list(post_body)
+
+  } else{
+
+    # Split by file extension if trying to upload a mix of VRL and CSV detection files
+    post_body <- split(data.frame(file, data_num), file_extension)
+    names(post_body) <- NULL
+
+    post_body <- lapply(post_body,
+                        function(x){
+                          construct_body(x$file, project, unique(x$data_num))
+                        }
+    )
+
+  }
+
+
+
 
 
   # Upload.
@@ -105,26 +160,41 @@ post_file <- function(project, file,
     httr::HEAD('https://matos.asascience.com/report/submit')
   )
 
-  response <- httr::POST(
+  response <- lapply(post_body, function(x){
+    httr::POST(
     'https://matos.asascience.com/report/uploadReport',
-    body = list(
-      pid = project,
-      df = data_num,
-      file = httr::upload_file(file)
-    ),
+    body = x,
     encode = 'multipart'
-  )
+    )
+  })
 
   # Check if upload was successful
-  response_content <- httr::content(response)
+  response_content <- lapply(response, httr::content)
 
-  if(length(response_content) == 0){
+  if(all(lapply(response_content, length) == 0)){
 
     cat('Upload successful!\n')
 
-  } else if(grepl('^Error', rvest::html_text(response_content, trim = T))){
+  } else if(
+    any(
+      grepl('^Error',
+            sapply(response_content,
+                   function(.) tryCatch(
+                     rvest::html_text(., trim = T),
+                     error = function(e) ''
+                   )
+            )
+      )
+    )
+  ){
 
-    stop(sub(' Error ', '', rvest::html_text(response_content)))
+    warning(
+      sapply(response_content, function(.) tryCatch(
+        rvest::html_text(., trim = T),
+        error = function(e) ''
+      )
+      )
+    )
 
   } else{
 
