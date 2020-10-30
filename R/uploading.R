@@ -42,11 +42,11 @@ post_file <- function(project, file,
   # Check that file exists
   file <- normalizePath(file, mustWork = F)
 
-  if(F %in% sapply(file, file.exists)){
+  if(any(sapply(file, file.exists) == F)){
 
-    stop(paste('Unable to find',
+    stop(paste0('Unable to find:\n\n',
                paste(file[sapply(file, file.exists) == F],
-                     collapse = ', ')))
+                     collapse = '\n')))
 
   }
 
@@ -64,30 +64,38 @@ post_file <- function(project, file,
 
   # Check that file extensions match the expected file type.
   if(data_type %in% c('receivers', 'new_tags') &&
-     !grepl('xls|csv', file_extension)){
+     any(grepl('xls|csv', file_extension) == F)){
 
-    stop('File is not saved as the correct type: should be CSV, XLS, or XLSX.')
+    stop(paste0('File is not saved as the correct type: should be CSV, XLS, or XLSX. Namely:\n\n',
+               paste(file[!grepl('xls|csv', file_extension)],
+                     collapse = '\n')))
 
   } else if(grepl('detections', data_type) &&
-            !grepl('vrl|csv', file_extension)){
+            any(grepl('vrl|csv', file_extension) == F)){
 
-    stop('File is not the correct type: should be VRL or CSV.')
+    stop(paste0('File is not the correct type: should be VRL or CSV. Namely:\n\n',
+               paste(file[!grepl('vrl|csv', file_extension)],
+                     collapse = '\n')))
 
   } else if(data_type == 'events' &&
-            file_extension != 'csv'){
+            any(file_extension != 'csv')){
 
-    stop('File is not saved as the correct type: should be CSV.')
+    stop(paste0('File is not saved as the correct type: should be CSV. Namely:\n\n',
+                paste(file[file_extension != 'csv'],
+                      collapse = '\n')))
 
   }
 
   # Convert data_type to the expected input numbers
-  data_num <- switch(data_type,
-    new_tags = 1,
-    receivers = 2,
-    csv_detections = 3,
-    events = 4,
-    vrl_detections = 5
-  )
+  data_num <- sapply(data_type, function(x){
+    switch(x,
+           new_tags = 1,
+           receivers = 2,
+           csv_detections = 3,
+           events = 4,
+           vrl_detections = 5
+    )
+  }, USE.NAMES = F)
 
   # Convert project name to project number, if needed
   if(is.character(project)){
