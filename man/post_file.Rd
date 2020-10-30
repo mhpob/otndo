@@ -7,7 +7,7 @@
 post_file(
   project,
   file,
-  data_type = c("new_tags", "receivers", "vrl_detections", "csv_detections", "events")
+  data_type = c("new_tags", "receivers", "detections", "events")
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ before uploading.
 and the type of file you want to upload (defaulting to VRL transmitter detections).
 
 
-    If data_type is "new_tags" or "receivers", CSV and XLS/XLSX files are accepted;
+    If data_type is "new_tags" or "receivers", only CSV and XLS/XLSX files are accepted;
     if "detections", only VRL and CSV files are accepted; if "events", only CSV is
     accepted.
 }

@@ -15,7 +15,7 @@
 #'     "new_tags" (default), "receivers", "detections", or "events".
 #'
 #' @details
-#'     If data_type is "new_tags" or "receivers", CSV and XLS/XLSX files are accepted;
+#'     If data_type is "new_tags" or "receivers", only CSV and XLS/XLSX files are accepted;
 #'     if "detections", only VRL and CSV files are accepted; if "events", only CSV is
 #'     accepted.
 #'
@@ -37,8 +37,7 @@
 #' }
 
 post_file <- function(project, file,
-                      data_type = c('new_tags', 'receivers', 'vrl_detections',
-                                    'csv_detections', 'events')){
+                      data_type = c('new_tags', 'receivers', 'detections', 'events')){
 
   # Check that file exists
   file <- normalizePath(file, mustWork = F)
@@ -52,21 +51,30 @@ post_file <- function(project, file,
   # Check and repair data_type argument
   data_type <- match.arg(data_type)
 
+  # Distinguish between VRL and CSV detections if necessary
+  file_extension <- tolower(tools::file_ext(file))
+
+  if(data_type == 'detections'){
+
+    data_type <- paste(file_extension, data_type, sep = '_')
+
+  }
+
   # Check that file extensions match the expected file type.
   if(data_type %in% c('receivers', 'new_tags') &&
-     !grepl('xls|csv', tools::file_ext(file), ignore.case = T)){
+     !grepl('xls|csv', file_extension)){
 
     stop('File is not saved as the correct type: should be CSV, XLS, or XLSX.')
 
-  } else if(data_type %in% c('events', 'csv_detections') &&
-            tolower(tools::file_ext(file)) != 'csv'){
+  } else if(grepl('detections', data_type) &&
+            !grepl('vrl|csv', file_extension)){
+
+    stop('File is not the correct type: should be VRL or CSV.')
+
+  } else if(data_type == 'events' &&
+            file_extension != 'csv'){
 
     stop('File is not saved as the correct type: should be CSV.')
-
-  } else if(file_type == 'vrl_detections' &&
-            tolower(tools::file_ext(file)) != 'vrl'){
-
-    stop('File is not the correct type: should be VRL.')
 
   }
 
