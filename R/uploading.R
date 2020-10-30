@@ -52,8 +52,17 @@ post_file <- function(project, file,
   # Log in.
   login_check()
 
+
   # Upload.
-  httr::POST(
+  cat('Uploading...\n')
+
+  # It seems that you need to ping the server with your credentials before it
+  # will let you POST.
+  invisible(
+    httr::HEAD('https://matos.asascience.com/report/submit')
+  )
+
+  response <- httr::POST(
     'https://matos.asascience.com/report/uploadReport',
     body = list(
       pid = project,
@@ -63,6 +72,22 @@ post_file <- function(project, file,
     encode = 'multipart'
   )
 
-  #Need to return error if it was already uploaded, and maybe a nice note if the upload was complete
+  # Check if upload was successful
+  response_content <- httr::content(response)
+
+  if(length(response_content) == 0){
+
+    cat('Upload successful!\n')
+
+  } else if(grepl('^Error', rvest::html_text(response_content, trim = T))){
+
+    stop(sub(' Error ', '', rvest::html_text(response_content)))
+
+  } else{
+
+    stop('Unidentified error. Please file an issue at
+         https://github.com/mhpob/matos/issues.')
+
+  }
 
 }
