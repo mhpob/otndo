@@ -38,8 +38,13 @@
 
 post_file <- function(project, file,
                       data_type = c('new_tags', 'receivers', 'detections', 'events')){
+  # CHECKS
+  ## Check that only one project and/or data_type are provided
+  if(length(project) > 1 | length(data_type) > 1){
+    stop('Only able to upload one type of data to one project at a time.')
+  }
 
-  # Check that file exists
+  ## Check that file exists
   file <- normalizePath(file, mustWork = F)
 
   if(any(sapply(file, file.exists) == F)){
@@ -50,10 +55,10 @@ post_file <- function(project, file,
 
   }
 
-  # Check and repair data_type argument
+  ## Check and repair data_type argument
   data_type <- match.arg(data_type)
 
-  # Distinguish between VRL and CSV detections if necessary
+  ### Distinguish between VRL and CSV detections if necessary
   file_extension <- tolower(tools::file_ext(file))
 
   if(data_type == 'detections'){
@@ -62,7 +67,7 @@ post_file <- function(project, file,
 
   }
 
-  # Check that file extensions match the expected file type.
+  ## Check that file extensions match the expected file type.
   if(data_type %in% c('receivers', 'new_tags') &&
      any(grepl('xls|csv', file_extension) == F)){
 
@@ -105,6 +110,16 @@ post_file <- function(project, file,
   # Log in.
   login_check()
 
+  # Construct body of POST
+  ## List files to be uploaded
+  post_files <- lapply(file, httr::upload_file)
+  names(post_files) <- rep('file', times = length(post_files))
+
+  ## Combine with project and data_num to create full body
+  post_body <- c(list(pid = project,
+                      df = data_num),
+                 post_files)
+
 
   # Upload.
   cat('Uploading...\n')
@@ -117,11 +132,7 @@ post_file <- function(project, file,
 
   response <- httr::POST(
     'https://matos.asascience.com/report/uploadReport',
-    body = list(
-      pid = project,
-      df = data_num,
-      file = httr::upload_file(file)
-    ),
+    body = post_body,
     encode = 'multipart'
   )
 
