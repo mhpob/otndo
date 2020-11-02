@@ -12,15 +12,19 @@
 #'     directory, this can be just the filename and extension. You will need to
 #'     provide the full file location if it is located elsewhere.
 #' @param data_type Character string. The data type that you are uploading. One of:
-#'     "new_tags" (default), "receivers", "detections", or "events".
+#'     "new_tags" (default), "receivers", "detections", "events", "gps", or "glider".
+#' @param print_response Logical. Do you want the POST response to be printed?
+#'      Mostly useful for diagnostic purposes. Default is FALSE.
 #'
 #' @details
-#'     If data_type is "new_tags" or "receivers", only CSV and XLS/XLSX files are accepted;
-#'     if "detections", only VRL and CSV files are accepted; if "events", only CSV is
-#'     accepted.
+#'     If data_type is "new_tags", "receivers", or "glider", only CSV and XLS/XLSX
+#'     files are accepted; if "detections", only VRL and CSV files are accepted;
+#'     if "events" or "gps", only CSV is accepted.
 #'
 #'     Multiple files can be uploaded at once, but they must all be the same data type
 #'     and posted to the same project.
+#'
+#' @return A notification of the success of your file upload is returned.
 #'
 #' @export
 #' @examples
@@ -40,7 +44,9 @@
 #' }
 
 post_file <- function(project, file,
-                      data_type = c('new_tags', 'receivers', 'detections', 'events')){
+                      data_type = c('new_tags', 'receivers', 'detections',
+                                    'events', 'gps', 'glider'),
+                      print_response = F){
   # CHECKS
   ## Check that only one project and/or data_type are provided
   if(length(project) > 1 | length(data_type) > 1){
@@ -71,7 +77,7 @@ post_file <- function(project, file,
   }
 
   ## Check that file extensions match the expected file type.
-  if(data_type %in% c('receivers', 'new_tags') &&
+  if(data_type %in% c('receivers', 'new_tags', 'glider') &&
      any(grepl('xls|csv', file_extension) == F)){
 
     stop(paste0('File is not saved as the correct type: should be CSV, XLS, or XLSX. Namely:\n\n',
@@ -85,7 +91,7 @@ post_file <- function(project, file,
                paste(file[!grepl('vrl|csv', file_extension)],
                      collapse = '\n')))
 
-  } else if(data_type == 'events' &&
+  } else if(data_type %in% c('events', 'gps') &&
             any(file_extension != 'csv')){
 
     stop(paste0('File is not saved as the correct type: should be CSV. Namely:\n\n',
@@ -122,7 +128,10 @@ post_file <- function(project, file,
            receivers = 2,
            csv_detections = 3,
            events = 4,
-           vrl_detections = 5
+           vrl_detections = 5,
+           gps = 6,
+           glider = 7
+
     )
   },
   USE.NAMES = F)
@@ -175,6 +184,10 @@ post_file <- function(project, file,
 
     cat('Upload successful!\n')
 
+    if(print_response == T){
+      response
+    }
+
   } else if(
     any(
       grepl('^Error',
@@ -196,7 +209,15 @@ post_file <- function(project, file,
       )
     )
 
+    if(print_response == T){
+      response
+    }
+
   } else{
+
+    if(print_response == T){
+      response
+    }
 
     stop('Unidentified error. Please file an issue at
          https://github.com/mhpob/matos/issues.')

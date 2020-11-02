@@ -7,7 +7,8 @@
 post_file(
   project,
   file,
-  data_type = c("new_tags", "receivers", "detections", "events")
+  data_type = c("new_tags", "receivers", "detections", "events", "gps", "glider"),
+  print_response = F
 )
 }
 \arguments{
@@ -19,7 +20,13 @@ directory, this can be just the filename and extension. You will need to
 provide the full file location if it is located elsewhere.}
 
 \item{data_type}{Character string. The data type that you are uploading. One of:
-"new_tags" (default), "receivers", "detections", or "events".}
+"new_tags" (default), "receivers", "detections", "events", "gps", or "glider".}
+
+\item{print_response}{Logical. Do you want the POST response to be printed?
+Mostly useful for diagnostic purposes. Default is FALSE.}
+}
+\value{
+A notification of the success of your file upload is returned.
 }
 \description{
 This function lets you post files to your projects. You will need to log in
@@ -30,9 +37,9 @@ before uploading.
 and the type of file you want to upload (defaulting to VRL transmitter detections).
 
 
-    If data_type is "new_tags" or "receivers", only CSV and XLS/XLSX files are accepted;
-    if "detections", only VRL and CSV files are accepted; if "events", only CSV is
-    accepted.
+    If data_type is "new_tags", "receivers", or "glider", only CSV and XLS/XLSX
+    files are accepted; if "detections", only VRL and CSV files are accepted;
+    if "events" or "gps", only CSV is accepted.
 
     Multiple files can be uploaded at once, but they must all be the same data type
     and posted to the same project.
