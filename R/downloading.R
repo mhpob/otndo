@@ -134,10 +134,27 @@ get_file <- function(file = NULL, project = NULL,
 
 
 
+#' Download Ocean-Tracking-Network-style metadata templates
+#'
+#' @param template_type Character string. One of: "tag" (default), the tagging
+#'      data submittal template; "receiver", the deployment data submittal template;
+#'      or "glider", the wave and Slocum glider metadata template.
+#' @param dest_file Optional character string noting where you would like the file
+#'      to be downloaded. Defaults to the working directory and the original file name.
+#'
+#' @return Ocean Tracking Network metadata template in XLSX format.
 #'
 #' @export
+#' @examples
+#' # Tag metadata template downloaded to working directory
+#' get_otn_template()
+#'
+#' # Glider metadata template downloaded to downloads folder
+#' \dontrun{
+#' get_otn_template('glider', 'c:/users/myusername/downloads/glider_metadata.xlsx')
+#' }
 get_otn_template <- function(template_type = c('tag', 'receiver', 'glider'),
-                                  dest_file = NULL){
+                             dest_file = NULL){
 
   # Check that arguments are correct
   template_type <- match.arg(template_type)
