@@ -98,6 +98,34 @@ my_detections <- tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
                             import = T)
 ```
 
+## Upload files to MATOS
+
+There are times when you want to upload new data to MATOS. The currently accepted data types and formats are:
+
+- newly-deployed transmitters (CSV/XLS(X))
+- detection logs (CSV/VRL)
+- receiver and glider deployment metadata (CSV/XLS(X))
+- receiver events like temperature, tilt, etc. (CSV)
+- glider GPS tracks (CSV)
+
+A few data types use designated Ocean Tracking Network templates:
+
+- tag metadata
+- receiver deployment metadata
+- glider deployment metadata
+
+If you don't have one of these templates downloaded, you can download it through the package. For example:
+```{r}
+get_otn_template('glider')
+```
+
+Then, get to uploading!
+```{r}
+post_file(project = 'umces boem offshore wind energy',
+          file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
+          data_type = 'new_tags')
+```
+
 
 ## Development
 

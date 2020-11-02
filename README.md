@@ -68,13 +68,20 @@ project_files <- list_files(project = 'umces boem offshore wind energy', data_ty
 #> Please log in.
 
 head(project_files)
-#>                           name                                     type upload_date                                                    url
-#> 1 BOEM_metadata_deployment.xls Deployed Receivers – Deployment Metadata   3/30/2020  https://matos.asascience.com/projectfile/download/375
-#> 2  VR2AR_546455_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1810
-#> 3  VR2AR_546456_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1811
-#> 4  VR2AR_546457_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1812
-#> 5  VR2AR_546458_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1813
-#> 6  VR2AR_546459_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020 https://matos.asascience.com/projectfile/download/1814
+#>                           name                                     type upload_date
+#> 1 BOEM_metadata_deployment.xls Deployed Receivers – Deployment Metadata   3/30/2020
+#> 2  VR2AR_546455_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020
+#> 3  VR2AR_546456_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020
+#> 4  VR2AR_546457_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020
+#> 5  VR2AR_546458_20170329_1.vrl               Tag Detections - .vfl file   5/28/2020
+#> 6  VR2AR_546459_20170328_1.vrl               Tag Detections - .vfl file   5/28/2020
+#>                                                      url
+#> 1  https://matos.asascience.com/projectfile/download/375
+#> 2 https://matos.asascience.com/projectfile/download/1810
+#> 3 https://matos.asascience.com/projectfile/download/1811
+#> 4 https://matos.asascience.com/projectfile/download/1812
+#> 5 https://matos.asascience.com/projectfile/download/1813
+#> 6 https://matos.asascience.com/projectfile/download/1814
 ```
 
 I can also list any of my OTN node *Data Extraction Files*.
@@ -83,13 +90,20 @@ I can also list any of my OTN node *Data Extraction Files*.
 ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
 
 head(ACT_MATOS_files)
-#>                                   name                 type upload_date                                                              url
-#> 1   proj87_matched_detections_2017.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_1
-#> 2   proj87_matched_detections_2018.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_2
-#> 3   proj87_matched_detections_2019.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_3
-#> 4   proj87_matched_detections_2020.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_4
-#> 5 proj87_qualified_detections_2016.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_5
-#> 6 proj87_qualified_detections_2017.zip Data Extraction File   8/28/2020 https://matos.asascience.com/projectfile/downloadExtraction/87_6
+#>                                   name                 type upload_date
+#> 1   proj87_matched_detections_2017.zip Data Extraction File   8/28/2020
+#> 2   proj87_matched_detections_2018.zip Data Extraction File   8/28/2020
+#> 3   proj87_matched_detections_2019.zip Data Extraction File   8/28/2020
+#> 4   proj87_matched_detections_2020.zip Data Extraction File   8/28/2020
+#> 5 proj87_qualified_detections_2016.zip Data Extraction File   8/28/2020
+#> 6 proj87_qualified_detections_2017.zip Data Extraction File   8/28/2020
+#>                                                                url
+#> 1 https://matos.asascience.com/projectfile/downloadExtraction/87_1
+#> 2 https://matos.asascience.com/projectfile/downloadExtraction/87_2
+#> 3 https://matos.asascience.com/projectfile/downloadExtraction/87_3
+#> 4 https://matos.asascience.com/projectfile/downloadExtraction/87_4
+#> 5 https://matos.asascience.com/projectfile/downloadExtraction/87_5
+#> 6 https://matos.asascience.com/projectfile/downloadExtraction/87_6
 ```
 
 ## Download project or data extraction files
@@ -141,6 +155,40 @@ my_detections <- tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
                             start_date = '03/01/2016',
                             end_date = '04/01/2016', 
                             import = T)
+```
+
+## Upload files to MATOS
+
+There are times when you want to upload new data to MATOS. The currently
+accepted data types and formats are:
+
+  - newly-deployed transmitters (CSV/XLS(X))
+  - detection logs (CSV/VRL)
+  - receiver and glider deployment metadata (CSV/XLS(X))
+  - receiver events like temperature, tilt, etc. (CSV)
+  - glider GPS tracks (CSV)
+
+A few data types use designated Ocean Tracking Network templates:
+
+  - tag metadata
+  - receiver deployment metadata
+  - glider deployment metadata
+
+If you don’t have one of these templates downloaded, you can download it
+through the package. For example:
+
+``` r
+get_otn_template('glider')
+```
+
+Then, get to uploading\!
+
+``` r
+post_file(project = 'umces boem offshore wind energy',
+          file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
+          data_type = 'new_tags')
+#> Uploading...
+#> Upload successful!
 ```
 
 ## Development
