@@ -233,8 +233,3 @@ tag_search <- function(tags, start_date, end_date, import = F){
     cat('\nCompleted!')
   }
 }
-
-
-# OTN deployment data template
-
-# OTN tagging data template
