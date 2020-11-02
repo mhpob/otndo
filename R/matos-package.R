@@ -5,6 +5,7 @@
 #' @importFrom utils unzip
 #' @importFrom utils read.csv
 #' @importFrom utils installed.packages
+#' @importFrom utils download.file
 #' @keywords internal
 "_PACKAGE"
 

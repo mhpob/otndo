@@ -146,11 +146,11 @@ get_file <- function(file = NULL, project = NULL,
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' # Tag metadata template downloaded to working directory
 #' get_otn_template()
 #'
 #' # Glider metadata template downloaded to downloads folder
-#' \dontrun{
 #' get_otn_template('glider', 'c:/users/myusername/downloads/glider_metadata.xlsx')
 #' }
 get_otn_template <- function(template_type = c('tag', 'receiver', 'glider'),
