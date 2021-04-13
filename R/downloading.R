@@ -39,7 +39,7 @@
 
 get_file <- function(file = NULL, project = NULL,
                      data_type = c(NA, 'extraction', 'project'),
-                     url = NULL, ...){
+                     url = NULL, out_dir = getwd(), overwrite = F){
 
   # This function will do the downloading once we have a URL.
   download_process <- function(url){
@@ -47,16 +47,21 @@ get_file <- function(file = NULL, project = NULL,
 
     response <-  httr::GET(
       url,
-      httr::write_disk(..., sub('.*filename=', '',
-                                httr::headers(GET_header)$'content-disposition'))
+      httr::write_disk(
+        path = file.path(out_dir,
+                         sub('.*filename=', '',
+                             httr::headers(GET_header)$'content-disposition')),
+        overwrite = overwrite)
     )
 
     cat('File saved to', file.path(response$content))
 
     if(grepl('zip', response$content)){
-      unzip(file.path(response$content))
+      unzip(file.path(response$content), exdir = out_dir)
 
-      cat('\nFile unzipped to', unzip(file.path(response$content), list = T)$Name)
+      cat('\nFile unzipped to',
+          file.path(out_dir,
+                    unzip(file.path(response$content), list = T)$Name))
     }
   }
 
