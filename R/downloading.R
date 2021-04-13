@@ -134,6 +134,40 @@ get_file <- function(file = NULL, project = NULL,
 
 
 
+#' Download all data extraction files that were updated after a certain date
+#'
+#' This is a loop around \code{\link{get_file}}.
+#'
+#' @param project Either the project number (the number in your project page URL)
+#'     or the full name of the project (the big name in bold on your project page,
+#'     *not* the "Project Title").
+#' @param data_type one of "extraction" (default), or "project", which will list
+#'     the data extraction or project files, respectively. Partial matching
+#'     is allowed, and will repair to the correct argument if spaces or the words
+#'     "data"/"file(s)" are included.
+#' @param since Only list download files uploaded after this date. Must be in
+#'      YYYY-MM-DD format.
+#'
+#' @export
+get_updates <- function(project, data_type, since){
+  # if(!is.null(dir)){
+  #   since <- as.Date(.POSIXct(max(sapply(list.files(dir), file.mtime))))
+  # }
+
+  files <- list_files(project = project, data_type = data_type, since = since)
+
+  for(i in seq_along(files$url)){
+    cat('\n')
+
+    get_file(url = files$url[i])
+
+    cat('\n')
+  }
+}
+
+
+
+
 #' Download Ocean-Tracking-Network-style metadata templates
 #'
 #' @param template_type Character string. One of: "tag" (default), the tagging
