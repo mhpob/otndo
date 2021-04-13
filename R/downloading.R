@@ -149,20 +149,22 @@ get_file <- function(file = NULL, project = NULL,
 #'      YYYY-MM-DD format.
 #'
 #' @export
-get_updates <- function(project, data_type, since){
-  # if(!is.null(dir)){
-  #   since <- as.Date(.POSIXct(max(sapply(list.files(dir), file.mtime))))
-  # }
+get_updates <- function(project, data_type, since,
+                        overwrite = F){
 
   files <- list_files(project = project, data_type = data_type, since = since)
 
+  pb <- txtProgressBar(min = 0, max = length(files$url), style = 3)
   for(i in seq_along(files$url)){
     cat('\n')
 
-    get_file(url = files$url[i])
+    get_file(url = files$url[i], overwrite = overwrite)
 
     cat('\n')
+
+    setTxtProgressBar(pb, i)
   }
+  close(pb)
 }
 
 
