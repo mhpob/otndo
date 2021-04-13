@@ -138,6 +138,8 @@ html_table_to_df <- function(html_file_list){
 
   names(df) <- c('name', 'type', 'upload_date', 'url')
 
+  df$upload_date <- as.Date(df$upload_date, format = '%m/%d/%Y')
+
   df
 }
 
