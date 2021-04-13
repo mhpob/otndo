@@ -4,7 +4,11 @@
 \alias{list_files}
 \title{List MATOS project files}
 \usage{
-list_files(project = NULL, data_type = c("extraction", "project"))
+list_files(
+  project = NULL,
+  data_type = c("extraction", "project"),
+  since = NULL
+)
 }
 \arguments{
 \item{project}{Either the project number (the number in your project page URL)
@@ -15,6 +19,9 @@ or the full name of the project (the big name in bold on your project page,
 the data extraction or project files, respectively. Partial matching
 is allowed, and will repair to the correct argument if spaces or the words
 "data"/"file(s)" are included.}
+
+\item{since}{Only list files uploaded after this date. Optional, but must be
+in YYYY-MM-DD format.}
 }
 \value{
 A data frame with columns of "File.Name", "File.Type", "Upload.Date", and "url".
