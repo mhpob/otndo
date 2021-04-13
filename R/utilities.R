@@ -125,20 +125,33 @@ get_project_number <- function(project){
 #' @rdname utilities
 #'
 html_table_to_df <- function(html_file_list){
+
   df <- httr::content(html_file_list, 'parsed') %>%
     rvest::html_nodes('.tableContent') %>%
     rvest::html_table() %>%
     data.frame()
+  names(df) <- tolower(gsub('\\.', '_', names(df)))
 
-  df <- df[, !names(df) %in% c('Download', 'Var.4')]
+
+  df <- df[, names(df) != 'var_4']
+  df$upload_date <- as.Date(df$upload_date, format = '%m/%d/%Y')
+  df$project <- gsub('.*/', '', html_file_list$url)
 
   urls <- scrape_file_urls(html_file_list)
 
   df <- cbind(df, url = urls)
 
-  names(df) <- c('name', 'type', 'upload_date', 'url')
+  # Parse file name for data extraction files
+  if(any(unique(df$file_type) == 'Data Extraction File')){
+    df <- data.frame(detection_type = gsub('.*\\d_|_det.*', '', df$file_name),
+                     detection_year = as.numeric(gsub('.*_|.zip', '', df$file_name)),
+                     df)
+    df <- df[, c('project', 'file_type', 'detection_type', 'detection_year',
+                 'upload_date', 'file_name', 'url')]
+  }else{
+    df <- df[, c('project', 'file_type', 'upload_date', 'file_name', 'url')]
+  }
 
-  df$upload_date <- as.Date(df$upload_date, format = '%m/%d/%Y')
 
   df
 }
