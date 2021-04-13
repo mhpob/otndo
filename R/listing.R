@@ -55,6 +55,8 @@ get_my_projects <- function(){
 #'     the data extraction or project files, respectively. Partial matching
 #'     is allowed, and will repair to the correct argument if spaces or the words
 #'     "data"/"file(s)" are included.
+#' @param since Only list files uploaded after this date. Optional, but must be
+#'      in YYYY-MM-DD format.
 #'
 #' @return A data frame with columns of "File.Name", "File.Type", "Upload.Date", and "url".
 #'
@@ -71,7 +73,8 @@ get_my_projects <- function(){
 #' list_files('umces boem offshore wind energy')
 #' }
 
-list_files <- function(project = NULL, data_type = c('extraction', 'project')){
+list_files <- function(project = NULL, data_type = c('extraction', 'project'),
+                       since = NULL){
 
   # Check and coerce data_type
   data_type <- gsub(' |file[s]?|data', '', data_type)
@@ -89,6 +92,10 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project')){
   files_html <- get_file_list(project, data_type = data_type)
 
   files <- html_table_to_df(files_html)
+
+  if(!is.null(since)){
+    files <- files[files$upload_date >= since, ]
+  }
 
   files
 
