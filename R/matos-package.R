@@ -6,6 +6,8 @@
 #' @importFrom utils read.csv
 #' @importFrom utils installed.packages
 #' @importFrom utils download.file
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #' @keywords internal
 "_PACKAGE"
 

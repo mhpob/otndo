@@ -4,7 +4,7 @@
 \alias{get_updates}
 \title{Download all data extraction files that were updated after a certain date}
 \usage{
-get_updates(project, data_type, since)
+get_updates(project, data_type, since, overwrite = F)
 }
 \arguments{
 \item{project}{Either the project number (the number in your project page URL)
@@ -18,6 +18,9 @@ is allowed, and will repair to the correct argument if spaces or the words
 
 \item{since}{Only list download files uploaded after this date. Must be in
 YYYY-MM-DD format.}
+
+\item{overwrite}{Logical. Do you want a file with the same name overwritten?
+Passed to httr::write_disk.}
 }
 \description{
 This is a loop around \code{\link{get_file}}.

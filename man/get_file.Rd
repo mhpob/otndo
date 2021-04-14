@@ -9,7 +9,8 @@ get_file(
   project = NULL,
   data_type = c(NA, "extraction", "project"),
   url = NULL,
-  ...
+  out_dir = getwd(),
+  overwrite = F
 )
 }
 \arguments{
@@ -29,7 +30,11 @@ to the correct argument if spaces or the words "data"/"file(s)" are included.}
 
 \item{url}{The URL of the file to be downloaded.}
 
-\item{...}{Arguments passed to httr::write_disk.}
+\item{out_dir}{Character. What directory/folder do you want the file saved into?
+Default is the current working directory.}
+
+\item{overwrite}{Logical. Do you want a file with the same name overwritten?
+Passed to httr::write_disk.}
 }
 \description{
 \code{get_file} downloads files from the MATOS website. This is best-used in

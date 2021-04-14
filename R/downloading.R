@@ -15,7 +15,10 @@
 #'     "extraction" or "project" is provided, it will list the data extraction or
 #'     project files, respectively. Partial matching is allowed, and will repair
 #'     to the correct argument if spaces or the words "data"/"file(s)" are included.
-#' @param ... Arguments passed to httr::write_disk.
+#' @param out_dir Character. What directory/folder do you want the file saved into?
+#'      Default is the current working directory.
+#' @param overwrite Logical. Do you want a file with the same name overwritten?
+#'      Passed to httr::write_disk.
 #'
 #' @export
 #' @examples
@@ -152,6 +155,8 @@ get_file <- function(file = NULL, project = NULL,
 #'     "data"/"file(s)" are included.
 #' @param since Only list download files uploaded after this date. Must be in
 #'      YYYY-MM-DD format.
+#' @param overwrite Logical. Do you want a file with the same name overwritten?
+#'      Passed to httr::write_disk.
 #'
 #' @export
 get_updates <- function(project, data_type, since,
