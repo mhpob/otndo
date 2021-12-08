@@ -4,7 +4,7 @@
 \alias{get_updates}
 \title{Download all data extraction files that were updated after a certain date}
 \usage{
-get_updates(project, data_type, since, overwrite = F)
+get_updates(project, data_type, detection_type, since, overwrite = F)
 }
 \arguments{
 \item{project}{Either the project number (the number in your project page URL)
@@ -15,6 +15,12 @@ or the full name of the project (the big name in bold on your project page,
 the data extraction or project files, respectively. Partial matching
 is allowed, and will repair to the correct argument if spaces or the words
 "data"/"file(s)" are included.}
+
+\item{detection_type}{one of NULL (default), "matched", "qualified", "sentinel_tag",
+or "unqualified"; used in a call to \code{list_files} under the hood. If NULL,
+all detection types will be listed. Partial matching is allowed, and will repair
+to the correct argument if spaces or the words "detection(s)" are included.
+More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.}
 
 \item{since}{Only list download files uploaded after this date. Must be in
 YYYY-MM-DD format.}

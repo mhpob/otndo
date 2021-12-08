@@ -174,16 +174,22 @@ get_file <- function(file = NULL, project = NULL,
 #'     the data extraction or project files, respectively. Partial matching
 #'     is allowed, and will repair to the correct argument if spaces or the words
 #'     "data"/"file(s)" are included.
+#' @param detection_type one of NULL (default), "matched", "qualified", "sentinel_tag",
+#'     or "unqualified"; used in a call to \code{list_files} under the hood. If NULL,
+#'     all detection types will be listed. Partial matching is allowed, and will repair
+#'     to the correct argument if spaces or the words "detection(s)" are included.
+#'     More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.
 #' @param since Only list download files uploaded after this date. Must be in
 #'      YYYY-MM-DD format.
 #' @param overwrite Logical. Do you want a file with the same name overwritten?
 #'      Passed to httr::write_disk.
 #'
 #' @export
-get_updates <- function(project, data_type, since,
+get_updates <- function(project, data_type, detection_type, since,
                         overwrite = F){
 
-  files <- list_files(project = project, data_type = data_type, since = since)
+  files <- list_files(project = project, data_type = data_type,
+                      detection_type = detection_type, since = since)
 
   if(nrow(files) == 0){
 
