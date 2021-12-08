@@ -58,25 +58,34 @@ get_file <- function(file = NULL, project = NULL,
         overwrite = overwrite)
     )
 
-    cat('File saved to', file.path(response$content))
+    file_loc <- file.path(response$content)
+    cat('File saved to', file_loc)
 
-    if(grepl('zip', response$content)){
-      unzip(file.path(response$content), exdir = out_dir)
+    if(grepl('zip', file_loc)){
+      file_loc <- unzip(file_loc, exdir = out_dir)
 
-      cat('\nFile unzipped to',
-          file.path(out_dir,
-                    unzip(file.path(response$content), list = T)$Name))
+      cat('\nFile unzipped to', file_loc)
     }
 
     if(isTRUE(to_vue)){
-        matos <- read.csv(file)
+      file_csv <- grep('.csv', file_loc, value = T)
+      matos <- read.csv(
+        file_csv
+      )
 
-        matos[, .(datecollected, receiver, tagname, transmitter.name = '',
-                  transmitter.serial = '', sensorvalue, sensorunit, station,
-                  latitude, longitude)]
-      }
 
+      matos$transmitter.name <- ''
+      matos$transmitter.serial <- ''
+
+      matos <- matos[, c('datecollected', 'receiver', 'tagname', 'transmitter.name',
+                         'transmitter.serial', 'sensorvalue', 'sensorunit', 'station',
+                         'latitude', 'longitude')]
+
+      write.csv(matos, file_csv, row.names = F)
+      cat('CSV converted to VUE format.')
     }
+
+  }
 
 
 # If calling the URL directly:
@@ -104,9 +113,6 @@ get_file <- function(file = NULL, project = NULL,
     data_type <- match.arg(data_type)
     data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
                         'downloadfiles')
-
-    detection_type <- gsub(' |detection[s]', '', detection_type)
-    detection_type <- match.arg(detection_type)
 
     # Check that both file and project are provided
     if(is.null(file) | is.null(project)){
