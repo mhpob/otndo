@@ -137,12 +137,12 @@ get_file <- function(file = NULL, project = NULL,
       file <- tolower(file)
 
       # Check that file exists in the table.
-      if(!file %in% file_table$name){
+      if(!file %in% file_table$file_name){
         stop(paste0('There is no file matching what you have provided, please ',
                     'double-check your file name.'))
       }
 
-      file_url <- file_table[file_table$name == file,]$url
+      file_url <- file_table[file_table$file_name == file,]$url
 
       download_process(url = file_url)
     }
