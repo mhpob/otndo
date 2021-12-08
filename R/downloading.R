@@ -167,29 +167,19 @@ get_file <- function(file = NULL, project = NULL,
 #'
 #' This is a loop around \code{\link{get_file}}.
 #'
-#' @param project Either the project number (the number in your project page URL)
-#'     or the full name of the project (the big name in bold on your project page,
-#'     *not* the "Project Title").
-#' @param data_type one of "extraction" (default), or "project", which will list
-#'     the data extraction or project files, respectively. Partial matching
-#'     is allowed, and will repair to the correct argument if spaces or the words
-#'     "data"/"file(s)" are included.
-#' @param detection_type one of NULL (default), "matched", "qualified", "sentinel_tag",
-#'     or "unqualified"; used in a call to \code{list_files} under the hood. If NULL,
-#'     all detection types will be listed. Partial matching is allowed, and will repair
-#'     to the correct argument if spaces or the words "detection(s)" are included.
-#'     More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.
+#' @param ... arguments to \code{\link{list_files}}
 #' @param since Only list download files uploaded after this date. Must be in
-#'      YYYY-MM-DD format.
+#'      YYYY-MM-DD format. Also passed to \code{\link{list_files}}.
+#' @param out_dir Character. What directory/folder do you want the file saved into?
+#'      Default is the current working directory. Passed to \code{httr::write_disk}
+#'      via \code{\link{get_file}}.
 #' @param overwrite Logical. Do you want a file with the same name overwritten?
-#'      Passed to httr::write_disk.
+#'      Passed to \code{httr::write_disk} via \code{\link{get_file}}.
 #'
 #' @export
-get_updates <- function(project, data_type, detection_type, since,
-                        overwrite = F){
+get_updates <- function(..., out_dir = getwd(), overwrite = F){
 
-  files <- list_files(project = project, data_type = data_type,
-                      detection_type = detection_type, since = since)
+  files <- list_files(...)
 
   if(nrow(files) == 0){
 
@@ -200,7 +190,7 @@ get_updates <- function(project, data_type, detection_type, since,
     for(i in seq_along(files$url)){
       cat('\n')
 
-      get_file(url = files$url[i], overwrite = overwrite)
+      get_file(url = files$url[i], out_dir = out_dir, overwrite = overwrite)
 
       cat('\n')
 
