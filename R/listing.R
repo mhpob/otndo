@@ -74,13 +74,18 @@ get_my_projects <- function(){
 #' }
 
 list_files <- function(project = NULL, data_type = c('extraction', 'project'),
+                       detection_type = c(NULL, 'matched', 'qualified',
+                                          'sentinel_tag', 'unqualified'),
                        since = NULL){
 
-  # Check and coerce data_type
+  # Check and coerce input args
   data_type <- gsub(' |file[s]?|data', '', data_type)
   data_type <- match.arg(data_type)
   data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
                       'downloadfiles')
+
+  detection_type <- gsub(' |detections', '', detection_type)
+  detection_type <- match.arg(detection_type)
 
   # Convert project name to number
   if(is.character(project)){
@@ -92,6 +97,10 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project'),
   files_html <- get_file_list(project, data_type = data_type)
 
   files <- html_table_to_df(files_html)
+
+  if(!is.null(detection_type)){
+    files <- files[files$detection_type == detection_type,]
+  }
 
   if(!is.null(since)){
     files <- files[files$upload_date >= since, ]

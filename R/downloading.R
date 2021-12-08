@@ -42,6 +42,8 @@
 
 get_file <- function(file = NULL, project = NULL,
                      data_type = c(NA, 'extraction', 'project'),
+                     detection_type = c(NA, 'matched', 'qualified',
+                                        'sentinel_tag', 'unqualified'),
                      url = NULL, out_dir = getwd(), overwrite = F, to_vue = F){
 
   # This function will do the downloading once we have a URL.
@@ -103,6 +105,9 @@ get_file <- function(file = NULL, project = NULL,
     data_type <- match.arg(data_type)
     data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
                         'downloadfiles')
+
+    detection_type <- gsub(' |detections', '', detection_type)
+    detection_type <- match.arg(detection_type)
 
     # Check that both file and project are provided
     if(is.null(file) | is.null(project)){
