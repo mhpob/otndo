@@ -8,7 +8,6 @@ get_file(
   file = NULL,
   project = NULL,
   data_type = c(NA, "extraction", "project"),
-  detection_type = c(NULL, "matched", "qualified", "sentinel_tag", "unqualified"),
   url = NULL,
   out_dir = getwd(),
   overwrite = F,
@@ -29,12 +28,6 @@ the file index is provided, it cannot guess and will throw an error. When
 "extraction" or "project" is provided, it will list the data extraction or
 project files, respectively. Partial matching is allowed, and will repair
 to the correct argument if spaces or the words "data"/"file(s)" are included.}
-
-\item{detection_type}{one of NULL (default), "matched", "qualified", "sentinel_tag",
-or "unqualified"; used in a call to \code{list_files} under the hood. If NULL,
-all detection types will be listed. Partial matching is allowed, and will repair
-to the correct argument if spaces or the words "detection(s)" are included.
-More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.}
 
 \item{url}{The URL of the file to be downloaded.}
 

@@ -4,7 +4,7 @@
 \alias{get_updates}
 \title{Download all data extraction files that were updated after a certain date}
 \usage{
-get_updates(..., out_dir = getwd(), overwrite = F)
+get_updates(..., out_dir = getwd(), overwrite = F, to_vue = F)
 }
 \arguments{
 \item{...}{arguments to \code{\link{list_files}}}
