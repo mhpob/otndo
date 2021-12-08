@@ -42,7 +42,7 @@
 
 get_file <- function(file = NULL, project = NULL,
                      data_type = c(NA, 'extraction', 'project'),
-                     url = NULL, out_dir = getwd(), overwrite = F){
+                     url = NULL, out_dir = getwd(), overwrite = F, to_vue = F){
 
   # This function will do the downloading once we have a URL.
   download_process <- function(url){
@@ -66,7 +66,17 @@ get_file <- function(file = NULL, project = NULL,
           file.path(out_dir,
                     unzip(file.path(response$content), list = T)$Name))
     }
-  }
+
+    if(isTRUE(to_vue)){
+        matos <- read.csv(file)
+
+        matos[, .(datecollected, receiver, tagname, transmitter.name = '',
+                  transmitter.serial = '', sensorvalue, sensorunit, station,
+                  latitude, longitude)]
+      }
+
+    }
+
 
 # If calling the URL directly:
   if(!is.null(url)){
@@ -164,17 +174,24 @@ get_updates <- function(project, data_type, since,
 
   files <- list_files(project = project, data_type = data_type, since = since)
 
-  pb <- txtProgressBar(min = 0, max = length(files$url), style = 3)
-  for(i in seq_along(files$url)){
-    cat('\n')
+  if(nrow(files) == 0){
 
-    get_file(url = files$url[i], overwrite = overwrite)
+    print('No files uploaded since the provided date.')
 
-    cat('\n')
+  } else{
+    pb <- txtProgressBar(min = 0, max = length(files$url), style = 3)
+    for(i in seq_along(files$url)){
+      cat('\n')
 
-    setTxtProgressBar(pb, i)
+      get_file(url = files$url[i], overwrite = overwrite)
+
+      cat('\n')
+
+      setTxtProgressBar(pb, i)
+    }
+    close(pb)
   }
-  close(pb)
+
 }
 
 

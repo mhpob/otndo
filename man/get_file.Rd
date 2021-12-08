@@ -10,7 +10,8 @@ get_file(
   data_type = c(NA, "extraction", "project"),
   url = NULL,
   out_dir = getwd(),
-  overwrite = F
+  overwrite = F,
+  to_vue = F
 )
 }
 \arguments{
