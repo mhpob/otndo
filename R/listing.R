@@ -55,6 +55,11 @@ get_my_projects <- function(){
 #'     the data extraction or project files, respectively. Partial matching
 #'     is allowed, and will repair to the correct argument if spaces or the words
 #'     "data"/"file(s)" are included.
+#' @param detection_type one of NULL (default), "matched", "qualified", "sentinel_tag",
+#'     or "unqualified"; used in a call to \code{list_files} under the hood. If NULL,
+#'     all detection types will be listed. Partial matching is allowed, and will repair
+#'     to the correct argument if spaces or the words "detection(s)" are included.
+#'     More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.
 #' @param since Only list files uploaded after this date. Optional, but must be
 #'      in YYYY-MM-DD format.
 #'
@@ -84,7 +89,7 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project'),
   data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
                       'downloadfiles')
 
-  detection_type <- gsub(' |detections', '', detection_type)
+  detection_type <- gsub(' |detection[s]', '', detection_type)
   detection_type <- match.arg(detection_type)
 
   # Convert project name to number

@@ -7,7 +7,6 @@
 #'     the index as found from \code{list_files}.
 #' @param project A character vector listing the full name of the project, or a
 #'     numeric listing the project number.
-#' @param url The URL of the file to be downloaded.
 #' @param data_type one of NA (default), "extraction", or "project"; used in a
 #'     call to \code{list_files} under the hood. If NA, it will try to guess whether
 #'     project files or data extraction files are desired from the file name. If
@@ -15,10 +14,17 @@
 #'     "extraction" or "project" is provided, it will list the data extraction or
 #'     project files, respectively. Partial matching is allowed, and will repair
 #'     to the correct argument if spaces or the words "data"/"file(s)" are included.
+#' @param detection_type one of NULL (default), "matched", "qualified", "sentinel_tag",
+#'     or "unqualified"; used in a call to \code{list_files} under the hood. If NULL,
+#'     all detection types will be listed. Partial matching is allowed, and will repair
+#'     to the correct argument if spaces or the words "detection(s)" are included.
+#'     More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.
+#' @param url The URL of the file to be downloaded.
 #' @param out_dir Character. What directory/folder do you want the file saved into?
 #'      Default is the current working directory.
 #' @param overwrite Logical. Do you want a file with the same name overwritten?
 #'      Passed to httr::write_disk.
+#' @param to_vue Logical. Convert to VUE export format?
 #'
 #' @export
 #' @examples
@@ -42,7 +48,7 @@
 
 get_file <- function(file = NULL, project = NULL,
                      data_type = c(NA, 'extraction', 'project'),
-                     detection_type = c(NA, 'matched', 'qualified',
+                     detection_type = c(NULL, 'matched', 'qualified',
                                         'sentinel_tag', 'unqualified'),
                      url = NULL, out_dir = getwd(), overwrite = F, to_vue = F){
 
@@ -106,7 +112,7 @@ get_file <- function(file = NULL, project = NULL,
     data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
                         'downloadfiles')
 
-    detection_type <- gsub(' |detections', '', detection_type)
+    detection_type <- gsub(' |detection[s]', '', detection_type)
     detection_type <- match.arg(detection_type)
 
     # Check that both file and project are provided

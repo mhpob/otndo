@@ -8,6 +8,7 @@ get_file(
   file = NULL,
   project = NULL,
   data_type = c(NA, "extraction", "project"),
+  detection_type = c(NULL, "matched", "qualified", "sentinel_tag", "unqualified"),
   url = NULL,
   out_dir = getwd(),
   overwrite = F,
@@ -29,6 +30,12 @@ the file index is provided, it cannot guess and will throw an error. When
 project files, respectively. Partial matching is allowed, and will repair
 to the correct argument if spaces or the words "data"/"file(s)" are included.}
 
+\item{detection_type}{one of NULL (default), "matched", "qualified", "sentinel_tag",
+or "unqualified"; used in a call to \code{list_files} under the hood. If NULL,
+all detection types will be listed. Partial matching is allowed, and will repair
+to the correct argument if spaces or the words "detection(s)" are included.
+More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.}
+
 \item{url}{The URL of the file to be downloaded.}
 
 \item{out_dir}{Character. What directory/folder do you want the file saved into?
@@ -36,6 +43,8 @@ Default is the current working directory.}
 
 \item{overwrite}{Logical. Do you want a file with the same name overwritten?
 Passed to httr::write_disk.}
+
+\item{to_vue}{Logical. Convert to VUE export format?}
 }
 \description{
 \code{get_file} downloads files from the MATOS website. This is best-used in
