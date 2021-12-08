@@ -177,7 +177,7 @@ get_file <- function(file = NULL, project = NULL,
 #'      Passed to \code{httr::write_disk} via \code{\link{get_file}}.
 #'
 #' @export
-get_updates <- function(..., out_dir = getwd(), overwrite = F){
+get_updates <- function(..., out_dir = getwd(), overwrite = F, to_vue = F){
 
   files <- list_files(...)
 
@@ -190,7 +190,8 @@ get_updates <- function(..., out_dir = getwd(), overwrite = F){
     for(i in seq_along(files$url)){
       cat('\n')
 
-      get_file(url = files$url[i], out_dir = out_dir, overwrite = overwrite)
+      get_file(url = files$url[i],
+               out_dir = out_dir, overwrite = overwrite, to_vue = to_vue)
 
       cat('\n')
 
