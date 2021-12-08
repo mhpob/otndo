@@ -82,7 +82,7 @@ get_file <- function(file = NULL, project = NULL,
                          'latitude', 'longitude')]
 
       write.csv(matos, file_csv, row.names = F)
-      cat('CSV converted to VUE format.')
+      cat('\nCSV converted to VUE format.')
 
     }
 
