@@ -26,6 +26,11 @@ knitr::opts_chunk$set(
 
 Please note that you will need a MATOS account, [which you can sign up for here](https://matos.asascience.com/account/signup), in order to interface with any project-specific files.
 
+## News!
+### 2021-04-12
+  - `get_updates`: A new function to download all files updated since a given date. Super useful after a data push!
+  - `list_files` now has a `since` argument, allowing you to only list the files that have been updated since a certain date.
+
 ## Installation
 
 This package is still in "throw things on the wall and see what sticks" phase (*"this package is currently undergoing heavy development"*). You can install the most-up-to-date version from GitHub:
@@ -120,7 +125,7 @@ get_otn_template('glider')
 ```
 
 Then, get to uploading!
-```{r}
+```{r eval=FALSE}
 post_file(project = 'umces boem offshore wind energy',
           file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
           data_type = 'new_tags')
