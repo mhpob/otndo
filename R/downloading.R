@@ -62,7 +62,7 @@ get_file <- function(file = NULL, project = NULL,
     cat('File saved to', file_loc)
 
     if(grepl('zip', file_loc)){
-      file_loc <- unzip(file_loc, exdir = out_dir)
+      file_loc <- unzip(file_loc, exdir = out_dir, setTimes = FALSE)
 
       cat('\nFile unzipped to', file_loc)
     }
