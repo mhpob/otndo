@@ -7,7 +7,8 @@
 \alias{html_table_to_df}
 \alias{login_check}
 \alias{scrape_file_urls}
-\title{Create new MATOS project}
+\alias{http_was_redirected}
+\title{Internal functions used by \code{matos}}
 \usage{
 get_file_list(project_number, data_type)
 
@@ -18,6 +19,8 @@ html_table_to_df(html_file_list)
 login_check(url = "https://matos.asascience.com/report/submit")
 
 scrape_file_urls(html_file_list)
+
+http_was_redirected(response)
 }
 \arguments{
 \item{project_number}{Number of the project}
@@ -32,12 +35,10 @@ Will be coerced to all lower case, so capitalization doesn't matter.}
 \code{get_file_list}}
 
 \item{url}{The (protected) URL that the overlapping function is trying to call.}
+
+\item{response}{an httr response object, e.g. from a call to httr::GET()}
 }
 \description{
-Somewhat useless function that just opens up the MATOS project creation page
-Internal functions used by \code{matos}
-}
-\details{
 Non-exported utility functions used by other functions in \code{matos}.
 }
 \section{Details}{
@@ -56,5 +57,7 @@ to the login page.
 
 \code{scrape_file_urls} is used internally by \code{html_table_to_df} to extract
 the URLs associates with each "Download" link.
+
+\code{http_was_redirected} checks if there was a redirect when requesting access to a project. If so, the user does not have access to project files. It is taken directly from \href{https://petermeissner.de/blog/2018/11/07/using-httr-to-detect-redirects/}{this blog post}.
 }
 
