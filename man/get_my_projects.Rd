@@ -4,10 +4,15 @@
 \alias{get_my_projects}
 \title{List personal MATOS projects}
 \usage{
-get_my_projects()
+get_my_projects(read_access = T)
+}
+\arguments{
+\item{read_access}{Do you want to only list projects for which you have file-read
+permission? Defaults to TRUE, though there is significant speed up if switched
+to FALSE.}
 }
 \description{
-This function lists the functions for which the logged-on user has permissions
+This function lists the functions for which the logged-on user has permissions.
 }
 \examples{
 \dontrun{
