@@ -78,8 +78,12 @@ get_file <- function(file = NULL, project = NULL,
       matos$transmitter.serial <- ''
 
       matos <- matos[, c('datecollected', 'receiver', 'tagname', 'transmitter.name',
-                         'transmitter.serial', 'sensorvalue', 'sensorunit', 'station',
+                         'transmitter.serial', 'sensorraw', 'sensorunit', 'station',
                          'latitude', 'longitude')]
+
+      names(matos) <- c('Date and Time (UTC)', 'Receiver', 'Transmitter',
+                        'Transmitter Name', 'Transmitter Serial', 'Sensor Value',
+                        'Sensor Unit', 'Station Name', 'Latitude', 'Longitude')
 
       write.csv(matos, file_csv, row.names = F)
       cat('\nCSV converted to VUE format.')
