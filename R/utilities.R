@@ -83,8 +83,6 @@ matos_login <- function(){
 #' \code{scrape_file_urls} is used internally by \code{html_table_to_df} to extract
 #' the URLs associates with each "Download" link.
 #'
-#' \code{http_was_redirected} checks if there was a redirect when requesting access to a project. If so, the user does not have access to project files. It is taken directly from \href{https://petermeissner.de/blog/2018/11/07/using-httr-to-detect-redirects/}{this blog post}.
-#'
 #' @param project_number Number of the project
 #' @param data_type one of "dataextractionfiles" or "projectfiles".
 #' @param project Character string of the full MATOS project name. This will be the
@@ -93,7 +91,6 @@ matos_login <- function(){
 #' @param url The (protected) URL that the overlapping function is trying to call.
 #' @param html_file_list Listed files in HTML form. Always the result of
 #' \code{get_file_list}
-#' @param response an httr response object, e.g. from a call to httr::GET()
 #'
 #'
 #' @name utilities
@@ -178,21 +175,4 @@ scrape_file_urls <- function(html_file_list){
   urls <- grep('projectfile', urls, value = T)
 
   paste0('https://matos.asascience.com', urls)
-}
-
-
-#' @rdname utilities
-#'
-http_was_redirected <- function(response){
-  # extract status
-  status <-
-    vapply(
-      X         = response$all_headers,
-      FUN       = `[[`,
-      FUN.VALUE = integer(1),
-      "status"
-    )
-
-  # check status and return
-  any(status >= 300 & status < 400)
 }
