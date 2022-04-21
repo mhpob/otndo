@@ -45,9 +45,9 @@ get_my_projects <- function(read_access = T){
     # Select projects that weren't referred
     files <- sapply(files, function(x) x$status_code != 302)
 
-    projject_numberss <- project_numbers[files]
+    project_numbers <- project_numbers[files]
 
-    all_projects[all_projects$number %in% proj_nums,]
+    all_projects[all_projects$number %in% project_numbers,]
 
   } else {
 
