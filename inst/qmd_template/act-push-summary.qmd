@@ -164,25 +164,30 @@ ggplot(qualified_time) +
 ```{r}
 #| label: station-summary-table
 
-.simpleCap <- function(x) {
-  x <- tolower(x)
-  s <- strsplit(x, " ")[[1]]
-  paste(toupper(substring(s, 1, 1)), substring(s, 2),
-        sep = "", collapse = " ")
-}
+# .simpleCap <- function(x) {
+#   x <- tolower(x)
+#   s <- strsplit(x, " ")[[1]]
+#   paste(toupper(substring(s, 1, 1)), substring(s, 2),
+#         sep = "", collapse = " ")
+# }
 
 station_summary <- merge(
   qualified[, .(detections = .N), by = 'station'],
   unique(qualified, by = c('fieldnumber', 'station')) |>
-    DT(, .(individuals = .N), by = 'station')) |>
-  DT(, station := sapply(station, .simpleCap))
+    DT(, .(individuals = .N,
+           long = mean(longitude),
+           lat = mean(latitude)), by = 'station')) #|>
+  # DT(, station := sapply(station, .simpleCap))
 
+setorder(station_summary, -lat, long)
+
+station_summary <- station_summary[, .(station, detections, individuals)]
 setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
 station_summary |>
   gt() |>
   tab_header(title = 'Records by receivers') |>
-  tab_footnote('statons listed from west to east',
+  tab_footnote('statons listed N-S, W-E',
                 locations = cells_title()) |>
   as_raw_html()
 ```
@@ -275,16 +280,23 @@ ggplot() +
 
 station_summary <- merge(
   new_matches[, .(detections = .N), by = 'station'],
-  unique(new_matches, by  = c('fieldnumber', 'station'))[, .(individuals = .N), by = 'station']
-) |>
-  DT(, station := sapply(station, .simpleCap))
+  unique(new_matches, by  = c('fieldnumber', 'station')) |> 
+    DT(, .(individuals = .N,
+           long = mean(longitude),
+           lat = mean(latitude)), by = 'station')) #|>
+  # DT(, station := sapply(station, .simpleCap))
+
+setorder(station_summary, -lat, long)
+
+station_summary <- station_summary[, .(station, detections, individuals)]
+setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
 setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
 station_summary |>
   gt() |>
   tab_header(title = 'Records by receivers') |>
-  tab_footnote('statons listed from west to east',
+  tab_footnote('statons listed N-S, W-E',
                 locations = cells_title()) |>
   as_raw_html()
 ```
