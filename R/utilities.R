@@ -131,7 +131,7 @@ get_project_name <- function(project){
 html_table_to_df <- function(html_file_list){
 
   df <- httr::content(html_file_list, 'parsed') %>%
-    rvest::html_nodes('.tableContent') %>%
+    rvest::html_element(xpath = '//*[@id="content"]/table') %>%
     rvest::html_table() %>%
     data.frame()
   names(df) <- tolower(gsub('\\.', '_', names(df)))
