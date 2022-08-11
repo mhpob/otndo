@@ -1,6 +1,7 @@
 ---
 params:
-  matos_project: "My Project"
+  project_name: "My Project"
+  project_number: 1
   qualified: "qual_dets"
   unqualified: "unqual_dets"
   push_log: system.file("push_log.csv", package="matos")
@@ -8,7 +9,7 @@ format: html
 editor: visual
 execute:
   echo: false
-title: "`r paste('ACT push summary:', params$matos_project)`"
+title: "`r paste('ACT push summary:', params$project_name)`"
 ---
 
 params needed:
@@ -16,8 +17,6 @@ params needed:
 -   deployment metadata
 
 Other needs:
-
--   fix act and otn urls to be generic to project -- need to bring in projnum
 
 -   expand table size
 
@@ -100,7 +99,7 @@ These are data related to the `r format(push_log$date[nrow(push_log)], '%B %Y')`
 
 ## Overall
 
-A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](https://matos.asascience.com/project/detail/192), [FACT](https://secoora.org/fact/projects/), and/or [OTN](https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ192). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
+A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](`r paste0('https://matos.asascience.com/project/detail/', params$project_number)`), [FACT](https://secoora.org/fact/projects/), and/or [OTN](`r paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ', params$project_number)`). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
 
 ```{r}
 #| label: otn-match-table

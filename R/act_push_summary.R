@@ -11,17 +11,22 @@ act_push_summary <- function(matos_project,
   # Project ----
   ##  Find project name
   if(is.numeric(matos_project)){
-    matos_project <- get_project_name(matos_project)
+    project_number <- matos_project
+    project_name <- get_project_name(matos_project)
+  }
+  if(!is.numeric(matos_project)){
+    project_name <- matos_project
+    project_number <- get_project_number(matos_project)
   }
 
   ##  Check that project name exists as written
-  if(length(get_project_number(matos_project)) == 0){
-    stop('No project matching that name.')
-  }
+  # if(length(get_project_number(matos_project)) == 0){
+  #   stop('No project matching that name.')
+  # }
 
   if(any(is.null(qualified), is.null(unqualified))){
     cat('\nListing extraction files...')
-    project_files <- list_files(matos_project, 'extraction', 'all')
+    project_files <- list_files(project_number, 'extraction', 'all')
     cat(' Done.\n')
   }
 
@@ -98,7 +103,8 @@ act_push_summary <- function(matos_project,
     input = 'inst/qmd_template/act-push-summary.qmd',
     # input = 'inst/qmd_template/test.qmd',
     execute_params = list(
-      matos_project = matos_project,
+      project_name = project_name,
+      project_number = project_number,
       qualified = qualified_filepath,
       unqualified = unqualified_filepath,
       push_log = push_log
