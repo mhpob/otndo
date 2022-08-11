@@ -1,6 +1,7 @@
 act_push_summary <- function(matos_project,
                              qualified = NULL,
-                             unqualified = NULL#,
+                             unqualified = NULL,
+                             update_push_log = F#,
                              # deployment = NULL
                              ){
 
@@ -80,6 +81,17 @@ act_push_summary <- function(matos_project,
   write.csv(unqualified, unqualified_filepath,
             row.names = F)
 
+
+
+  # Push log ----
+  if(update_push_log == TRUE){
+    push_log <- 'https://raw.githubusercontent.com/mhpob/matos/push-summary/inst/push_log.csv'
+  }else{
+    push_log <- system.file("push_log.csv",
+                            package="matos")
+  }
+
+
   cat('\nWriting report...')
 
   quarto::quarto_render(
@@ -88,7 +100,8 @@ act_push_summary <- function(matos_project,
     execute_params = list(
       matos_project = matos_project,
       qualified = qualified_filepath,
-      unqualified = unqualified_filepath
+      unqualified = unqualified_filepath,
+      push_log = push_log
     ))
 
   cat('Done.\n')
