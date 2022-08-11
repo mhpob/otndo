@@ -106,7 +106,7 @@ matos_projects <- function(what = c('all', 'mine'), read_access = T){
 #' }
 
 list_files <- function(project = NULL, data_type = c('extraction', 'project'),
-                       detection_type = c(NULL, 'matched', 'qualified',
+                       detection_type = c('all', 'matched', 'qualified',
                                           'sentinel_tag', 'unqualified'),
                        since = NULL){
 
@@ -130,7 +130,7 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project'),
 
   files <- html_table_to_df(files_html)
 
-  if(!is.null(detection_type)){
+  if(detection_type != 'all'){
     files <- files[files$detection_type == detection_type,]
   }
 
