@@ -12,10 +12,7 @@ title: "`r paste('ACT push summary:', params$matos_project)`"
 
 params needed:
 
--   project title (matos_project) (CHECK)
--   qualified location (CHECK)
--   unqualified location
--   qualified ctime
+-   when pushes occurred
 -   deployment metadata
 
 ```{r}
