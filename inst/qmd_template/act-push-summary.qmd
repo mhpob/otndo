@@ -1,0 +1,319 @@
+---
+params:
+  matos_project: "My Project"
+  qualified: "qual_dets"
+  unqualified: "unqual_dets"
+format: html
+editor: visual
+execute:
+  echo: false
+title: "`r paste('ACT push summary:', params$matos_project)`"
+---
+
+params needed:
+
+-   project title (matos_project) (CHECK)
+-   qualified location (CHECK)
+-   unqualified location
+-   qualified ctime
+-   deployment metadata
+
+```{r}
+#| label: packages
+#| message: false
+
+library(data.table)
+library(sf)
+library(geoarrow)
+library(ggplot2)
+library(gt)
+```
+
+```{r}
+#| label: otn-files-read
+
+qualified <- fread(params$qualified)
+unqualified <- fread(params$unqualified)
+```
+
+```{r}
+#| label: upload-times
+
+# use params to find ctime
+# upload_time <- tar_meta(starts_with('matos'),
+#                     fields = c('time', 'path')) |> 
+#   as.data.table() |> 
+#   DT(grepl('qualified', path), file.info(as.character(path))$ctime)
+# 
+# push_dates <- tar_read(act_push_dates)
+```
+
+```{r n-pis}
+#| label: n-pis
+#| warning: false
+
+pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi')) |> 
+  DT(, ':='(PI = strsplit(tag_contact_pi, ' \\(|\\)(, )?'),
+            POC = strsplit(tag_contact_poc, ' \\(|\\)(, )?'))) |>
+  DT(, ':='(PI = lapply(X = PI, function(.) .[!grepl('@', .)]),
+            POC = lapply(X = POC, function(.) .[!grepl('@', .)]),
+            PI_emails = lapply(X = PI, function(.) .[grepl('@', .)]),
+            POC_emails = lapply(X = POC, function(.) .[grepl('@', .)]))) |> 
+  DT(, ':='(PI = unlist(lapply(X = PI,
+                               function(.) paste(., collapse = ', '))),
+            POC = unlist(lapply(X = POC,
+                                function(.) paste(., collapse = ', '))),
+            emails = t(mapply(c, PI_emails, POC_emails)))) |> 
+  DT(, emails := unlist(
+    lapply(
+      lapply(emails, unique),
+      paste, collapse = '\n')))
+
+```
+
+```{r}
+projects <- unique(qualified$trackercode)
+projects <- gsub('OTN.', '', projects)
+projects <- gsub('PROJ', 'ACT.PROJ', projects)
+
+table_name <- c('otn_resources_metadata_points',
+                'project_metadata')
+
+otn_metadata_query <- paste0("https://members.oceantrack.org/geoserver/otn/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=otn:",
+                             table_name,
+                             "&outputFormat=csv&CQL_FILTER=collectioncode IN (",
+                             paste("\'", projects, "\'", collapse = ",", sep = ''),
+                    ")") |> 
+  URLencode()
+
+otn_tables <- lapply(otn_metadata_query, fread)
+
+otn_tables <- lapply(otn_tables, function(.) .[!grepl('^[FA]', collectioncode), collectioncode := paste0('OTN.', collectioncode)])
+```
+
+These are data related to the `r #format(push_dates$current, '%B %Y')` ACT data push. New matched detection files (["qualified" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)) were uploaded on `r #format(min(upload_time),'%B %d')`. The last data push occurred on `r #format(push_dates$previous, '%B %d, %Y')`.
+
+## Overall
+
+A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](https://matos.asascience.com/project/detail/192), [FACT](https://secoora.org/fact/projects/), and/or [OTN](https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ192). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
+
+```{r}
+#| label: otn-match-table
+
+mt <- merge(
+  qualified[, .(detections = .N), by = 'trackercode'],
+  unique(qualified, by  = 'fieldnumber')[, .(individuals = .N), by = 'trackercode']
+)
+
+mt <- merge(mt, pis[, .(trackercode, PI, POC, emails)])
+mt[, trackercode := ifelse(grepl('^PROJ', trackercode),
+                           paste0('ACT.', trackercode), trackercode)]
+
+mt <- merge(mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
+
+mt[, ':='(network = gsub('\\..*', '', trackercode),
+          code = gsub('.*\\.', '', trackercode),
+          trackercode = NULL,
+          PI = fifelse(PI == 'NA', '', PI),
+          POC = fifelse(POC == 'NA', '', POC))]
+
+mt <- mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, emails)]
+setnames(mt, c('PIs', 'POC', 'Project name', 'Network', 'Project code', 'Detections', 'Individuals', 'Contact info'))
+
+setorder(mt, -'Detections', -'Individuals')
+
+gt(mt) |>
+  tab_header(title = 'Matched detecions') |>
+  as_raw_html()
+```
+
+```{r}
+#| label: otn-match-map
+
+otn_sf <- otn_tables[[1]] |>
+  data.frame() |>
+  st_as_sf(wkt = 'the_geom', crs = 4326)
+otn_limits <- st_bbox(otn_sf)
+
+natural_earth <- read_geoparquet_sf(system.file("ne_10m_coastline.parquet", 
+                                                package="matos"), quiet = T)
+
+ggplot() +
+  geom_sf(data = natural_earth) +
+  geom_sf(data = otn_sf, fill = NA, color = 'blue') +
+  coord_sf(xlim = c(otn_limits['xmin'] - 5, otn_limits['xmax'] + 5),
+           ylim = c(otn_limits['ymin'] - 5, otn_limits['ymax'] + 5)) +
+  labs(title = 'Geographic extent of detected projects') +
+  theme_minimal()
+```
+
+```{r}
+#| label: temporal-extent
+
+qualified[, day := as.Date(datecollected)]
+qualified_time <- unique(qualified, by = c('trackercode', 'day'))
+
+ggplot(qualified_time) +
+  geom_tile(aes(x = day, y = gsub('.*\\.', '', trackercode))) +
+  labs(x = '', y = '',
+       subtitle = 'Temporal distribution of detections by project') +
+  theme_minimal()
+```
+
+```{r}
+#| label: deployment-gantt
+
+# tar_read(deployment_gantt) +
+#   labs(title = 'Temporal receiver coverage')
+```
+
+```{r}
+#| label: station-summary-table
+
+.simpleCap <- function(x) {
+  x <- tolower(x)
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1, 1)), substring(s, 2),
+        sep = "", collapse = " ")
+}
+
+station_summary <- merge(
+  qualified[, .(detections = .N), by = 'station'],
+  unique(qualified, by = c('fieldnumber', 'station')) |>
+    DT(, .(individuals = .N), by = 'station')) |>
+  DT(, station := sapply(station, .simpleCap))
+
+setnames(station_summary, c('Station', 'Detections', 'Individuals'))
+
+station_summary |>
+  gt() |>
+  tab_header(title = 'Records by receivers') |>
+  tab_footnote('statons listed from west to east',
+                locations = cells_title()) |>
+  as_raw_html()
+```
+
+```{r}
+
+station_spatial <- qualified |>
+  unique(by = 'station') |>
+  DT(station_summary[, Station := toupper(Station)], , on = c('station'= 'Station')) |>
+  data.frame() |>
+  st_as_sf(coords = c('longitude', 'latitude'), crs = 4326)
+
+station_limits <- st_bbox(station_spatial) 
+x_nudge <- (station_limits[3] - station_limits[1]) * (1/10)
+y_nudge <- (station_limits[4] - station_limits[2]) * (1/10)
+
+ggplot() +
+  geom_sf(data = natural_earth, fill = 'lightgray') +
+  geom_sf(data = station_spatial,
+          aes(size = Detections, color = Individuals)) +
+  labs(subtitle = 'Records by receivers') +
+  scale_color_viridis_c() +
+  coord_sf(xlim = c(station_limits['xmin'] - x_nudge, station_limits['xmax'] + x_nudge),
+           ylim = c(station_limits['ymin'] - y_nudge, station_limits['ymax'] + y_nudge)) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## What's new?
+
+```{r}
+#\ label: new-matches
+
+# new_matches <- qualified[datelastmodified > push_dates$previous]
+```
+
+Since the last data push in `r #format(push_dates$previous, '%B %Y')`, `r #format(nrow(qualified[datelastmodified > push_dates$previous]), big.mark = ',')` detections of `r #uniqueN(qualified[datelastmodified > push_dates$previous], by  = 'fieldnumber')` individuals have been updated or newly-matched.
+
+```{r}
+#\ label: new-otn-match-table
+
+# new_mt <- merge(
+#   new_matches[, .(detections = .N), by = 'trackercode'],
+#   unique(new_matches, by  = 'fieldnumber') |> 
+#     DT(, .(individuals = .N), by = 'trackercode')
+# )
+# 
+# new_mt <- merge(new_mt, pis[, .(trackercode, PI)])
+# new_mt[, trackercode := ifelse(grepl('^PROJ', trackercode), 
+#                            paste0('ACT.', trackercode), trackercode)]
+# 
+# new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
+# 
+# new_mt[, ':='(network = gsub('\\..*', '', trackercode),
+#           code = gsub('.*\\.', '', trackercode),
+#           trackercode = NULL)]
+# 
+# new_mt <- new_mt[, .(PI, resource_full_name, network, code, detections, individuals)]
+# setnames(new_mt, c('PIs', 'Project name', 'Network', 'Project code',
+#                    'Detections', 'Individuals'))
+# 
+# setorder(new_mt, -'Detections', -'Individuals')
+# 
+# gt(new_mt) |>
+#   tab_header(title = 'New matched detections') |>
+#   as_raw_html()
+```
+
+```{r}
+#| label: new-otn-match-map
+
+# new_otn_sf <- otn_sf[grepl(
+#     paste(unique(new_matches$trackercode), collapse = '|'),
+#     otn_sf$collectioncode
+#   ),]
+# otn_limits <- st_bbox(new_otn_sf)
+# 
+# ggplot() +
+#   geom_sf(data = natural_earth) +
+#   geom_sf(data = new_otn_sf, fill = NA, color = 'blue') +
+#     coord_sf(xlim = c(otn_limits['xmin'] - 5, otn_limits['xmax'] + 5),
+#              ylim = c(otn_limits['ymin'] - 5, otn_limits['ymax'] + 5)) +
+#   labs(title = 'Geographic extent of newly-detected projects') +
+#   theme_minimal()
+```
+
+```{r}
+#| label: new-station-summary-table
+
+# station_summary <- merge(
+#   new_matches[, .(detections = .N), by = 'station'],
+#   unique(new_matches, by  = c('fieldnumber', 'station'))[, .(individuals = .N), by = 'station']
+# ) |> 
+#   DT(, station := sapply(station, .simpleCap))
+# 
+# setnames(station_summary, c('Station', 'Detections', 'Individuals'))
+# 
+# station_summary |> 
+#   gt() |> 
+#   tab_header(title = 'Records by receivers') |> 
+#   tab_footnote('statons listed from west to east',
+#                 locations = cells_title()) |> 
+#   as_raw_html()
+```
+
+```{r}
+#| label: new-detection-map
+
+# station_spatial <- qualified |> 
+#   unique(by = 'stationname') |> 
+#   DT(station_summary, , on = c('stationname'= 'Station')) |> 
+#   data.frame() |> 
+#   st_as_sf(coords = c('deploy_long', 'deploy_lat'), crs = 4326)
+# 
+# 
+# ggplot() +
+#   geom_sf(data = bathy, color = 'lightgray') +
+#   geom_sf(data = midatl) +
+#   geom_sf(data = station_spatial,
+#           aes(size = Detections, color = Individuals)) +
+#   labs(subtitle = 'New records by Mid-Bay receivers') +
+#   scale_color_viridis_c() +
+#   coord_sf(xlim = c(-76.5, -76.15), ylim = c(38.25, 38.45)) +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+blurb on unqualified/etc
