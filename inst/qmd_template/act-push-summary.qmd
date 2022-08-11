@@ -32,7 +32,7 @@ library(gt)
 ```
 
 ```{r}
-#| label: otn-files-read
+#| label: extraction-files-read
 
 qualified <- fread(params$qualified)
 unqualified <- fread(params$unqualified)
@@ -40,7 +40,7 @@ unqualified <- fread(params$unqualified)
 push_log <- data.table::fread(params$push_log)
 ```
 
-```{r n-pis}
+```{r}
 #| label: n-pis
 #| warning: false
 
@@ -64,6 +64,8 @@ pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi')) |>
 ```
 
 ```{r}
+#| label: otn-query
+
 projects <- unique(qualified$trackercode)
 projects <- gsub('OTN.', '', projects)
 projects <- gsub('PROJ', 'ACT.PROJ', projects)
@@ -140,7 +142,7 @@ ggplot() +
 ```
 
 ```{r}
-#| label: temporal-extent
+#| label: temporal-distribution
 
 qualified[, day := as.Date(datecollected)]
 qualified_time <- unique(qualified, by = c('trackercode', 'day'))
@@ -186,6 +188,7 @@ station_summary |>
 ```
 
 ```{r}
+#| label: detection-map
 
 station_spatial <- qualified |>
   unique(by = 'station') |>
