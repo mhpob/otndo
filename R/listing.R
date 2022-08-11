@@ -1,60 +1,56 @@
-#' List personal MATOS projects
+#' List MATOS projects
 #'
-#' This function lists the functions for which the logged-on user has permissions.
+#' By default, this function scrapes the table found at \url{https://matos.asascience.com/project}.
+#' This table provides not only the full name of the project, but also the MATOS
+#' project number and project page URL. You do not need to log in via \code{matos_login}
+#' or have any permissions to view/download this table.
 #'
-#' @param read_access Do you want to only list projects for which you have file-read
-#'      permission? Defaults to TRUE, though there is significant speed up if switched
-#'      to FALSE.
+#' @param what What list of projects do you want returned: all projects ("all",
+#'      default) or your projects ("mine")?
+#' @param read_access If listing your projects, do you want to only list projects
+#'      for which you have file-read permission? Defaults to TRUE, though there
+#'      is significant speed up if switched to FALSE.
+#'
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' # After logging in, just type the following:
-#' get_my_projects()
+#' # List all projects, the default:
+#' matos_projects()
+#'
+#' # List your projects (which may contain some for which you do not have read access):
+#' matos_projects('mine', read_access = F)
 #' }
-get_my_projects <- function(read_access = T){
-  url <- 'https://matos.asascience.com/report/submit'
+matos_projects <- function(what = c('all', 'mine'), read_access = T){
 
-  login_check(url)
+  what <- match.arg(what)
 
-  site <- httr::GET(url)
+  if(what == 'all'){
 
-  names <- httr::content(site) %>%
-    rvest::html_node(xpath = '//*[@id="selProject"]') %>%
-    rvest::html_nodes('option') %>%
-    rvest::html_text()
+    project_list <- httr::GET(
+      'https://matos.asascience.com/project'
+    )
 
-  all_projects <- matos_projects()
+    projects_info <- httr::content(project_list) %>%
+      rvest::html_node('.project_list') %>%
+      rvest::html_nodes('a')
 
-  if(read_access == T){
-    project_numbers <- unique(unlist(sapply(names, get_project_number)))
+    urls <- rvest::html_attr(projects_info, 'href')
 
-    # MATOS website issues code 302 and refers to project splash page if there is
-    #   no read access. Capture which projects do this.
-    files <- lapply(project_numbers, function(x){
-      httr::HEAD(
-        url = paste('https://matos.asascience.com/project',
-                    'dataextractionfiles',
-                    x, sep = '/'),
-
-        # Don't follow referred URL to save time
-        config = httr::config(followlocation = F)
-      )
-    })
-
-    # Select projects that weren't referred
-    files <- sapply(files, function(x) x$status_code != 302)
-
-    project_numbers <- project_numbers[files]
-
-    all_projects[all_projects$number %in% project_numbers,]
-
-  } else {
-
-    all_projects[all_projects$name %in% tolower(names),]
+    projects <- data.frame(
+      name = rvest::html_text(projects_info, trim = T),
+      number = as.numeric(gsub('.*detail/', '', urls)),
+      url = paste0('https://matos.asascience.com',
+                   urls)
+    )
 
   }
 
+  if(what == 'mine'){
+    projects <- get_my_projects(read_access = read_access)
+  }
+
+  projects
 }
 
 
@@ -148,47 +144,61 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project'),
 
 
 
-#' List all MATOS projects
+#' List personal MATOS projects
 #'
-#' This function scrapes the table found at \url{https://matos.asascience.com/project}.
-#' This table provides not only the full name of the project, but also the MATOS
-#' project number and project page URL. You do not need to log in via \code{matos_login}
-#' or have any permissions to view/download this table.
+#' This function lists the functions for which the logged-on user has permissions.
+#'
+#' @param read_access Do you want to only list projects for which you have file-read
+#'      permission? Defaults to TRUE, though there is significant speed up if switched
+#'      to FALSE.
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' # Just type in the following...
-#' matos_projects()
+#' # After logging in, just type the following:
+#' get_my_projects()
 #' }
-matos_projects <- function(what = c('all', 'mine'), read_access = T){
+get_my_projects <- function(read_access = T){
+  url <- 'https://matos.asascience.com/report/submit'
 
-  what <- match.arg(what)
+  login_check(url)
 
-  if(what == 'all'){
+  site <- httr::GET(url)
 
-    project_list <- httr::GET(
-      'https://matos.asascience.com/project'
-    )
+  names <- httr::content(site) %>%
+    rvest::html_node(xpath = '//*[@id="selProject"]') %>%
+    rvest::html_nodes('option') %>%
+    rvest::html_text()
 
-    projects_info <- httr::content(project_list) %>%
-      rvest::html_node('.project_list') %>%
-      rvest::html_nodes('a')
+  all_projects <- matos_projects()
 
-    urls <- rvest::html_attr(projects_info, 'href')
+  if(read_access == T){
+    project_numbers <- unique(unlist(sapply(names, get_project_number)))
 
-    projects <- data.frame(
-      name = rvest::html_text(projects_info, trim = T),
-      number = as.numeric(gsub('.*detail/', '', urls)),
-      url = paste0('https://matos.asascience.com',
-                   urls)
-    )
+    # MATOS website issues code 302 and refers to project splash page if there is
+    #   no read access. Capture which projects do this.
+    files <- lapply(project_numbers, function(x){
+      httr::HEAD(
+        url = paste('https://matos.asascience.com/project',
+                    'dataextractionfiles',
+                    x, sep = '/'),
+
+        # Don't follow referred URL to save time
+        config = httr::config(followlocation = F)
+      )
+    })
+
+    # Select projects that weren't referred
+    files <- sapply(files, function(x) x$status_code != 302)
+
+    project_numbers <- project_numbers[files]
+
+    all_projects[all_projects$number %in% project_numbers,]
+
+  } else {
+
+    all_projects[all_projects$name %in% tolower(names),]
 
   }
 
-  if(what == 'mine'){
-    projects <- get_my_projects(read_access = read_access)
-  }
-
-  projects
 }

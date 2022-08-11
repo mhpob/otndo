@@ -2,19 +2,30 @@
 % Please edit documentation in R/listing.R
 \name{matos_projects}
 \alias{matos_projects}
-\title{List all MATOS projects}
+\title{List MATOS projects}
 \usage{
-matos_projects()
+matos_projects(what = c("all", "mine"), read_access = T)
+}
+\arguments{
+\item{what}{What list of projects do you want returned: all projects ("all",
+default) or your projects ("mine")?}
+
+\item{read_access}{If listing your projects, do you want to only list projects
+for which you have file-read permission? Defaults to TRUE, though there
+is significant speed up if switched to FALSE.}
 }
 \description{
-This function scrapes the table found at \url{https://matos.asascience.com/project}.
+By default, this function scrapes the table found at \url{https://matos.asascience.com/project}.
 This table provides not only the full name of the project, but also the MATOS
 project number and project page URL. You do not need to log in via \code{matos_login}
 or have any permissions to view/download this table.
 }
 \examples{
 \dontrun{
-# Just type in the following...
+# List all projects, the default:
 matos_projects()
+
+# List your projects (which may contain some for which you do not have read access):
+matos_projects('mine', read_access = F)
 }
 }
