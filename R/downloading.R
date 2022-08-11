@@ -64,7 +64,7 @@ get_file <- function(file = NULL, project = NULL,
     if(grepl('zip', file_loc)){
       file_loc <- unzip(file_loc, exdir = out_dir, setTimes = FALSE)
 
-      cat('\nFile unzipped to', file_loc)
+      cat('\nFile unzipped to', file_loc, '\n')
     }
 
     if(isTRUE(to_vue)){
@@ -90,6 +90,7 @@ get_file <- function(file = NULL, project = NULL,
 
     }
 
+    file_loc
   }
 
 
