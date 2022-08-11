@@ -40,18 +40,6 @@ unqualified <- fread(params$unqualified)
 push_log <- data.table::fread(params$push_log)
 ```
 
-```{r}
-#| label: upload-times
-
-# use params to find ctime
-# upload_time <- tar_meta(starts_with('matos'),
-#                     fields = c('time', 'path')) |> 
-#   as.data.table() |> 
-#   DT(grepl('qualified', path), file.info(as.character(path))$ctime)
-# 
-# push_dates <- tar_read(act_push_dates)
-```
-
 ```{r n-pis}
 #| label: n-pis
 #| warning: false
