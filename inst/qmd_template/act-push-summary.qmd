@@ -10,6 +10,7 @@ editor: visual
 execute:
   echo: false
 title: "`r paste('ACT push summary:', params$project_name)`"
+author: "[Mike O'Brien](mailto:obrien@umces.edu) via the [`matos` R package](https://www.github.com/mhpob/matos)"
 ---
 
 params needed:
