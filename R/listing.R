@@ -161,23 +161,34 @@ list_files <- function(project = NULL, data_type = c('extraction', 'project'),
 #' # Just type in the following...
 #' matos_projects()
 #' }
-matos_projects <- function(){
-  project_list <- httr::GET(
-    'https://matos.asascience.com/project'
-  )
+matos_projects <- function(what = c('all', 'mine'), read_access = T){
 
-  projects_info <- httr::content(project_list) %>%
-    rvest::html_node('.project_list') %>%
-    rvest::html_nodes('a')
+  what <- match.arg(what)
 
-  urls <- rvest::html_attr(projects_info, 'href')
+  if(what == 'all'){
 
-  projects <- data.frame(
-    name = rvest::html_text(projects_info, trim = T),
-    number = as.numeric(gsub('.*detail/', '', urls)),
-    url = paste0('https://matos.asascience.com',
-                 urls)
-  )
+    project_list <- httr::GET(
+      'https://matos.asascience.com/project'
+    )
+
+    projects_info <- httr::content(project_list) %>%
+      rvest::html_node('.project_list') %>%
+      rvest::html_nodes('a')
+
+    urls <- rvest::html_attr(projects_info, 'href')
+
+    projects <- data.frame(
+      name = rvest::html_text(projects_info, trim = T),
+      number = as.numeric(gsub('.*detail/', '', urls)),
+      url = paste0('https://matos.asascience.com',
+                   urls)
+    )
+
+  }
+
+  if(what == 'mine'){
+    projects <- get_my_projects(read_access = read_access)
+  }
 
   projects
 }
