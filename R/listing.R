@@ -173,7 +173,7 @@ matos_projects <- function(){
   urls <- rvest::html_attr(projects_info, 'href')
 
   projects <- data.frame(
-    name = tolower(rvest::html_text(projects_info, trim = T)),
+    name = rvest::html_text(projects_info, trim = T),
     number = as.numeric(gsub('.*detail/', '', urls)),
     url = paste0('https://matos.asascience.com',
                  urls)
