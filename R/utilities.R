@@ -74,6 +74,9 @@ matos_login <- function(){
 #' \code{get_project_number} finds the internal MATOS number associated with each
 #' project by scraping the HTML of the main MATOS projects page.
 #'
+#' \code{get_project_name} finds the MATOS project name associated with the given
+#' project number by scraping the HTML of the main MATOS projects page.
+#'
 #' \code{html_table_to_df} converts the HTML table provided by \code{get_file_list}
 #' into a R-usable data frame.
 #'
@@ -112,6 +115,14 @@ get_file_list <- function(project_number, data_type){
 get_project_number <- function(project){
   projects <- matos_projects()
   projects[projects$name == trimws(project),]$number
+}
+
+
+#' @rdname utilities
+#'
+get_project_name <- function(project){
+  projects <- matos_projects()
+  projects[projects$number == project,]$name
 }
 
 

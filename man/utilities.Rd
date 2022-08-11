@@ -4,6 +4,7 @@
 \alias{utilities}
 \alias{get_file_list}
 \alias{get_project_number}
+\alias{get_project_name}
 \alias{html_table_to_df}
 \alias{login_check}
 \alias{scrape_file_urls}
@@ -12,6 +13,8 @@
 get_file_list(project_number, data_type)
 
 get_project_number(project)
+
+get_project_name(project)
 
 html_table_to_df(html_file_list)
 
@@ -43,6 +46,9 @@ extraction files page provided with a given project.
 
 \code{get_project_number} finds the internal MATOS number associated with each
 project by scraping the HTML of the main MATOS projects page.
+
+\code{get_project_name} finds the MATOS project name associated with the given
+project number by scraping the HTML of the main MATOS projects page.
 
 \code{html_table_to_df} converts the HTML table provided by \code{get_file_list}
 into a R-usable data frame.
