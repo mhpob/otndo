@@ -1,10 +1,11 @@
 ---
 params:
-  project_name: "My Project"
-  project_number: 1
-  qualified: "qual_dets"
-  unqualified: "unqual_dets"
+  project_name: NULL
+  project_number: NULL
+  qualified: NULL
+  unqualified: NULL
   push_log: system.file("push_log.csv", package="matos")
+  deployment: NULL
 format: html
 editor: visual
 execute:
@@ -13,13 +14,10 @@ title: "`r paste('ACT push summary:', params$project_name)`"
 author: "[Mike O'Brien](mailto:obrien@umces.edu) via the [`matos` R package](https://www.github.com/mhpob/matos)"
 ---
 
-params needed:
-
--   deployment metadata
-
 Other needs:
 
 -   expand table size
+-   unqualified narrative
 
 ```{r}
 #| label: packages
@@ -157,9 +155,24 @@ ggplot(qualified_time) +
 
 ```{r}
 #| label: deployment-gantt
-
-# tar_read(deployment_gantt) +
-#   labs(title = 'Temporal receiver coverage')
+if(!is.null(params$deployment)){
+  
+  deployment <- fread(params$deployment)
+  
+  ggplot(data = deployment) +
+    geom_linerange(aes(y = stationname,
+                       xmin = deploy_date_time,
+                       xmax = recover_date_time),
+                   size = 5) +
+    geom_linerange(aes(ymin = as.numeric(factor(stationname)) - 0.4,
+                       ymax = as.numeric(factor(stationname)) + 0.4,
+                       x = recover_date_time),
+                   color = 'red', size = 2) +
+    scale_x_datetime(date_breaks = 'month', date_labels = '%b %y') +
+    labs(x = NULL, y = NULL, title = 'Temporal receiver coverage') +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
 ```
 
 ```{r}

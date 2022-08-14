@@ -7,7 +7,7 @@
 list_files(
   project = NULL,
   data_type = c("extraction", "project"),
-  detection_type = c(NULL, "matched", "qualified", "sentinel_tag", "unqualified"),
+  detection_type = c("all", "matched", "qualified", "sentinel_tag", "unqualified"),
   since = NULL
 )
 }

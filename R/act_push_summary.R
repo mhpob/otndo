@@ -1,9 +1,10 @@
-act_push_summary <- function(matos_project,
-                             qualified = NULL,
-                             unqualified = NULL,
-                             update_push_log = F#,
-                             # deployment = NULL
-                             ){
+act_push_summary <- function(
+    matos_project,
+    qualified = NULL,
+    unqualified = NULL,
+    update_push_log = F,
+    deployment = NULL
+){
 
   # Create a temporary directory to store intermediate files
   td <- tempdir()
@@ -66,9 +67,9 @@ act_push_summary <- function(matos_project,
 
     unqualified <- project_files[project_files$detection_type == 'unqualified',]
     unqualified <- lapply(unqualified$url,
-                        function(.){
-                          get_file(url = .)
-                        }
+                          function(.){
+                            get_file(url = .)
+                          }
     )
 
     unqualified <- unlist(unqualified)
@@ -97,6 +98,34 @@ act_push_summary <- function(matos_project,
   }
 
 
+  # Deployment log ----
+  if(!is.null(deployment)){
+    deployment <- readxl::read_excel(deployment,
+                                     sheet = 2, skip = 3)
+
+    names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
+    deployment <- deployment[!is.na(deployment$otn_array),]
+
+    deployment$deploy_date_time  <-  as.POSIXct(deployment$deploy_date_time, tz = 'UTC',
+                                                format = '%Y-%m-%dT%H:%M:%S')
+    deployment$recover_date_time <-  as.POSIXct(deployment$recover_date_time, tz = 'UTC',
+                                                 format = '%Y-%m-%dT%H:%M:%S')
+
+    deployment <- deployment[!is.na(deployment$deploy_date_time) & !is.na(deployment$recover_date_time),]
+    deployment$receiver <- paste(deployment$ins_model_no, deployment$ins_serial_no, sep = '-')
+    deployment$stationname <- deployment$station_no
+    deployment$internal_transmitter <- deployment$transmitter
+    deployment <- deployment[, c('stationname', 'receiver', 'internal_transmitter',
+                                 'deploy_date_time', 'deploy_lat', 'deploy_long',
+                                 'recover_date_time')]
+
+    deployment_filepath <- file.path(td, 'deployment.csv')
+    write.csv(deployment, deployment_filepath,
+              row.names = F)
+
+  }
+
+
   cat('\nWriting report...')
 
   quarto::quarto_render(
@@ -107,7 +136,8 @@ act_push_summary <- function(matos_project,
       project_number = project_number,
       qualified = qualified_filepath,
       unqualified = unqualified_filepath,
-      push_log = push_log
+      push_log = push_log,
+      deployment = deployment_filepath
     ))
 
   cat('Done.\n')
@@ -120,7 +150,9 @@ act_push_summary <- function(matos_project,
 # qualified <- c('proj192_qualified_detections_2021.csv',
 #                'proj192_qualified_detections_2022.csv')
 # unqualified <- c('proj192_unqualified_detections_2021.csv',
-#                'proj192_unqualified_detections_2022.csv')
+#                  'proj192_unqualified_detections_2022.csv')
 # act_push_summary(matos_project,
 #                  qualified,
-#                  unqualified)
+#                  unqualified,
+# deployment = 'c:/users/darpa2/Analysis/kennebec-sturgeon-monitoring/act-matos/MASTER_metadata_deployment.xlsx')
+#
