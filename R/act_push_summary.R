@@ -1,3 +1,5 @@
+#' Create summary reports of the ACT data push
+#'
 act_push_summary <- function(
     matos_project,
     qualified = NULL,
@@ -91,7 +93,7 @@ act_push_summary <- function(
 
   # Push log ----
   if(update_push_log == TRUE){
-    push_log <- 'https://raw.githubusercontent.com/mhpob/matos/push-summary/inst/push_log.csv'
+    push_log <- 'https://raw.githubusercontent.com/mhpob/matos/master/inst/push_log.csv'
   }else{
     push_log <- system.file("push_log.csv",
                             package="matos")
