@@ -19,7 +19,8 @@ Suggests:
     data.table (>= 1.14.3),
     geoarrow,
     ggplot2,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    leaflet
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
