@@ -18,7 +18,6 @@ Suggests:
     gt,
     data.table (>= 1.14.3),
     ggplot2,
-    geoarrow,
     testthat (>= 3.0.0)
 License: GPL (>= 3)
 Encoding: UTF-8
