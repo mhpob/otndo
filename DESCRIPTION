@@ -30,6 +30,6 @@ BugReports: https://github.com/mhpob/matos/issues
 Depends: 
     R (>= 4.1.0)
 Remotes: 
-    Rdatatable/data.table
+    Rdatatable/data.table,
     paleolimbot/geoarrow
 Config/testthat/edition: 3
