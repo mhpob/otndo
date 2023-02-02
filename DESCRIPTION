@@ -17,6 +17,7 @@ Suggests:
     sf,
     gt,
     data.table (>= 1.14.3),
+    geoarrow,
     ggplot2,
     testthat (>= 3.0.0)
 License: GPL (>= 3)
