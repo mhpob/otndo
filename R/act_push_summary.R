@@ -26,7 +26,7 @@ act_push_summary <- function(
   # }
 
   if(any(is.null(qualified), is.null(unqualified))){
-    cat('\nListing extraction files...')
+    cat('\nListing extraction files...\n')
     project_files <- list_files(project_number, 'extraction', 'all')
     cat(' Done.\n')
   }
@@ -34,9 +34,9 @@ act_push_summary <- function(
   # Qualified detections ----
   ##  Download qualified detections if not provided
   if(is.null(qualified)){
-    cat('\nDownloading qualified detections...')
+    cat('\nDownloading qualified detections...\n')
 
-    qualified <- project_files[project_files$detection_type == 'qualified']
+    qualified <- project_files[project_files$detection_type == 'qualified',]
     qualified <- lapply(qualified$url,
                         function(.){
                           get_file(url = .)
@@ -63,7 +63,7 @@ act_push_summary <- function(
   # Unqualified detections ----
   ##  Download unqualified detections if not provided
   if(is.null(unqualified)){
-    cat('\nDownloading unqualified detections...')
+    cat('\nDownloading unqualified detections...\n')
 
     unqualified <- project_files[project_files$detection_type == 'unqualified',]
     unqualified <- lapply(unqualified$url,

@@ -11,12 +11,9 @@ editor: visual
 execute:
   echo: false
 title: "`r paste('ACT push summary:', params$project_name)`"
-author: "[Mike O'Brien](mailto:obrien@umces.edu) via the [`matos` R package](https://www.github.com/mhpob/matos)"
+author: "[Mike O'Brien](mailto:obrien@umces.edu) via the [`matos` R package](https://mhpob.github.io/matos)"
 ---
 
-Other needs:
-
--   expand table size
 -   unqualified narrative
 
 ```{r}
@@ -25,6 +22,7 @@ Other needs:
 
 library(data.table)
 library(sf)
+library(mapview)
 library(geoarrow)
 library(ggplot2)
 library(gt)
@@ -59,7 +57,6 @@ pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi')) |>
     lapply(
       lapply(emails, unique),
       paste, collapse = '\n')))
-
 ```
 
 ```{r}
@@ -84,14 +81,25 @@ otn_tables <- lapply(otn_metadata_query, fread)
 otn_tables <- lapply(otn_tables, function(.) .[!grepl('^[FA]', collectioncode), collectioncode := paste0('OTN.', collectioncode)])
 ```
 
-These are data related to the `r format(push_log$date[nrow(push_log)], '%B %Y')` ACT data push. New matched detection files (["qualified" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)) were uploaded on `r format(push_log$date[nrow(push_log)], '%B %d')`. The last data push occurred on `r format(push_log$date[nrow(push_log) - 1], '%B %d, %Y')`.
+```{r}
+#| label: proper-urls
+
+act <- paste0('https://matos.asascience.com/project/detail/',
+              params$project_number)
+otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
+              params$project_number)
+```
+
+These are data related to the `r format(push_log$date[nrow(push_log)], '%B %Y')` ACT data push. New matched detection files (["qualified" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)) were uploaded on `r format(push_log$date[nrow(push_log)], '%B %d')`. The previous data push occurred on `r format(push_log$date[nrow(push_log) - 1], '%B %d, %Y')`.
 
 ## Overall
 
-A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](`r paste0('https://matos.asascience.com/project/detail/', params$project_number)`), [FACT](https://secoora.org/fact/projects/), and/or [OTN](`r paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ', params$project_number)`). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
+A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](`r act`), [FACT](https://secoora.org/fact/projects/), and/or [OTN](`r otn`). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
+
 
 ```{r}
 #| label: otn-match-table
+#| column: page-inset
 
 mt <- merge(
   qualified[, .(detections = .N), by = 'trackercode'],
@@ -116,7 +124,7 @@ setnames(mt, c('PIs', 'POC', 'Project name', 'Network', 'Project code', 'Detecti
 setorder(mt, -'Detections', -'Individuals')
 
 gt(mt) |>
-  tab_header(title = 'Matched detecions') |>
+  # tab_header(title = 'Matched detecions') |>
   as_raw_html()
 ```
 
@@ -163,11 +171,11 @@ if(!is.null(params$deployment)){
     geom_linerange(aes(y = stationname,
                        xmin = deploy_date_time,
                        xmax = recover_date_time),
-                   size = 5) +
+                   linewidth = 5) +
     geom_linerange(aes(ymin = as.numeric(factor(stationname)) - 0.4,
                        ymax = as.numeric(factor(stationname)) + 0.4,
                        x = recover_date_time),
-                   color = 'red', size = 2) +
+                   color = 'red', linewidth = 2) +
     scale_x_datetime(date_breaks = 'month', date_labels = '%b %y') +
     labs(x = NULL, y = NULL, title = 'Temporal receiver coverage') +
     theme_minimal() +
@@ -200,14 +208,40 @@ setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
 station_summary |>
   gt() |>
-  tab_header(title = 'Records by receivers') |>
-  tab_footnote('statons listed N-S, W-E',
-                locations = cells_title()) |>
+  # tab_header(title = 'Records by receivers') |>
+  # tab_footnote('statons listed N-S, W-E',
+  #               locations = cells_title()) |>
   as_raw_html()
 ```
 
 ```{r}
+#| label: station-spatial
+
+station_spatial <- qualified |>
+  unique(by = 'station') |>
+  DT(station_summary[, Station := toupper(Station)], , on = c('station'= 'Station'))|>
+  DT(, .(station, Detections, Individuals, longitude, latitude)) |> 
+  st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) 
+
+station_center <- st_centroid(st_union(station_spatial))
+station_center <- st_coordinates(station_center)
+```
+
+
+
+```{r}
+#| label: detection-map-leaflet
+mapview::mapview(station_spatial,
+                 zcol = 'Detections',
+                 cex = 'Individuals',
+                 layer.name = "Matched detections") 
+```
+
+
+
+```{r}
 #| label: detection-map
+#| eval: false
 
 station_spatial <- qualified |>
   unique(by = 'station') |>
@@ -267,7 +301,7 @@ setnames(new_mt, c('PIs', 'Project name', 'Network', 'Project code',
 setorder(new_mt, -'Detections', -'Individuals')
 
 gt(new_mt) |>
-  tab_header(title = 'New matched detections') |>
+  # tab_header(title = 'New matched detections') |>
   as_raw_html()
 ```
 
@@ -309,9 +343,9 @@ setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
 station_summary |>
   gt() |>
-  tab_header(title = 'Records by receivers') |>
-  tab_footnote('statons listed N-S, W-E',
-                locations = cells_title()) |>
+  # tab_header(title = 'Records by receivers') |>
+  # tab_footnote('statons listed N-S, W-E',
+  #               locations = cells_title()) |>
   as_raw_html()
 ```
 
@@ -329,7 +363,7 @@ station_summary |>
 #   geom_sf(data = bathy, color = 'lightgray') +
 #   geom_sf(data = midatl) +
 #   geom_sf(data = station_spatial,
-#           aes(size = Detections, color = Individuals)) +
+#           aes(linewidth = Detections, color = Individuals)) +
 #   labs(subtitle = 'New records by Mid-Bay receivers') +
 #   scale_color_viridis_c() +
 #   coord_sf(xlim = c(-76.5, -76.15), ylim = c(38.25, 38.45)) +
@@ -337,4 +371,51 @@ station_summary |>
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-blurb on unqualified/etc
+
+## Unmatched detections
+
+```{r}
+#| label: unqualified
+
+unqual_f <- unqualified[, .N, by = 'fieldnumber'][N <= 1]
+setnames(unqual_f, c('Transmitter', 'N'))
+
+unqual_real <- unqualified[, .N, by = 'fieldnumber'][N > 1]
+setnames(unqual_real, c('Transmitter', 'N'))
+```
+
+Some detections were not matched to other investigators via OTN nodes. There are `r format(nrow(unqualified), big.mark = ',')` of these ["unqualified" detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2) across `r uniqueN(unqualified, by  = 'fieldnumber')` transmitters.
+
+`r nrow(unqual_f)` of these are very likely false, as they only have one detection; this leaves detections of `r nrow(unqual_real)` transmitters that could find a home elsewhere.
+
+### Likely false detections
+```{r}
+#| label: unqualified-false
+
+unqual_f |> 
+  gt() |> 
+  as_raw_html()
+```
+
+### Possibly real detections
+```{r}
+#| label: unqualified-real
+
+unqual_real |> 
+  gt() |> 
+  as_raw_html()
+```
+
+
+```{r}
+#| label: temporal-distribution-unqual
+
+unqualified[, day := as.Date(datecollected)]
+unqualified_time <- unique(unqualified, by = c('station', 'day'))
+
+ggplot(unqualified_time) +
+  geom_tile(aes(x = day, y = station)) +
+  labs(x = '', y = '',
+       subtitle = 'Temporal distribution of unmatched detections by station') +
+  theme_minimal()
+```
