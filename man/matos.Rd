@@ -12,6 +12,7 @@ This package provides HTML-scaping functions to interact with the MATOS website 
 Useful links:
 \itemize{
   \item \url{https://github.com/mhpob/matos}
+  \item \url{https://mhpob.github.io/matos/}
   \item Report bugs at \url{https://github.com/mhpob/matos/issues}
 }
 
