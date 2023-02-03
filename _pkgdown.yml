@@ -7,7 +7,6 @@ reference:
   desc: Functions to list your MATOS files or projects
 - contents:
   - starts_with('list')
-  - get_my_projects
 - title: Downloading
   desc: Functions to download your files from MATOS
 - contents:
