@@ -94,7 +94,7 @@ get_file <- function(file = NULL, project = NULL,
   }
 
 
-# If calling the URL directly:
+  # If calling the URL directly:
   if(!is.null(url)){
 
     login_check(url)
@@ -103,7 +103,7 @@ get_file <- function(file = NULL, project = NULL,
 
   } else{
 
-# If providing a project name or number and a file/index instead of the URL:
+    # If providing a project name or number and a file/index instead of the URL:
 
     # Check and repair data_type names
     if(is.numeric(file) && is.na(data_type)){
@@ -140,8 +140,8 @@ get_file <- function(file = NULL, project = NULL,
       # Check that index exists in the table.
       if(file == 0 | file > nrow(file_table)){
         stop(paste0('There is no index matching what you have provided. ',
-                   'Try a file name or index from 1 to ',
-                   nrow(file_table), '.'))
+                    'Try a file name or index from 1 to ',
+                    nrow(file_table), '.'))
       }
 
       file_url <- file_table[file,]$url
@@ -163,149 +163,5 @@ get_file <- function(file = NULL, project = NULL,
       download_process(url = file_url)
     }
 
-  }
-}
-
-
-
-#' Download all data extraction files that were updated after a certain date
-#'
-#' This is a loop around \code{\link{get_file}}.
-#'
-#' @param ... arguments to \code{\link{list_files}}
-#' @param since Only list download files uploaded after this date. Must be in
-#'      YYYY-MM-DD format. Also passed to \code{\link{list_files}}.
-#' @param out_dir Character. What directory/folder do you want the file saved into?
-#'      Default is the current working directory. Passed to \code{httr::write_disk}
-#'      via \code{\link{get_file}}.
-#' @param overwrite Logical. Do you want a file with the same name overwritten?
-#'      Passed to \code{httr::write_disk} via \code{\link{get_file}}.
-#'
-#' @export
-get_updates <- function(..., out_dir = getwd(), overwrite = F, to_vue = F){
-
-  files <- list_files(...)
-
-  if(nrow(files) == 0){
-
-    print('No files uploaded since the provided date.')
-
-  } else{
-    pb <- txtProgressBar(min = 0, max = length(files$url), style = 3)
-    for(i in seq_along(files$url)){
-      cat('\n')
-
-      get_file(url = files$url[i],
-               out_dir = out_dir, overwrite = overwrite, to_vue = to_vue)
-
-      cat('\n')
-
-      setTxtProgressBar(pb, i)
-    }
-    close(pb)
-  }
-
-}
-
-
-
-
-#' Download Ocean-Tracking-Network-style metadata templates
-#'
-#' @param template_type Character string. One of: "tag" (default), the tagging
-#'      data submittal template; "receiver", the deployment data submittal template;
-#'      or "glider", the wave and Slocum glider metadata template.
-#' @param dest_file Optional character string noting where you would like the file
-#'      to be downloaded. Defaults to the working directory and the original file name.
-#'
-#' @return Ocean Tracking Network metadata template in XLSX format.
-#'
-#' @export
-#' @examples
-#' \dontrun{
-#' # Tag metadata template downloaded to working directory
-#' get_otn_template()
-#'
-#' # Glider metadata template downloaded to downloads folder
-#' get_otn_template('glider', 'c:/users/myusername/downloads/glider_metadata.xlsx')
-#' }
-get_otn_template <- function(template_type = c('tag', 'receiver', 'glider'),
-                             dest_file = NULL){
-
-  # Check that arguments are correct
-  template_type <- match.arg(template_type)
-
-  # Check that user is logged in
-  login_check()
-
-  # Convert template type to filename (as of 2020-11-02)
-  template_file <- switch(template_type,
-                          tag = 'otn_metadata_deployment.xlsx',
-                          receiver = 'otn_metadata_tagging.xlsx',
-                          glider = 'glider-deployment-metadata-v2.xlsx')
-
-
-  # Download the file
-  download.file(paste('https://matos.asascience.com/static', template_file, sep = '/'),
-                destfile = ifelse(is.null(dest_file), template_file, dest_file),
-                mode = 'wb')
-}
-
-
-
-#' Search for tags on the MATOS website
-#'
-#' This function is an interface to \href{https://matos.asascience.com/search}{MATOS' tag search page},
-#' with the result of a CSV downloaded into your working directory. Be aware: these
-#' downloads can take a *long* time, especially if you have many tags or are
-#' searching over a long period of time.
-#'
-#' @param tags Character vector of tags. Will be coerced into CSV when POSTing to
-#'     the website.
-#' @param start_date Character string listing the start date in MM/DD/YYYY format.
-#'     If no dates are provided, all tag detections are returned.
-#' @param end_date Character string listing the end date in MM/DD/YYYY format.
-#'     If no dates are provided, all tag detections are returned.
-#' @param import Should the downloaded data be imported into R as a data frame? Default is FALSE.
-#'
-#' @export
-#' @examples
-#' \dontrun{
-#' tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
-#'            start_date = '03/01/2016',
-#'            end_date = '04/01/2016')
-#' }
-
-tag_search <- function(tags, start_date, end_date, import = F){
-
-  # Time of query (used to match MATOS naming convention)
-  time_of_query <- as.POSIXlt(Sys.time())
-
-  cat('Downloading data. Please note that this can take a while!\n')
-
-  search <- httr::POST(
-    'https://matos.asascience.com/search/searchtags',
-    body = list(
-      startDate = start_date,
-      endDate = end_date,
-      tagSearch = paste(tags, collapse = ',')
-    ),
-    httr::write_disk(paste('MATOS_Export',
-                           time_of_query$year + 1900,
-                           time_of_query$mon + 1,
-                           time_of_query$mday,
-                           time_of_query$hour,
-                           paste0(time_of_query$min, '.csv'),
-                           sep = "_"))
-  )
-
-  cat('Download complete. File saved to', file.path(search$content))
-
-  if(import == T){
-    cat('\nReading file into R...')
-
-    read.csv(file.path(search$content))
-
-    cat('\nCompleted!')
   }
 }
