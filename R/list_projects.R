@@ -47,7 +47,7 @@ list_projects <- function(what = c('all', 'mine'), read_access = T){
   }
 
   if(what == 'mine'){
-    projects <- get_my_projects(read_access = read_access)
+    projects <- list_my_projects(read_access = read_access)
   }
 
   projects

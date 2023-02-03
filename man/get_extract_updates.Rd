@@ -11,14 +11,14 @@ get_extract_updates(..., out_dir = getwd(), overwrite = F, to_vue = F)
 
 \item{out_dir}{Character. What directory/folder do you want the file saved into?
 Default is the current working directory. Passed to \code{httr::write_disk}
-via \code{\link{get_file}}.}
+via \code{\link{get_extract_file}}.}
 
 \item{overwrite}{Logical. Do you want a file with the same name overwritten?
-Passed to \code{httr::write_disk} via \code{\link{get_file}}.}
+Passed to \code{httr::write_disk} via \code{\link{get_extract_file}}.}
 
 \item{since}{Only list download files uploaded after this date. Must be in
 YYYY-MM-DD format. Also passed to \code{\link{list_extract_files}}.}
 }
 \description{
-This is a loop around \code{\link{get_file}}.
+This is a loop around \code{\link{get_extract_file}}.
 }
