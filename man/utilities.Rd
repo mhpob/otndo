@@ -23,7 +23,7 @@ login_check(url = "https://matos.asascience.com/report/submit")
 
 scrape_file_urls(html_file_list)
 
-download_process(url)
+download_process(url, out_dir, overwrite, to_vue)
 }
 \arguments{
 \item{project_number}{Number of the project}

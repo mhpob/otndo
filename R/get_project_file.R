@@ -34,7 +34,8 @@ get_project_file <- function(file = NULL, project = NULL,
 
     login_check(url)
 
-    download_process(url = url)
+    download_process(url = url, out_dir = out_dir, overwrite = overwrite,
+                     to_vue = to_vue)
 
   } else{
 
@@ -66,7 +67,8 @@ get_project_file <- function(file = NULL, project = NULL,
 
       file_url <- file_table[file,]$url
 
-      download_process(url = file_url)
+      download_process(url = file_url, out_dir = out_dir, overwrite = overwrite,
+                       to_vue = to_vue)
 
     } else{
       # Protect against issues dealing with case
@@ -80,7 +82,8 @@ get_project_file <- function(file = NULL, project = NULL,
 
       file_url <- file_table[file_table$file_name == file,]$url
 
-      download_process(url = file_url)
+      download_process(url = file_url, out_dir = out_dir, overwrite = overwrite,
+                       to_vue = to_vue)
     }
 
   }

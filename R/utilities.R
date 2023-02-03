@@ -193,7 +193,7 @@ scrape_file_urls <- function(html_file_list){
 
 #' @rdname utilities
 #'
-download_process <- function(url){
+download_process <- function(url, out_dir, overwrite, to_vue){
   GET_header <- httr::GET(url)
 
   response <-  httr::GET(
