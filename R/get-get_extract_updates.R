@@ -2,9 +2,9 @@
 #'
 #' This is a loop around \code{\link{get_file}}.
 #'
-#' @param ... arguments to \code{\link{list_files}}
+#' @param ... arguments to \code{\link{list_extract_files}}
 #' @param since Only list download files uploaded after this date. Must be in
-#'      YYYY-MM-DD format. Also passed to \code{\link{list_files}}.
+#'      YYYY-MM-DD format. Also passed to \code{\link{list_extract_files}}.
 #' @param out_dir Character. What directory/folder do you want the file saved into?
 #'      Default is the current working directory. Passed to \code{httr::write_disk}
 #'      via \code{\link{get_file}}.
@@ -12,9 +12,9 @@
 #'      Passed to \code{httr::write_disk} via \code{\link{get_file}}.
 #'
 #' @export
-get_updates <- function(..., out_dir = getwd(), overwrite = F, to_vue = F){
+get_extract_updates <- function(..., out_dir = getwd(), overwrite = F, to_vue = F){
 
-  files <- list_files(...)
+  files <- list_extract_files(...)
 
   if(nrow(files) == 0){
 
