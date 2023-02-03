@@ -7,6 +7,7 @@ reference:
   desc: Functions to download your files from MATOS
 - contents:
   - starts_with('get_')
+  - tag_search
 - title: Listing
   desc: Functions to list your MATOS files or projects
 - contents:
@@ -19,4 +20,7 @@ reference:
 - title: Uploading
 - contents:
   - post_file
+- title: Utilities
+- contents:
+  - matos_login
 
