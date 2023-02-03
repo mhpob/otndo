@@ -114,7 +114,7 @@ get_file_list <- function(project_number, data_type){
 #'
 get_project_number <- function(project){
   projects <- matos_projects()
-  projects[projects$name == trimws(project),]$number
+  projects[tolower(projects$name) == tolower(trimws(project)),]$number
 }
 
 
@@ -122,7 +122,7 @@ get_project_number <- function(project){
 #'
 get_project_name <- function(project){
   projects <- matos_projects()
-  projects[tolower(projects$number) == tolower(project),]$name
+  projects[projects$number == project,]$name
 }
 
 
