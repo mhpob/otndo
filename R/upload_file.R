@@ -3,7 +3,7 @@
 #' This function lets you post files to your projects. You will need to log in
 #' before uploading.
 #'
-#' \code{post_file} takes a project name or number, the file you want to upload,
+#' \code{upload_file} takes a project name or number, the file you want to upload,
 #' and the type of file you want to upload (defaulting to VRL transmitter detections).
 #'
 #' @param project The name (character) or number (numeric) of the project to which
@@ -30,23 +30,26 @@
 #' @examples
 #' \dontrun{
 #' # Newly tagged fish, the default
-#' post_file(87, 'your_tagged_fish.xls')
-#' post_file(87, 'your_tagged_fish.xls', 'new_tags')
+#' upload_file(87, 'your_tagged_fish.xls')
+#' upload_file(87, 'your_tagged_fish.xls', 'new_tags')
 #'
 #' # Transmitter detections
-#' post_file('umces boem offshore wind energy', 'c:/wherever/your_CSV_detections.csv',
-#'      'detections')
-#' post_file('umces boem offshore wind energy', 'c:/wherever/your_VRL_detections.vrl',
-#'      'detections')
+#' upload_file('umces boem offshore wind energy',
+#'       'c:/wherever/your_CSV_detections.csv',
+#'       'detections')
+#' upload_file('umces boem offshore wind energy',
+#'       'c:/wherever/your_VRL_detections.vrl',
+#'       'detections')
 #'
 #' # Receiver metadata
-#' post_file('umces boem offshore wind energy', 'your_receiver_metadata.xlsx', 'receivers')
+#' upload_file('umces boem offshore wind energy',
+#'       'your_receiver_metadata.xlsx', 'receivers')
 #' }
 
-post_file <- function(project, file,
-                      data_type = c('new_tags', 'receivers', 'detections',
-                                    'events', 'gps', 'glider'),
-                      print_response = F){
+upload_file <- function(project, file,
+                        data_type = c('new_tags', 'receivers', 'detections',
+                                      'events', 'gps', 'glider'),
+                        print_response = F){
   # CHECKS
   ## Check that only one project and/or data_type are provided
   if(length(project) > 1 | length(data_type) > 1){
