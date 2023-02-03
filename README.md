@@ -148,34 +148,16 @@ MATOS. I can download directly if I know the URL of the file:
 project_files$url[1]
 #> [1] "https://matos.asascience.com/projectfile/download/375"
 
-get_file(url = project_files$url[1])
+get_project_file(url = project_files$url[1])
 #> File saved to C:\Users\darpa2\Analysis\matos\BOEM_metadata_deployment.xls
 #> [1] "C:\\Users\\darpa2\\Analysis\\matos\\BOEM_metadata_deployment.xls"
 ```
 
 I can download by using an index from the `ACT_MATOS_files` table above,
-here the file on the second row. Note that this means we have to specify
-what kind of data we’re looking for when identifying by index.
+here the file on the second row.
 
 ``` r
-get_file(file = 2, project = 'umces boem offshore wind energy', data_type = 'extraction')
-#> File saved to C:\Users\darpa2\Analysis\matos\proj87_matched_detections_2018.zip
-#> File unzipped to C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv C:/Users/darpa2/Analysis/matos/data_description.txt
-#> [1] "C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv"
-#> [2] "C:/Users/darpa2/Analysis/matos/data_description.txt"
-```
-
-If I download using a file name, `get_file` will use the file extension
-to figure out what kind of data I want, so explicitly identifying the
-data type is not needed. Since all data extraction files are zipped, the
-function assumes the correct data type.
-
-``` r
-get_file(file = 'proj87_matched_detections_2018.zip',
-         project = 'umces boem offshore wind energy',
-         overwrite = T)
-#> Warning in is.character(file) && is.na(data_type): 'length(x) = 3 > 1' in
-#> coercion to 'logical(1)'
+get_extract_file(file = 2, project = 'umces boem offshore wind energy')
 #> File saved to C:\Users\darpa2\Analysis\matos\proj87_matched_detections_2018.zip
 #> File unzipped to C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv C:/Users/darpa2/Analysis/matos/data_description.txt
 #> [1] "C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv"

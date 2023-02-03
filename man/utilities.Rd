@@ -8,6 +8,7 @@
 \alias{html_table_to_df}
 \alias{login_check}
 \alias{scrape_file_urls}
+\alias{download_process}
 \title{Internal functions used by \code{matos}}
 \usage{
 get_file_list(project_number, data_type)
@@ -21,6 +22,8 @@ html_table_to_df(html_file_list)
 login_check(url = "https://matos.asascience.com/report/submit")
 
 scrape_file_urls(html_file_list)
+
+download_process(url, out_dir, overwrite, to_vue)
 }
 \arguments{
 \item{project_number}{Number of the project}
@@ -58,5 +61,8 @@ to the login page.
 
 \code{scrape_file_urls} is used internally by \code{html_table_to_df} to extract
 the URLs associates with each "Download" link.
+
+\code{download_process} is used internally by \code{get_project_file} and
+\code{get_extract_file}
 }
 

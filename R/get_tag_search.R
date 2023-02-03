@@ -1,6 +1,7 @@
 #' Search for tags on the MATOS website
 #'
-#' This function is an interface to \href{https://matos.asascience.com/search}{MATOS' tag search page},
+#' This function is an interface to
+#' \href{https://matos.asascience.com/search}{MATOS' tag search page},
 #' with the result of a CSV downloaded into your working directory. Be aware: these
 #' downloads can take a *long* time, especially if you have many tags or are
 #' searching over a long period of time.
@@ -16,12 +17,12 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
+#' get_tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
 #'            start_date = '03/01/2016',
 #'            end_date = '04/01/2016')
 #' }
 
-tag_search <- function(tags, start_date, end_date, import = F){
+get_tag_search <- function(tags, start_date, end_date, import = F){
 
   # Time of query (used to match MATOS naming convention)
   time_of_query <- as.POSIXlt(Sys.time())

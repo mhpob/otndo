@@ -38,7 +38,8 @@ prompted to log in.
 1) find the project number if not provided, 2) download
 the HTML table, 3) parse the URL for each file, and 4) combine the table and
 URLs into a data frame. This function is most useful when investigating what
-files you have available, and then downloading them with \code{\link{get_file}}.
+files you have available, and then downloading them with
+\code{\link{get_extract_file}}.
 
 \code{list_extract_files} lists files associated with the ACT_MATOS OTN node. These
 are files listed on the *Data Extraction Files* page.
