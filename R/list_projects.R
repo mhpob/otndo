@@ -16,12 +16,12 @@
 #' @examples
 #' \dontrun{
 #' # List all projects, the default:
-#' matos_projects()
+#' list_projects()
 #'
 #' # List your projects (which may contain some for which you do not have read access):
-#' matos_projects('mine', read_access = F)
+#' list_projects('mine', read_access = F)
 #' }
-matos_projects <- function(what = c('all', 'mine'), read_access = T){
+list_projects <- function(what = c('all', 'mine'), read_access = T){
 
   what <- match.arg(what)
 
