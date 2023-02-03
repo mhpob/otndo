@@ -46,11 +46,6 @@ list_extract_files <- function(project = NULL,
                        since = NULL){
 
   # Check and coerce input args
-  data_type <- gsub(' |file[s]?|data', '', data_type)
-  data_type <- match.arg(data_type)
-  data_type <- ifelse(data_type == 'extraction', 'dataextractionfiles',
-                      'downloadfiles')
-
   detection_type <- gsub(' |detection[s]', '', detection_type)
   detection_type <- match.arg(detection_type)
 
