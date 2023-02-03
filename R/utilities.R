@@ -122,7 +122,7 @@ get_project_number <- function(project){
 #'
 get_project_name <- function(project){
   projects <- matos_projects()
-  projects[projects$number == project,]$name
+  projects[tolower(projects$number) == tolower(project),]$name
 }
 
 
