@@ -11,8 +11,7 @@ reference:
 - title: Listing
   desc: Functions to list your MATOS files or projects
 - contents:
-  - matos_projects
-  - list_files
+  - starts_with('list')
   - get_my_projects
 - title: Summarizing
 - contents:
