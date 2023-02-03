@@ -14,6 +14,7 @@ reference:
   - list_files
   - get_my_projects
 - title: Summarizing
+- contents:
   - act_push_summary
 - title: Uploading
 - contents:
