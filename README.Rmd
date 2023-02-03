@@ -76,20 +76,13 @@ There are a few ways to download the different types of files held by MATOS. I c
 ```{r}
 project_files$url[1]
 
-get_file(url = project_files$url[1])
+get_project_file(url = project_files$url[1])
 ```
 
-I can download by using an index from the `ACT_MATOS_files` table above, here the file on the second row. Note that this means we have to specify what kind of data we're looking for when identifying by index.
+I can download by using an index from the `ACT_MATOS_files` table above, here the file on the second row.
 
 ```{r}
-get_file(file = 2, project = 'umces boem offshore wind energy', data_type = 'extraction')
-```
-
-If I download using a file name, `get_file` will use the file extension to figure out what kind of data I want, so explicitly identifying the data type is not needed. Since all data extraction files are zipped, the function assumes the correct data type.
-```{r}
-get_file(file = 'proj87_matched_detections_2018.zip',
-         project = 'umces boem offshore wind energy',
-         overwrite = T)
+get_extract_file(file = 2, project = 'umces boem offshore wind energy')
 ```
 
 ## Search and download tag detections
