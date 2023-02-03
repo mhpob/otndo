@@ -10,9 +10,9 @@
 #' @examples
 #' \dontrun{
 #' # After logging in, just type the following:
-#' get_my_projects()
+#' list_my_projects()
 #' }
-get_my_projects <- function(read_access = T){
+list_my_projects <- function(read_access = T){
   url <- 'https://matos.asascience.com/report/submit'
 
   login_check(url)
@@ -24,7 +24,7 @@ get_my_projects <- function(read_access = T){
     rvest::html_nodes('option') %>%
     rvest::html_text()
 
-  all_projects <- matos_projects()
+  all_projects <- list_projects()
 
   if(read_access == T){
     project_numbers <- unique(unlist(sapply(names, get_project_number)))

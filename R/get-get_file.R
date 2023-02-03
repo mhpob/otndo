@@ -1,14 +1,16 @@
 #' Download files from the MATOS website
 #'
 #' \code{get_file} downloads files from the MATOS website. This is best-used in
-#' conjunction with \code{\link{list_files}}.
+#' conjunction with \code{\link{list_extract_files}} or
+#' \code{\link{list_project_files}}.
 #'
 #' @param file A character vector listing the name of the file, or a numeric listing
-#'     the index as found from \code{list_files}.
+#'     the index as found from \code{\link{list_extract_files}} or
+#'     \code{\link{list_project_files}}.
 #' @param project A character vector listing the full name of the project, or a
 #'     numeric listing the project number.
-#' @param data_type one of NA (default), "extraction", or "project"; used in a
-#'     call to \code{list_files} under the hood. If NA, it will try to guess whether
+#' @param data_type one of NA (default), "extraction", or "project". If NA, it
+#'     will try to guess whether
 #'     project files or data extraction files are desired from the file name. If
 #'     the file index is provided, it cannot guess and will throw an error. When
 #'     "extraction" or "project" is provided, it will list the data extraction or

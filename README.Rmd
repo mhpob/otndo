@@ -42,20 +42,20 @@ remotes::install_github("mhpob/matos")
 
 ## List available files
 
-First, `matos_projects` returns the [project page](https://matos.asascience.com/project), which is useful to figure out what URLs are associated with each project. You do not need MATOS permissions in order to view this page.
+First, `list_projects` returns the [project page](https://matos.asascience.com/project), which is useful to figure out what URLs are associated with each project. You do not need MATOS permissions in order to view this page.
 
 ```{r list_projs}
 library(matos)
 
-all_projects <- matos_projects()
+all_projects <- list_projects()
 
 head(all_projects)
 ```
 
-I can also view the files that I've uploaded to my projects using `list_files`, but that requires logging in first.
+I can also view the files that I've uploaded to my projects using `list_project_files`, but that requires logging in first.
 
 ```{r}
-project_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
+project_files <- list_project_files(project = 'umces boem offshore wind energy')
 
 head(project_files)
 ```
@@ -63,7 +63,7 @@ head(project_files)
 I can also list any of my OTN node *Data Extraction Files*.
 
 ```{r}
-ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
+ACT_MATOS_files <- list_extract_files(project = 'umces boem offshore wind energy', detection_type = 'all')
 
 head(ACT_MATOS_files)
 ```
