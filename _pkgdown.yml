@@ -11,13 +11,12 @@ reference:
   desc: Functions to download your files from MATOS
 - contents:
   - starts_with('get_')
-  - tag_search
 - title: Summarizing
 - contents:
   - act_push_summary
 - title: Uploading
 - contents:
-  - post_file
+  - upload_file
 - title: Utilities
 - contents:
   - matos_login

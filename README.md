@@ -113,7 +113,8 @@ head(project_files)
 I can also list any of my OTN node *Data Extraction Files*.
 
 ``` r
-ACT_MATOS_files <- list_extract_files(project = 'umces boem offshore wind energy', detection_type = 'all')
+ACT_MATOS_files <- list_extract_files(project = 'umces boem offshore wind energy',
+                                      detection_type = 'all')
 
 head(ACT_MATOS_files)
 #>   project            file_type detection_type detection_year upload_date
@@ -206,9 +207,9 @@ get_otn_template('glider')
 Then, get to uploading!
 
 ``` r
-post_file(project = 'umces boem offshore wind energy',
-          file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
-          data_type = 'new_tags')
+upload_file(project = 'umces boem offshore wind energy',
+            file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
+            data_type = 'new_tags')
 ```
 
 ## Development
