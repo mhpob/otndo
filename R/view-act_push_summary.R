@@ -1,5 +1,13 @@
 #' Create summary reports of the ACT data push
 #'
+#' @param matos_project MATOS project number or name that you wish to have summarized
+#' @param qualified Default is NULL; OTN qualified detections will be downloaded and unzipped. If you do not wish to download your qualified detections, this argument also accepts a character vector of file paths of your qualified detections.
+#' @param unqualified Default is NULL; OTN unqualified detections will be downloaded and unzipped. If you do not wish to download your unqualified detections, this argument also accepts a character vector of file paths of your unqualified detections.
+#' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
+#' @param deployment File path of user-supplied master OTN receiver deployment metadata.
+#'
+#' @export
+
 act_push_summary <- function(
     matos_project,
     qualified = NULL,
