@@ -29,7 +29,7 @@ act_push_summary <- function(
 
   if(any(is.null(qualified), is.null(unqualified))){
     cat('\nListing extraction files...\n')
-    project_files <- list_files(project_number, 'extraction', 'all')
+    project_files <- list_extract_files(project_number, 'all')
     cat(' Done.\n')
   }
 
@@ -41,7 +41,7 @@ act_push_summary <- function(
     qualified <- project_files[project_files$detection_type == 'qualified',]
     qualified <- lapply(qualified$url,
                         function(.){
-                          get_file(url = .)
+                          get_extract_file(url = .)
                         }
     )
 
@@ -70,7 +70,7 @@ act_push_summary <- function(
     unqualified <- project_files[project_files$detection_type == 'unqualified',]
     unqualified <- lapply(unqualified$url,
                           function(.){
-                            get_file(url = .)
+                            get_extract_file(url = .)
                           }
     )
 
@@ -132,7 +132,6 @@ act_push_summary <- function(
 
   quarto::quarto_render(
     input = 'inst/qmd_template/act-push-summary.qmd',
-    # input = 'inst/qmd_template/test.qmd',
     execute_params = list(
       project_name = project_name,
       project_number = project_number,

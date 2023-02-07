@@ -27,6 +27,15 @@ knitr::opts_chunk$set(
 Please note that you will need a MATOS account, [which you can sign up for here](https://matos.asascience.com/account/signup), in order to interface with any project-specific files.
 
 ## News!
+### 2023-02-02
+  - The package has a pkgdown website at [https://mhpob.github.io/matos/](https://mhpob.github.io/matos/)
+  - [`act_push_summary`](https://mhpob.github.io/matos/reference/act_push_summary.html) is live! This currently only does receiver summaries, but tag summaries are coming soon.
+  - Most functions have been renamed following a LIST-GET workflow.
+    - LIST your files to see what you have
+    - GET those files
+    - and also... UPLOAD. But that didn't fit into the pithy saying.
+  - A few functions, namely `list_files` and `get_file` have been split into functions with fewer options and clearer names (`list_extract_files` and `list_project_files`, e.g.). Hopefully this will make things more intuitive.
+  
 ### 2021-04-12
   - `get_updates`: A new function to download all files updated since a given date. Super useful after a data push!
   - `list_files` now has a `since` argument, allowing you to only list the files that have been updated since a certain date.
@@ -42,20 +51,20 @@ remotes::install_github("mhpob/matos")
 
 ## List available files
 
-First, `matos_projects` returns the [project page](https://matos.asascience.com/project), which is useful to figure out what URLs are associated with each project. You do not need MATOS permissions in order to view this page.
+First, `list_projects` returns the [project page](https://matos.asascience.com/project), which is useful to figure out what URLs are associated with each project. You do not need MATOS permissions in order to view this page.
 
 ```{r list_projs}
 library(matos)
 
-all_projects <- matos_projects()
+all_projects <- list_projects()
 
 head(all_projects)
 ```
 
-I can also view the files that I've uploaded to my projects using `list_files`, but that requires logging in first.
+I can also view the files that I've uploaded to my projects using `list_project_files`, but that requires logging in first.
 
 ```{r}
-project_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
+project_files <- list_project_files(project = 'umces boem offshore wind energy')
 
 head(project_files)
 ```
@@ -63,7 +72,8 @@ head(project_files)
 I can also list any of my OTN node *Data Extraction Files*.
 
 ```{r}
-ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
+ACT_MATOS_files <- list_extract_files(project = 'umces boem offshore wind energy',
+                                      detection_type = 'all')
 
 head(ACT_MATOS_files)
 ```
@@ -76,20 +86,13 @@ There are a few ways to download the different types of files held by MATOS. I c
 ```{r}
 project_files$url[1]
 
-get_file(url = project_files$url[1])
+get_project_file(url = project_files$url[1])
 ```
 
-I can download by using an index from the `ACT_MATOS_files` table above, here the file on the second row. Note that this means we have to specify what kind of data we're looking for when identifying by index.
+I can download by using an index from the `ACT_MATOS_files` table above, here the file on the second row.
 
 ```{r}
-get_file(file = 2, project = 'umces boem offshore wind energy', data_type = 'extraction')
-```
-
-If I download using a file name, `get_file` will use the file extension to figure out what kind of data I want, so explicitly identifying the data type is not needed. Since all data extraction files are zipped, the function assumes the correct data type.
-```{r}
-get_file(file = 'proj87_matched_detections_2018.zip',
-         project = 'umces boem offshore wind energy',
-         overwrite = T)
+get_extract_file(file = 2, project = 'umces boem offshore wind energy')
 ```
 
 ## Search and download tag detections
@@ -126,9 +129,9 @@ get_otn_template('glider')
 
 Then, get to uploading!
 ```{r eval=FALSE}
-post_file(project = 'umces boem offshore wind energy',
-          file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
-          data_type = 'new_tags')
+upload_file(project = 'umces boem offshore wind energy',
+            file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
+            data_type = 'new_tags')
 ```
 
 

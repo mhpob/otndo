@@ -2,3 +2,22 @@ url: https://mhpob.github.io/matos/
 template:
   bootstrap: 5
 
+reference:
+- title: Listing
+  desc: Functions to list your MATOS files or projects
+- contents:
+  - starts_with('list')
+- title: Downloading
+  desc: Functions to download your files from MATOS
+- contents:
+  - starts_with('get_')
+- title: Summarizing
+- contents:
+  - act_push_summary
+- title: Uploading
+- contents:
+  - upload_file
+- title: Utilities
+- contents:
+  - matos_login
+

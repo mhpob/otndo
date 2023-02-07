@@ -86,6 +86,9 @@ matos_login <- function(){
 #' \code{scrape_file_urls} is used internally by \code{html_table_to_df} to extract
 #' the URLs associates with each "Download" link.
 #'
+#' \code{download_process} is used internally by \code{get_project_file} and
+#' \code{get_extract_file}
+#'
 #' @param project_number Number of the project
 #' @param data_type one of "dataextractionfiles" or "projectfiles".
 #' @param project Character string of the full MATOS project name. This will be the
@@ -113,15 +116,15 @@ get_file_list <- function(project_number, data_type){
 #' @rdname utilities
 #'
 get_project_number <- function(project){
-  projects <- matos_projects()
-  projects[projects$name == trimws(project),]$number
+  projects <- list_projects()
+  projects[tolower(projects$name) == tolower(trimws(project)),]$number
 }
 
 
 #' @rdname utilities
 #'
 get_project_name <- function(project){
-  projects <- matos_projects()
+  projects <- list_projects()
   projects[projects$number == project,]$name
 }
 
@@ -186,4 +189,53 @@ scrape_file_urls <- function(html_file_list){
   urls <- grep('projectfile', urls, value = T)
 
   paste0('https://matos.asascience.com', urls)
+}
+
+#' @rdname utilities
+#'
+download_process <- function(url, out_dir, overwrite, to_vue){
+  GET_header <- httr::GET(url)
+
+  response <-  httr::GET(
+    url,
+    httr::write_disk(
+      path = file.path(out_dir,
+                       sub('.*filename=', '',
+                           httr::headers(GET_header)$'content-disposition')),
+      overwrite = overwrite)
+  )
+
+  file_loc <- file.path(response$content)
+  cat('File saved to', file_loc)
+
+  if(grepl('zip', file_loc)){
+    file_loc <- unzip(file_loc, exdir = out_dir, setTimes = FALSE)
+
+    cat('\nFile unzipped to', file_loc, '\n')
+  }
+
+  if(isTRUE(to_vue)){
+    file_csv <- grep('.csv', file_loc, value = T)
+    matos <- read.csv(
+      file_csv
+    )
+
+
+    matos$transmitter.name <- ''
+    matos$transmitter.serial <- ''
+
+    matos <- matos[, c('datecollected', 'receiver', 'tagname', 'transmitter.name',
+                       'transmitter.serial', 'sensorraw', 'sensorunit', 'station',
+                       'latitude', 'longitude')]
+
+    names(matos) <- c('Date and Time (UTC)', 'Receiver', 'Transmitter',
+                      'Transmitter Name', 'Transmitter Serial', 'Sensor Value',
+                      'Sensor Unit', 'Station Name', 'Latitude', 'Longitude')
+
+    write.csv(matos, file_csv, row.names = F)
+    cat('\nCSV converted to VUE format.')
+
+  }
+
+  file_loc
 }

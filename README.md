@@ -27,12 +27,27 @@ interface with any project-specific files.
 
 ## News!
 
+### 2023-02-02
+
+- The package has a pkgdown website at <https://mhpob.github.io/matos/>
+- [`act_push_summary`](https://mhpob.github.io/matos/reference/act_push_summary.html)
+  is live! This currently only does receiver summaries, but tag
+  summaries are coming soon.
+- Most functions have been renamed following a LIST-GET workflow.
+  - LIST your files to see what you have
+  - GET those files
+  - and also… UPLOAD. But that didn’t fit into the pithy saying.
+- A few functions, namely `list_files` and `get_file` have been split
+  into functions with fewer options and clearer names
+  (`list_extract_files` and `list_project_files`, e.g.). Hopefully this
+  will make things more intuitive.
+
 ### 2021-04-12
 
--   `get_updates`: A new function to download all files updated since a
-    given date. Super useful after a data push!
--   `list_files` now has a `since` argument, allowing you to only list
-    the files that have been updated since a certain date.
+- `get_updates`: A new function to download all files updated since a
+  given date. Super useful after a data push!
+- `list_files` now has a `since` argument, allowing you to only list the
+  files that have been updated since a certain date.
 
 ## Installation
 
@@ -47,41 +62,41 @@ remotes::install_github("mhpob/matos")
 
 ## List available files
 
-First, `matos_projects` returns the [project
+First, `list_projects` returns the [project
 page](https://matos.asascience.com/project), which is useful to figure
 out what URLs are associated with each project. You do not need MATOS
 permissions in order to view this page.
 
 ``` r
 library(matos)
-#> By continuing, you are agreeing to the ACT Network MATOS User Agreement and Data Policy, Version 1.1:
+#> By continuing, you are agreeing to the ACT Network MATOS User Agreement and Data Policy, Version 1.2:
 #> 
 #> https://matos.asascience.com/static/MATOS.User.Agreement.V1.1.pdf
 
-all_projects <- matos_projects()
+all_projects <- list_projects()
 
 head(all_projects)
-#>                                      name number
-#> 1                               ack array    168
-#> 2     apg atlantic and shortnose sturgeon    176
-#> 3 boem-de offshore wind energy area study     85
-#> 4                         brandywine shad    162
-#> 5      btwaves caribbean acoustic tagging     94
-#> 6                    cfcc marine tech cfr     98
+#>                                   name number
+#> 1                            ACK Array    168
+#> 2  APG Atlantic and Shortnose Sturgeon    176
+#> 3 ASI - White Shark Study, Montauk, NY    211
+#> 4                   ASI Acoustic Array    100
+#> 5              ASI Spinner Shark Study    227
+#> 6   ASI White Shark Study, Southern NE    232
 #>                                               url
 #> 1 https://matos.asascience.com/project/detail/168
 #> 2 https://matos.asascience.com/project/detail/176
-#> 3  https://matos.asascience.com/project/detail/85
-#> 4 https://matos.asascience.com/project/detail/162
-#> 5  https://matos.asascience.com/project/detail/94
-#> 6  https://matos.asascience.com/project/detail/98
+#> 3 https://matos.asascience.com/project/detail/211
+#> 4 https://matos.asascience.com/project/detail/100
+#> 5 https://matos.asascience.com/project/detail/227
+#> 6 https://matos.asascience.com/project/detail/232
 ```
 
 I can also view the files that I’ve uploaded to my projects using
-`list_files`, but that requires logging in first.
+`list_project_files`, but that requires logging in first.
 
 ``` r
-project_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'project')
+project_files <- list_project_files(project = 'umces boem offshore wind energy')
 #> Please log in.
 #> Please enter password in TK window (Alt+Tab)
 #> Please enter password in TK window (Alt+Tab)
@@ -113,23 +128,24 @@ head(project_files)
 I can also list any of my OTN node *Data Extraction Files*.
 
 ``` r
-ACT_MATOS_files <- list_files(project = 'umces boem offshore wind energy', data_type = 'extraction')
+ACT_MATOS_files <- list_extract_files(project = 'umces boem offshore wind energy',
+                                      detection_type = 'all')
 
 head(ACT_MATOS_files)
 #>   project            file_type detection_type detection_year upload_date
-#> 1      87 Data Extraction File        matched           2017  2021-11-23
-#> 2      87 Data Extraction File        matched           2018  2021-08-17
-#> 3      87 Data Extraction File        matched           2019  2021-08-17
-#> 4      87 Data Extraction File        matched           2020  2021-11-23
-#> 5      87 Data Extraction File        matched           2021  2021-08-17
-#> 6      87 Data Extraction File      qualified           2016  2021-11-23
-#>                              file_name
-#> 1   proj87_matched_detections_2017.zip
-#> 2   proj87_matched_detections_2018.zip
-#> 3   proj87_matched_detections_2019.zip
-#> 4   proj87_matched_detections_2020.zip
-#> 5   proj87_matched_detections_2021.zip
-#> 6 proj87_qualified_detections_2016.zip
+#> 1      87 Data Extraction File        matched           2017  2022-11-02
+#> 2      87 Data Extraction File        matched           2018  2022-07-13
+#> 3      87 Data Extraction File        matched           2019  2022-11-02
+#> 4      87 Data Extraction File        matched           2020  2022-11-02
+#> 5      87 Data Extraction File        matched           2021  2022-11-02
+#> 6      87 Data Extraction File        matched           2022  2022-11-02
+#>                            file_name
+#> 1 proj87_matched_detections_2017.zip
+#> 2 proj87_matched_detections_2018.zip
+#> 3 proj87_matched_detections_2019.zip
+#> 4 proj87_matched_detections_2020.zip
+#> 5 proj87_matched_detections_2021.zip
+#> 6 proj87_matched_detections_2022.zip
 #>                                                                url
 #> 1 https://matos.asascience.com/projectfile/downloadExtraction/87_1
 #> 2 https://matos.asascience.com/projectfile/downloadExtraction/87_2
@@ -148,31 +164,20 @@ MATOS. I can download directly if I know the URL of the file:
 project_files$url[1]
 #> [1] "https://matos.asascience.com/projectfile/download/375"
 
-get_file(url = project_files$url[1])
+get_project_file(url = project_files$url[1])
 #> File saved to C:\Users\darpa2\Analysis\matos\BOEM_metadata_deployment.xls
+#> [1] "C:\\Users\\darpa2\\Analysis\\matos\\BOEM_metadata_deployment.xls"
 ```
 
 I can download by using an index from the `ACT_MATOS_files` table above,
-here the file on the second row. Note that this means we have to specify
-what kind of data we’re looking for when identifying by index.
+here the file on the second row.
 
 ``` r
-get_file(file = 2, project = 'umces boem offshore wind energy', data_type = 'extraction')
+get_extract_file(file = 2, project = 'umces boem offshore wind energy')
 #> File saved to C:\Users\darpa2\Analysis\matos\proj87_matched_detections_2018.zip
 #> File unzipped to C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv C:/Users/darpa2/Analysis/matos/data_description.txt
-```
-
-If I download using a file name, `get_file` will use the file extension
-to figure out what kind of data I want, so explicitly identifying the
-data type is not needed. Since all data extraction files are zipped, the
-function assumes the correct data type.
-
-``` r
-get_file(file = 'proj87_matched_detections_2018.zip',
-         project = 'umces boem offshore wind energy',
-         overwrite = T)
-#> File saved to C:\Users\darpa2\Analysis\matos\proj87_matched_detections_2018.zip
-#> File unzipped to C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv C:/Users/darpa2/Analysis/matos/data_description.txt
+#> [1] "C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv"
+#> [2] "C:/Users/darpa2/Analysis/matos/data_description.txt"
 ```
 
 ## Search and download tag detections
@@ -195,17 +200,17 @@ my_detections <- tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
 There are times when you want to upload new data to MATOS. The currently
 accepted data types and formats are:
 
--   newly-deployed transmitters (CSV/XLS(X))
--   detection logs (CSV/VRL)
--   receiver and glider deployment metadata (CSV/XLS(X))
--   receiver events like temperature, tilt, etc. (CSV)
--   glider GPS tracks (CSV)
+- newly-deployed transmitters (CSV/XLS(X))
+- detection logs (CSV/VRL)
+- receiver and glider deployment metadata (CSV/XLS(X))
+- receiver events like temperature, tilt, etc. (CSV)
+- glider GPS tracks (CSV)
 
 A few data types use designated Ocean Tracking Network templates:
 
--   tag metadata
--   receiver deployment metadata
--   glider deployment metadata
+- tag metadata
+- receiver deployment metadata
+- glider deployment metadata
 
 If you don’t have one of these templates downloaded, you can download it
 through the package. For example:
@@ -217,9 +222,9 @@ get_otn_template('glider')
 Then, get to uploading!
 
 ``` r
-post_file(project = 'umces boem offshore wind energy',
-          file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
-          data_type = 'new_tags')
+upload_file(project = 'umces boem offshore wind energy',
+            file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
+            data_type = 'new_tags')
 ```
 
 ## Development
@@ -231,6 +236,6 @@ O’Brien: obrien@umces.edu) directly](mailto:obrien@umces.edu).
 
 ## Notes
 
--   Sessions expire more-frequently than we would like. Because of this,
-    you may often be prompted to log in. Just follow the instructions
-    and crunch away.
+- Sessions expire more-frequently than we would like. Because of this,
+  you may often be prompted to log in. Just follow the instructions and
+  crunch away.
