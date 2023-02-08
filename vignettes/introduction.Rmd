@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(matos)
 ```
 ```{r echo=FALSE}
-matos_login(UserName = Sys.getenv('MATOS_USER'), Password = Sys.getenv('MATOS_PASS'))
+matos_login(UserName = matos_username, Password = matos_password)
 ```
 
 ## List available files
@@ -26,14 +26,16 @@ matos_login(UserName = Sys.getenv('MATOS_USER'), Password = Sys.getenv('MATOS_PA
 First, `list_projects` returns the [project page](https://matos.asascience.com/project), which is useful to figure out what URLs are associated with each project. You do not need MATOS permissions in order to view this page.
 
 ```{r list_projs}
-library(matos)
-
 all_projects <- list_projects()
 
 head(all_projects)
 ```
 
-I can also view the files that I've uploaded to my projects using `list_project_files`, but that requires logging in first.
+I can also view the files that I've uploaded to my projects using `list_project_files`, but that requires logging in first. The family of `list_` functions in this package will prompt you to log in before moving on.
+
+```{r echo=FALSE}
+matos_login(UserName = Sys.getenv('MATOS_USER'), Password = Sys.getenv('MATOS_PASS'))
+```
 
 ```{r}
 project_files <- list_project_files(project = 'umces boem offshore wind energy')
