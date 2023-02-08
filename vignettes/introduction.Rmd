@@ -17,9 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(matos)
 ```
-```{r echo=FALSE}
-matos_login(UserName = matos_username, Password = matos_password)
-```
+
 
 ## List available files
 
@@ -33,8 +31,8 @@ head(all_projects)
 
 I can also view the files that I've uploaded to my projects using `list_project_files`, but that requires logging in first. The family of `list_` functions in this package will prompt you to log in before moving on.
 
-```{r echo=FALSE}
-matos_login(UserName = Sys.getenv('MATOS_USER'), Password = Sys.getenv('MATOS_PASS'))
+```{r echo=FALSE, eval= 'matos_username' %in% ls()}
+matos_login(UserName = matos_username, Password = matos_password)
 ```
 
 ```{r}
