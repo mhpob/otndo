@@ -31,13 +31,20 @@ download_process(url, out_dir, overwrite, to_vue)
 \item{data_type}{one of "dataextractionfiles" or "projectfiles".}
 
 \item{project}{Character string of the full MATOS project name. This will be the
-big name in bold at the top of your project page, not the "Project Title" below it.
-Will be coerced to all lower case, so capitalization doesn't matter.}
+big name in bold at the top of your project page, not the "Project Title"
+below it. Will be coerced to all lower case, so capitalization doesn't matter.}
 
 \item{html_file_list}{Listed files in HTML form. Always the result of
 \code{get_file_list}}
 
 \item{url}{The (protected) URL that the overlapping function is trying to call.}
+
+\item{out_dir}{Character. To what directory would you like your files downloaded?
+Defaults to the current working directory.}
+
+\item{overwrite}{Logical. Do you want to overwrite existing files that have
+the same name (\code{TRUE}) or protect yourself against doing this
+(\code{FALSE}, the default)?}
 }
 \description{
 Non-exported utility functions used by other functions in \code{matos}.

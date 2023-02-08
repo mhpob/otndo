@@ -4,12 +4,15 @@
 #' your MATOS account. This is necessary so that you may interface with any
 #' project-specific files. If you don't have a MATOS account
 #' \href{https://matos.asascience.com/account/signup}{you can sign up for one here}.
-#' Log in is completed using the \href{https://rstudio.github.io/rstudio-extensions/rstudioapi.html}{RStudio API};
-#' this probably won't work if you're not using RStudio, so it will be changed in the future.
+#'
 #' A pop up will appear asking for your username and password. If everything works
 #' out, your credentials will be kept in the sessions' cookies. Your username/password
 #' will not be saved -- this was done intentionally so that you don't accidentally
 #' save credentials in a public script.
+#'
+#' @param UserName,Password Character. These arguments should not be used! They
+#'      only exist to allow certain vignettes to build using secret keys stored
+#'      by GitHub. Again, you should not script out your username and password!
 #'
 #' @export
 #' @examples
@@ -115,12 +118,16 @@ matos_login <- function(UserName = NULL, Password = NULL){
 #' @param project_number Number of the project
 #' @param data_type one of "dataextractionfiles" or "projectfiles".
 #' @param project Character string of the full MATOS project name. This will be the
-#' big name in bold at the top of your project page, not the "Project Title" below it.
-#' Will be coerced to all lower case, so capitalization doesn't matter.
+#'      big name in bold at the top of your project page, not the "Project Title"
+#'      below it. Will be coerced to all lower case, so capitalization doesn't matter.
 #' @param url The (protected) URL that the overlapping function is trying to call.
 #' @param html_file_list Listed files in HTML form. Always the result of
 #' \code{get_file_list}
-#'
+#' @param out_dir Character. To what directory would you like your files downloaded?
+#'      Defaults to the current working directory.
+#' @param overwrite Logical. Do you want to overwrite existing files that have
+#'      the same name (\code{TRUE}) or protect yourself against doing this
+#'      (\code{FALSE}, the default)?
 #'
 #' @name utilities
 

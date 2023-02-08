@@ -16,8 +16,8 @@ via \code{\link{get_extract_file}}.}
 \item{overwrite}{Logical. Do you want a file with the same name overwritten?
 Passed to \code{httr::write_disk} via \code{\link{get_extract_file}}.}
 
-\item{since}{Only list download files uploaded after this date. Must be in
-YYYY-MM-DD format. Also passed to \code{\link{list_extract_files}}.}
+\item{to_vue}{Logical. Should the data be converted to match that of VUE's
+CSV export?}
 }
 \description{
 This is a loop around \code{\link{get_extract_file}}.

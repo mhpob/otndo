@@ -3,13 +3,13 @@
 #' This is a loop around \code{\link{get_extract_file}}.
 #'
 #' @param ... arguments to \code{\link{list_extract_files}}
-#' @param since Only list download files uploaded after this date. Must be in
-#'      YYYY-MM-DD format. Also passed to \code{\link{list_extract_files}}.
 #' @param out_dir Character. What directory/folder do you want the file saved into?
 #'      Default is the current working directory. Passed to \code{httr::write_disk}
 #'      via \code{\link{get_extract_file}}.
 #' @param overwrite Logical. Do you want a file with the same name overwritten?
 #'      Passed to \code{httr::write_disk} via \code{\link{get_extract_file}}.
+#' @param to_vue Logical. Should the data be converted to match that of VUE's
+#'      CSV export?
 #'
 #' @export
 get_extract_updates <- function(..., out_dir = getwd(), overwrite = F, to_vue = F){
