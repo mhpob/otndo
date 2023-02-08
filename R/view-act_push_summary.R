@@ -36,15 +36,15 @@ act_push_summary <- function(
   # }
 
   if(any(is.null(qualified), is.null(unqualified))){
-    cat('\nListing extraction files...\n')
+    cli::cli_alert_info('Listing extraction files...')
     project_files <- list_extract_files(project_number, 'all')
-    cat(' Done.\n')
+    cli::cli_alert_success('   Done.')
   }
 
   # Qualified detections ----
   ##  Download qualified detections if not provided
   if(is.null(qualified)){
-    cat('\nDownloading qualified detections...\n')
+    cli::cli_alert_info('Downloading qualified detections...')
 
     qualified <- project_files[project_files$detection_type == 'qualified',]
     qualified <- lapply(qualified$url,
@@ -56,7 +56,7 @@ act_push_summary <- function(
     qualified <- unlist(qualified)
     qualified <- grep('\\.csv$', qualified, value = T)
 
-    cat(' Done.\n')
+    cli::cli_alert_success('   Done.')
   }
 
   ##  Bind files together
@@ -73,7 +73,7 @@ act_push_summary <- function(
   # Unqualified detections ----
   ##  Download unqualified detections if not provided
   if(is.null(unqualified)){
-    cat('\nDownloading unqualified detections...\n')
+    cli::cli_alert_info('Downloading unqualified detections...')
 
     unqualified <- project_files[project_files$detection_type == 'unqualified',]
     unqualified <- lapply(unqualified$url,
@@ -85,7 +85,7 @@ act_push_summary <- function(
     unqualified <- unlist(unqualified)
     unqualified <- grep('\\.csv$', unqualified, value = T)
 
-    cat(' Done.\n')
+    cli::cli_alert_success('   Done.')
   }
 
   ##  Bind files together
@@ -130,7 +130,7 @@ act_push_summary <- function(
   write.csv(deployment_data, deployment_filepath,
             row.names = F)
 
-  cat('\nWriting report...')
+  cli::cli_alert_info('Writing report...')
 
   quarto::quarto_render(
     input = 'inst/qmd_template/act-push-summary.qmd',
@@ -143,7 +143,7 @@ act_push_summary <- function(
       deployment = deployment_filepath
     ))
 
-  cat('Done.\n')
+  cli::cli_alert_success('   Done.')
 
   unlink(td)
 }
