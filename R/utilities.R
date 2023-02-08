@@ -206,12 +206,12 @@ download_process <- function(url, out_dir, overwrite, to_vue){
   )
 
   file_loc <- file.path(response$content)
-  cat('File saved to', file_loc)
+  cat('\nFile(s) saved to:\n   ', paste(file_loc, collapse = '\n   '), '\n')
 
   if(grepl('zip', file_loc)){
     file_loc <- unzip(file_loc, exdir = out_dir, setTimes = FALSE)
 
-    cat('\nFile unzipped to', file_loc, '\n')
+    cat('\nFile(s) unzipped to:\n   ', paste(file_loc, collapse = '\n   '), '\n')
   }
 
   if(isTRUE(to_vue)){
@@ -233,7 +233,7 @@ download_process <- function(url, out_dir, overwrite, to_vue){
                       'Sensor Unit', 'Station Name', 'Latitude', 'Longitude')
 
     write.csv(matos, file_csv, row.names = F)
-    cat('\nCSV converted to VUE format.')
+    cat('\nCSV converted to VUE format.\n')
 
   }
 
