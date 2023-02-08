@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(matos)
 ```
 ```{r echo=FALSE}
-matos_login(UserName = matos_username, Password = matos_password)
+matos_login(UserName = Sys.getenv('MATOS_USER'), Password = Sys.getenv('MATOS_PASS'))
 ```
 
 ## List available files
