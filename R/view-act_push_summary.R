@@ -6,7 +6,34 @@
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
 #' @param deployment File path of user-supplied master OTN receiver deployment metadata.
 #'
+#' @section Push log:
+#'
+#'  To keep track of when ACT data pushes occur, a log is kept
+#'  \href{https://raw.githubusercontent.com/mhpob/matos/master/inst/push_log.csv}{on the package's GitHub page}. This is automatically downloaded every time you download
+#'  or update the package, but you can avoid re-downloading the package by changing
+#'  \code{update_push_log} to \code{TRUE}.
+#'
+#'
+#' @section No files provided:
+#'
+#'  If you only provide your ACT project number or title and leave all of the
+#'  arguments as their defaults, this function will ask you to log in then proceed
+#'  to download all of the necessary files. If you provide already-downloaded files
+#'  you can speed up this process substantially.
+#'
+#' @section Output:
+#'
+#'  This function creates an HTML report that can be viewed in your web browser.
+#'
 #' @export
+#' @examples
+#' \dontrun{
+#' # Using only the ACT/MATOS project number:
+#' act_push_summary(87)
+#'
+#' # Providing a local file:
+#' act_push_summary(87, deployment = "my_master_deployment_metadata.xlsx")
+#' }
 
 act_push_summary <- function(
     matos_project,
