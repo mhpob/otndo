@@ -4,7 +4,7 @@
 \alias{matos_login}
 \title{Log in to your MATOS account}
 \usage{
-matos_login()
+matos_login(UserName = NULL, Password = NULL)
 }
 \description{
 This function prompts you for the username (email) and password associated with

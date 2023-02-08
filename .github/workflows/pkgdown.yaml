@@ -19,6 +19,8 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      MATOS_USER: ${{ secrets.MATOS_USERNAME}}
+      MATOS_PASS: ${{ secrets.MATOS_PASSWORD}}
     steps:
       - uses: actions/checkout@v3
 
@@ -34,7 +36,10 @@ jobs:
           needs: website
 
       - name: Build site
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        run: |
+          matos_username = Sys.getenv('MATOS_USER')
+          matos_password = Sys.getenv('MATOS_PASS')
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀

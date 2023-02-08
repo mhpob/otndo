@@ -11,6 +11,7 @@
 #' will not be saved -- this was done intentionally so that you don't accidentally
 #' save credentials in a public script.
 #'
+#' @export
 #' @examples
 #' \dontrun{
 #' # Type:
@@ -18,11 +19,19 @@
 #' # ...then follow the on-screen prompts
 #' }
 
-matos_login <- function(){
-  credentials <- list(
-    UserName = getPass::getPass('Username:', noblank = T),
-    Password = getPass::getPass('Password:', noblank = T)
-  )
+matos_login <- function(UserName = NULL, Password = NULL){
+
+  if(any(is.null(UserName), is.null(Password))){
+    credentials <- list(
+      UserName = getPass::getPass('Username:', noblank = T),
+      Password = getPass::getPass('Password:', noblank = T)
+    )
+  }else{
+    credentials <- list(
+      UserName = UserName,
+      Password = Password
+    )
+  }
 
 
   login_response <- httr::POST(
