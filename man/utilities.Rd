@@ -45,6 +45,9 @@ Defaults to the current working directory.}
 \item{overwrite}{Logical. Do you want to overwrite existing files that have
 the same name (\code{TRUE}) or protect yourself against doing this
 (\code{FALSE}, the default)?}
+
+\item{to_vue}{Logical. Should the data be converted to match that of VUE's
+CSV export?}
 }
 \description{
 Non-exported utility functions used by other functions in \code{matos}.

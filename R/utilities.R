@@ -128,6 +128,8 @@ matos_login <- function(UserName = NULL, Password = NULL){
 #' @param overwrite Logical. Do you want to overwrite existing files that have
 #'      the same name (\code{TRUE}) or protect yourself against doing this
 #'      (\code{FALSE}, the default)?
+#' @param to_vue Logical. Should the data be converted to match that of VUE's
+#'      CSV export?
 #'
 #' @name utilities
 
