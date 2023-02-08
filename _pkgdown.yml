@@ -21,3 +21,9 @@ reference:
 - contents:
   - matos_login
 
+articles:
+  - title: Articles
+    navbar: ~
+    contents:
+    - introduction
+    - act-push-summary
