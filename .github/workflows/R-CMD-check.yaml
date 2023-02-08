@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      MATOS_USER: ${{ secrets.MATOS_USERNAME }}
+      MATOS_PASS: ${{ secrets.MATOS_PASSWORD }}
       R_KEEP_PKG_SOURCE: yes
     steps:
       - uses: actions/checkout@v3
@@ -25,5 +27,11 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+
+      - name: GitHub secrets to environment
+        run: |
+          matos_username = Sys.getenv('MATOS_USER')
+          matos_password = Sys.getenv('MATOS_PASS')
+        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
