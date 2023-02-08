@@ -109,32 +109,26 @@ act_push_summary <- function(
 
 
   # Deployment log ----
-  if(!is.null(deployment)){
-    deployment <- readxl::read_excel(deployment,
-                                     sheet = 2, skip = 3)
+  if(is.null(deployment)){
+    deployment_files <- list_project_files(matos_project)
 
-    names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
-    deployment <- deployment[!is.na(deployment$otn_array),]
+    deployment_files <- deployment_files[grepl('Deployment', deployment_files$file_type),]
 
-    deployment$deploy_date_time  <-  as.POSIXct(deployment$deploy_date_time, tz = 'UTC',
-                                                format = '%Y-%m-%dT%H:%M:%S')
-    deployment$recover_date_time <-  as.POSIXct(deployment$recover_date_time, tz = 'UTC',
-                                                 format = '%Y-%m-%dT%H:%M:%S')
+    deployment_files <- lapply(deployment_files$url,
+                        function(.){
+                          get_project_file(url = .)
+                        })
 
-    deployment <- deployment[!is.na(deployment$deploy_date_time) & !is.na(deployment$recover_date_time),]
-    deployment$receiver <- paste(deployment$ins_model_no, deployment$ins_serial_no, sep = '-')
-    deployment$stationname <- deployment$station_no
-    deployment$internal_transmitter <- deployment$transmitter
-    deployment <- deployment[, c('stationname', 'receiver', 'internal_transmitter',
-                                 'deploy_date_time', 'deploy_lat', 'deploy_long',
-                                 'recover_date_time')]
-
-    deployment_filepath <- file.path(td, 'deployment.csv')
-    write.csv(deployment, deployment_filepath,
-              row.names = F)
-
+    deployment <- unlist(deployment_files)
   }
 
+  deployment_data <- lapply(deployment,
+                            clean_otn_deployment)
+  deployment_data <- do.call(rbind, deployment_data)
+
+  deployment_filepath <- file.path(td, 'deployment.csv')
+  write.csv(deployment_data, deployment_filepath,
+            row.names = F)
 
   cat('\nWriting report...')
 
@@ -154,7 +148,40 @@ act_push_summary <- function(
   unlink(td)
 }
 
+#' Utility function for act_push_summary
+clean_otn_deployment <- function(deployment){
 
+  # check for header
+  if(ncol(readxl::read_excel(deployment,
+                             sheet = 2,
+                             range = 'A1')) == 0){
+    deployment <- readxl::read_excel(deployment, sheet = 2,
+                                     skip = 3)
+  }else{
+    deployment <- readxl::read_excel(deployment, sheet = 2)
+  }
+
+  names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
+  deployment <- deployment[!is.na(deployment$otn_array),]
+
+  deployment$deploy_date_time  <-  as.POSIXct(deployment$deploy_date_time,
+                                              tz = 'UTC',
+                                              format = '%Y-%m-%dT%H:%M:%S')
+  deployment$recover_date_time <-  as.POSIXct(deployment$recover_date_time,
+                                              tz = 'UTC',
+                                              format = '%Y-%m-%dT%H:%M:%S')
+
+  deployment <- deployment[!is.na(deployment$deploy_date_time) &
+                             !is.na(deployment$recover_date_time),]
+  deployment$receiver <- paste(deployment$ins_model_no,
+                               deployment$ins_serial_no,
+                               sep = '-')
+  deployment$stationname <- deployment$station_no
+  deployment$internal_transmitter <- deployment$transmitter
+  deployment <- deployment[, c('stationname', 'receiver', 'internal_transmitter',
+                               'deploy_date_time', 'deploy_lat', 'deploy_long',
+                               'recover_date_time')]
+}
 # matos_project <- 192
 # qualified <- c('proj192_qualified_detections_2021.csv',
 #                'proj192_qualified_detections_2022.csv')
@@ -163,5 +190,6 @@ act_push_summary <- function(
 # act_push_summary(matos_project,
 #                  qualified,
 #                  unqualified,
-# deployment = 'c:/users/darpa2/Analysis/kennebec-sturgeon-monitoring/act-matos/MASTER_metadata_deployment.xlsx')
-#
+# deployment = c('NAVYKENN_metadata_deployment_202205.xlsx',
+#                'NAVYKENN_metadata_deployment_202210.xlsx'))
+
