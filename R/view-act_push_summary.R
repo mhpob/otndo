@@ -149,6 +149,7 @@ act_push_summary <- function(
 }
 
 #' Utility function for act_push_summary
+#' @keywords internal
 clean_otn_deployment <- function(deployment){
 
   # check for header
