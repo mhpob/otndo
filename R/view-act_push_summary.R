@@ -36,15 +36,15 @@ act_push_summary <- function(
   # }
 
   if(any(is.null(qualified), is.null(unqualified))){
-    cat('\nListing extraction files...\n')
+    cli::cli_alert_info('Listing extraction files...')
     project_files <- list_extract_files(project_number, 'all')
-    cat(' Done.\n')
+    cli::cli_alert_success('   Done.')
   }
 
   # Qualified detections ----
   ##  Download qualified detections if not provided
   if(is.null(qualified)){
-    cat('\nDownloading qualified detections...\n')
+    cli::cli_alert_info('Downloading qualified detections...')
 
     qualified <- project_files[project_files$detection_type == 'qualified',]
     qualified <- lapply(qualified$url,
@@ -56,7 +56,7 @@ act_push_summary <- function(
     qualified <- unlist(qualified)
     qualified <- grep('\\.csv$', qualified, value = T)
 
-    cat(' Done.\n')
+    cli::cli_alert_success('   Done.')
   }
 
   ##  Bind files together
@@ -73,7 +73,7 @@ act_push_summary <- function(
   # Unqualified detections ----
   ##  Download unqualified detections if not provided
   if(is.null(unqualified)){
-    cat('\nDownloading unqualified detections...\n')
+    cli::cli_alert_info('Downloading unqualified detections...')
 
     unqualified <- project_files[project_files$detection_type == 'unqualified',]
     unqualified <- lapply(unqualified$url,
@@ -85,7 +85,7 @@ act_push_summary <- function(
     unqualified <- unlist(unqualified)
     unqualified <- grep('\\.csv$', unqualified, value = T)
 
-    cat(' Done.\n')
+    cli::cli_alert_success('   Done.')
   }
 
   ##  Bind files together
@@ -109,34 +109,28 @@ act_push_summary <- function(
 
 
   # Deployment log ----
-  if(!is.null(deployment)){
-    deployment <- readxl::read_excel(deployment,
-                                     sheet = 2, skip = 3)
+  if(is.null(deployment)){
+    deployment_files <- list_project_files(matos_project)
 
-    names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
-    deployment <- deployment[!is.na(deployment$otn_array),]
+    deployment_files <- deployment_files[grepl('Deployment', deployment_files$file_type),]
 
-    deployment$deploy_date_time  <-  as.POSIXct(deployment$deploy_date_time, tz = 'UTC',
-                                                format = '%Y-%m-%dT%H:%M:%S')
-    deployment$recover_date_time <-  as.POSIXct(deployment$recover_date_time, tz = 'UTC',
-                                                 format = '%Y-%m-%dT%H:%M:%S')
+    deployment_files <- lapply(deployment_files$url,
+                        function(.){
+                          get_project_file(url = .)
+                        })
 
-    deployment <- deployment[!is.na(deployment$deploy_date_time) & !is.na(deployment$recover_date_time),]
-    deployment$receiver <- paste(deployment$ins_model_no, deployment$ins_serial_no, sep = '-')
-    deployment$stationname <- deployment$station_no
-    deployment$internal_transmitter <- deployment$transmitter
-    deployment <- deployment[, c('stationname', 'receiver', 'internal_transmitter',
-                                 'deploy_date_time', 'deploy_lat', 'deploy_long',
-                                 'recover_date_time')]
-
-    deployment_filepath <- file.path(td, 'deployment.csv')
-    write.csv(deployment, deployment_filepath,
-              row.names = F)
-
+    deployment <- unlist(deployment_files)
   }
 
+  deployment_data <- lapply(deployment,
+                            clean_otn_deployment)
+  deployment_data <- do.call(rbind, deployment_data)
 
-  cat('\nWriting report...')
+  deployment_filepath <- file.path(td, 'deployment.csv')
+  write.csv(deployment_data, deployment_filepath,
+            row.names = F)
+
+  cli::cli_alert_info('Writing report...')
 
   quarto::quarto_render(
     input = 'inst/qmd_template/act-push-summary.qmd',
@@ -149,12 +143,46 @@ act_push_summary <- function(
       deployment = deployment_filepath
     ))
 
-  cat('Done.\n')
+  cli::cli_alert_success('   Done.')
 
   unlink(td)
 }
 
+#' Utility function for act_push_summary
+#' @keywords internal
+clean_otn_deployment <- function(deployment){
 
+  # check for header
+  if(ncol(readxl::read_excel(deployment,
+                             sheet = 2,
+                             range = 'A1')) == 0){
+    deployment <- readxl::read_excel(deployment, sheet = 2,
+                                     skip = 3)
+  }else{
+    deployment <- readxl::read_excel(deployment, sheet = 2)
+  }
+
+  names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
+  deployment <- deployment[!is.na(deployment$otn_array),]
+
+  deployment$deploy_date_time  <-  as.POSIXct(deployment$deploy_date_time,
+                                              tz = 'UTC',
+                                              format = '%Y-%m-%dT%H:%M:%S')
+  deployment$recover_date_time <-  as.POSIXct(deployment$recover_date_time,
+                                              tz = 'UTC',
+                                              format = '%Y-%m-%dT%H:%M:%S')
+
+  deployment <- deployment[!is.na(deployment$deploy_date_time) &
+                             !is.na(deployment$recover_date_time),]
+  deployment$receiver <- paste(deployment$ins_model_no,
+                               deployment$ins_serial_no,
+                               sep = '-')
+  deployment$stationname <- deployment$station_no
+  deployment$internal_transmitter <- deployment$transmitter
+  deployment <- deployment[, c('stationname', 'receiver', 'internal_transmitter',
+                               'deploy_date_time', 'deploy_lat', 'deploy_long',
+                               'recover_date_time')]
+}
 # matos_project <- 192
 # qualified <- c('proj192_qualified_detections_2021.csv',
 #                'proj192_qualified_detections_2022.csv')
@@ -163,5 +191,6 @@ act_push_summary <- function(
 # act_push_summary(matos_project,
 #                  qualified,
 #                  unqualified,
-# deployment = 'c:/users/darpa2/Analysis/kennebec-sturgeon-monitoring/act-matos/MASTER_metadata_deployment.xlsx')
-#
+# deployment = c('NAVYKENN_metadata_deployment_202205.xlsx',
+#                'NAVYKENN_metadata_deployment_202210.xlsx'))
+

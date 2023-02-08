@@ -14,8 +14,6 @@ title: "`r paste('ACT push summary:', params$project_name)`"
 author: "[Mike O'Brien](mailto:obrien@umces.edu) via the [`matos` R package](https://mhpob.github.io/matos)"
 ---
 
--   unqualified narrative
-
 ```{r}
 #| label: packages
 #| message: false
@@ -94,8 +92,7 @@ These are data related to the `r format(push_log$date[nrow(push_log)], '%B %Y')`
 
 ## Overall
 
-A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](`r act`), [FACT](https://secoora.org/fact/projects/), and/or [OTN](`r otn`). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
-
+A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](%60r%20act%60), [FACT](https://secoora.org/fact/projects/), and/or [OTN](%60r%20otn%60). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
 
 ```{r}
 #| label: otn-match-table
@@ -227,8 +224,6 @@ station_center <- st_centroid(st_union(station_spatial))
 station_center <- st_coordinates(station_center)
 ```
 
-
-
 ```{r}
 #| label: detection-map-leaflet
 mapview::mapview(station_spatial,
@@ -236,8 +231,6 @@ mapview::mapview(station_spatial,
                  cex = 'Individuals',
                  layer.name = "Matched detections") 
 ```
-
-
 
 ```{r}
 #| label: detection-map
@@ -371,7 +364,6 @@ station_summary |>
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-
 ## Unmatched detections
 
 ```{r}
@@ -389,6 +381,7 @@ Some detections were not matched to other investigators via OTN nodes. There are
 `r nrow(unqual_f)` of these are very likely false, as they only have one detection; this leaves detections of `r nrow(unqual_real)` transmitters that could find a home elsewhere.
 
 ### Likely false detections
+
 ```{r}
 #| label: unqualified-false
 
@@ -398,6 +391,7 @@ unqual_f |>
 ```
 
 ### Possibly real detections
+
 ```{r}
 #| label: unqualified-real
 
@@ -405,7 +399,6 @@ unqual_real |>
   gt() |> 
   as_raw_html()
 ```
-
 
 ```{r}
 #| label: temporal-distribution-unqual

@@ -36,11 +36,13 @@ matos_login <- function(){
       rstudioapi::showDialog('Login unsuccessful :(',
                              'Your username/password combination was not recognized.
                              Please re-run the funtion and try again.')
-      stop('Login unsuccessful.')
+      cli::cli_abort('Login unsuccessful.',
+                     'i' = 'Please re-run the funtion and try again.')
 
     } else{
       rstudioapi::showDialog('Login successful!',
                              'You are now logged into your MATOS profile.')
+      cli::cli_alert_success('Login successful!')
     }
   } else{
     if(grepl('login', login_response)){
@@ -48,12 +50,14 @@ matos_login <- function(){
                            'Your username/password combination was not recognized.
                            Please re-run the funtion and try again.',
                            caption = 'Login unuccessful :(')
-      stop('Login unsuccessful.')
+      cli::cli_abort('Login unsuccessful.',
+                     'i' = 'Please re-run the funtion and try again.')
 
     } else{
       tcltk::tk_messageBox('ok',
                            'You are now logged into your MATOS profile.',
                            caption = 'Login unuccessful !')
+      cli::cli_alert_success('Login successful!')
     }
   }
 }
@@ -171,7 +175,7 @@ login_check <- function(url = 'https://matos.asascience.com/report/submit'){
   check_response <- httr::HEAD(url)
 
   if(nrow(check_response$cookies) == 1){
-    message('Please log in.')
+    cli::cli_alert_warning('Please log in.')
 
     matos_login()
   }
@@ -194,6 +198,9 @@ scrape_file_urls <- function(html_file_list){
 #' @rdname utilities
 #'
 download_process <- function(url, out_dir, overwrite, to_vue){
+
+  cli::cli_h1("Downloading files")
+
   GET_header <- httr::GET(url)
 
   response <-  httr::GET(
@@ -206,15 +213,24 @@ download_process <- function(url, out_dir, overwrite, to_vue){
   )
 
   file_loc <- file.path(response$content)
-  cat('File saved to', file_loc)
+
+  cli::cli_alert_success('\nFile(s) saved to:')
+  cat('  ', paste(file_loc, collapse = '\n   '), '\n')
+
+
+  cli::cli_h1("Unzipping files")
 
   if(grepl('zip', file_loc)){
     file_loc <- unzip(file_loc, exdir = out_dir, setTimes = FALSE)
 
-    cat('\nFile unzipped to', file_loc, '\n')
+    cli::cli_alert_success('\nFile(s) unzipped to:')
+    cat('  ', paste(file_loc, collapse = '\n   '), '\n')
   }
 
   if(isTRUE(to_vue)){
+
+    cli::cli_h1("Converting to VUE CSV format")
+
     file_csv <- grep('.csv', file_loc, value = T)
     matos <- read.csv(
       file_csv
@@ -233,7 +249,7 @@ download_process <- function(url, out_dir, overwrite, to_vue){
                       'Sensor Unit', 'Station Name', 'Latitude', 'Longitude')
 
     write.csv(matos, file_csv, row.names = F)
-    cat('\nCSV converted to VUE format.')
+    cli::cli_alert_success('CSV converted to VUE format.')
 
   }
 

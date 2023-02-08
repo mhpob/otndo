@@ -9,8 +9,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![R build
-status](https://github.com/mhpob/matos/workflows/R-CMD-check/badge.svg)](https://github.com/mhpob/matos/actions)
+[![R-CMD-check](https://github.com/mhpob/matos/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/matos/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 {matos} is an attempt at an API to the [Mid-Atlantic Acoustic Telemetry
@@ -69,9 +68,11 @@ permissions in order to view this page.
 
 ``` r
 library(matos)
-#> By continuing, you are agreeing to the ACT Network MATOS User Agreement and Data Policy, Version 1.2:
+#> By continuing, you are agreeing to the ACT Network MATOS User Agreement and
+#> Data Policy, Version 1.2:
 #> 
-#> https://matos.asascience.com/static/MATOS.User.Agreement.V1.1.pdf
+#> <]8;;https://matos.asascience.com/static/MATOS.User.Agreement.V1.1.pdfhttps://matos.asascience.com/static/MATOS.User.Agreement.V1.1.pdf]8;;>
+#> 
 
 all_projects <- list_projects()
 
@@ -97,9 +98,10 @@ I can also view the files that I’ve uploaded to my projects using
 
 ``` r
 project_files <- list_project_files(project = 'umces boem offshore wind energy')
-#> Please log in.
+#> ! Please log in.
 #> Please enter password in TK window (Alt+Tab)
 #> Please enter password in TK window (Alt+Tab)
+#> ✔ Login successful!
 
 head(project_files)
 #>   project                                file_type upload_date
@@ -165,7 +167,12 @@ project_files$url[1]
 #> [1] "https://matos.asascience.com/projectfile/download/375"
 
 get_project_file(url = project_files$url[1])
-#> File saved to C:\Users\darpa2\Analysis\matos\BOEM_metadata_deployment.xls
+#> 
+#> ── Downloading files ───────────────────────────────────────────────────────────
+#> ✔ File(s) saved to:
+#>    C:\Users\darpa2\Analysis\matos\BOEM_metadata_deployment.xls
+#> 
+#> ── Unzipping files ─────────────────────────────────────────────────────────────
 #> [1] "C:\\Users\\darpa2\\Analysis\\matos\\BOEM_metadata_deployment.xls"
 ```
 
@@ -174,8 +181,15 @@ here the file on the second row.
 
 ``` r
 get_extract_file(file = 2, project = 'umces boem offshore wind energy')
-#> File saved to C:\Users\darpa2\Analysis\matos\proj87_matched_detections_2018.zip
-#> File unzipped to C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv C:/Users/darpa2/Analysis/matos/data_description.txt
+#> 
+#> ── Downloading files ───────────────────────────────────────────────────────────
+#> ✔ File(s) saved to:
+#>    C:\Users\darpa2\Analysis\matos\proj87_matched_detections_2018.zip
+#> 
+#> ── Unzipping files ─────────────────────────────────────────────────────────────
+#> ✔ File(s) unzipped to:
+#>    C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv
+#>    C:/Users/darpa2/Analysis/matos/data_description.txt
 #> [1] "C:/Users/darpa2/Analysis/matos/proj87_matched_detections_2018.csv"
 #> [2] "C:/Users/darpa2/Analysis/matos/data_description.txt"
 ```

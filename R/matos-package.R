@@ -2,6 +2,7 @@
 #' @docType package
 #'
 #' @importFrom magrittr "%>%"
+#' @importFrom utils browseURL
 #' @importFrom utils unzip
 #' @importFrom utils read.csv
 #' @importFrom utils write.csv
@@ -22,10 +23,4 @@
 #' @export
 #' @importFrom magrittr %>%
 #' @usage lhs \%>\% rhs
-NULL
-
-# The following block is used by usethis to automatically manage
-# roxygen namespace tags. Modify with care!
-## usethis namespace: start
-## usethis namespace: end
 NULL
