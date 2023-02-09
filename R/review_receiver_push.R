@@ -29,13 +29,13 @@
 #' @examples
 #' \dontrun{
 #' # Using only the ACT/MATOS project number:
-#' act_push_summary(87)
+#' review_receiver_push(87)
 #'
 #' # Providing a local file:
-#' act_push_summary(87, deployment = "my_master_deployment_metadata.xlsx")
+#' review_receiver_push(87, deployment = "my_master_deployment_metadata.xlsx")
 #' }
 
-act_push_summary <- function(
+review_receiver_push <- function(
     matos_project,
     qualified = NULL,
     unqualified = NULL,
@@ -160,7 +160,7 @@ act_push_summary <- function(
   cli::cli_alert_info('Writing report...')
 
   quarto::quarto_render(
-    input = 'inst/qmd_template/act-push-summary.qmd',
+    input = 'inst/qmd_template/review_receiver_push.qmd',
     execute_params = list(
       project_name = project_name,
       project_number = project_number,
