@@ -183,7 +183,7 @@ review_receiver_push <- function(
   unlink(td)
 }
 
-#' Utility function for act_push_summary
+#' Utility function for reveiew_receiver_push
 #' @keywords internal
 clean_otn_deployment <- function(deployment){
 

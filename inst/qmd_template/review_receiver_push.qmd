@@ -7,12 +7,19 @@ params:
   push_log: system.file("push_log.csv", package="matos")
   deployment: NULL
 format: html
-editor: visual
 execute:
   echo: false
 title: "`r paste('Receiver data push summary:', params$project_name)`"
 author: "[Mike O'Brien](mailto:obrien@umces.edu) via the [`matos` R package](https://mhpob.github.io/matos)"
 ---
+
+```{r}
+#| label: act-eval-key
+#| echo: false
+
+act_eval <- !is.null(params$project_number)
+```
+
 
 ```{r}
 #| label: packages
@@ -79,20 +86,36 @@ otn_tables <- lapply(otn_metadata_query, fread)
 otn_tables <- lapply(otn_tables, function(.) .[!grepl('^[FA]', collectioncode), collectioncode := paste0('OTN.', collectioncode)])
 ```
 
+
 ```{r}
 #| label: proper-urls
 
-act <- paste0('https://matos.asascience.com/project/detail/',
-              params$project_number)
-otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
-              params$project_number)
+if(act_eval){
+  act <- paste0('https://matos.asascience.com/project/detail/',
+                params$project_number)
+  otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
+                params$project_number)
+}else{
+  act <- 'https://matos.asascience.com/project'
+  otn <- 'https://members.oceantrack.org/OTN/projects'
+}
 ```
 
-These are data related to receiver data from the `r format(push_log$date[nrow(push_log)], '%B %Y')` data push. New matched detection files (["qualified" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)) were uploaded on `r format(push_log$date[nrow(push_log)], '%B %d')`. The previous data push occurred on `r format(push_log$date[nrow(push_log) - 1], '%B %d, %Y')`.
+```{r results='asis', echo=FALSE}
+if(!act_eval) {cat("<!---")}
+```
+
+These are data related to receiver data from the `r format(push_log$date[nrow(push_log)], '%B %Y')` ACT data push. New matched detection files (["qualified" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)) were uploaded on `r format(push_log$date[nrow(push_log)], '%B %d')`. The previous data push occurred on `r format(push_log$date[nrow(push_log) - 1], '%B %d, %Y')`.
+
+```{r results='asis', echo=FALSE}
+if(!act_eval) {cat("-->")}
+```
 
 ## Overall
 
 A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](`r act`), [FACT](https://secoora.org/fact/projects/), and/or [OTN](`r otn`). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
+
+
 
 ```{r}
 #| label: otn-match-table
@@ -258,6 +281,9 @@ ggplot() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+```{r results='asis', echo=FALSE}
+if(!act_eval) {cat("<!---")}
+```
 ## What's new?
 
 ```{r}
@@ -362,6 +388,9 @@ station_summary |>
 #   coord_sf(xlim = c(-76.5, -76.15), ylim = c(38.25, 38.45)) +
 #   theme_minimal() +
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+```{r results='asis', echo=FALSE}
+if(!act_eval) {cat("-->")}
 ```
 
 ## Unmatched detections
