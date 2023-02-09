@@ -36,12 +36,16 @@
 #' }
 
 review_receiver_push <- function(
-    matos_project,
+    matos_project = NULL,
     qualified = NULL,
     unqualified = NULL,
     update_push_log = F,
     deployment = NULL
 ){
+  if(all(is.null(matos_project), is.null(qualified), is.null(unqualified))){
+    cli::cli_abort('Must provide some detections or an ACT/MATOS project from where they can be fetched.')
+  }
+
 
   # Create a temporary directory to store intermediate files
   td <- tempdir()
@@ -52,9 +56,13 @@ review_receiver_push <- function(
     project_number <- matos_project
     project_name <- get_project_name(matos_project)
   }
-  if(!is.numeric(matos_project)){
+  if(is.character(matos_project)){
     project_name <- matos_project
     project_number <- get_project_number(matos_project)
+  }
+  if(is.null(matos_project)){
+    project_name <- NULL
+    project_number <- NULL
   }
 
   ##  Check that project name exists as written
@@ -190,7 +198,7 @@ clean_otn_deployment <- function(deployment){
   }
 
   names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
-  deployment <- deployment[!is.na(deployment$otn_array),]
+  deployment <- deployment[!is.na(deployment$deploy_date_time),]
 
   deployment$deploy_date_time  <-  as.POSIXct(deployment$deploy_date_time,
                                               tz = 'UTC',
@@ -205,10 +213,18 @@ clean_otn_deployment <- function(deployment){
                                deployment$ins_serial_no,
                                sep = '-')
   deployment$stationname <- deployment$station_no
-  deployment$internal_transmitter <- deployment$transmitter
-  deployment <- deployment[, c('stationname', 'receiver', 'internal_transmitter',
-                               'deploy_date_time', 'deploy_lat', 'deploy_long',
-                               'recover_date_time')]
+
+  if('transmitter' %in% names(deployment)){
+    deployment$internal_transmitter <- deployment$transmitter
+    deployment[, c('stationname', 'receiver', 'internal_transmitter',
+                   'deploy_date_time', 'deploy_lat', 'deploy_long',
+                   'recover_date_time')]
+  }else(
+    deployment[, c('stationname', 'receiver',
+                   'deploy_date_time', 'deploy_lat', 'deploy_long',
+                   'recover_date_time')]
+  )
+
 }
 # matos_project <- 192
 # qualified <- c('proj192_qualified_detections_2021.csv',
