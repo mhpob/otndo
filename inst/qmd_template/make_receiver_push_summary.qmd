@@ -73,7 +73,7 @@ pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi')) |>
 
 projects <- unique(qualified$trackercode)
 projects <- gsub('OTN.', '', projects)
-projects <- gsub('PROJ', 'ACT.PROJ', projects)
+projects <- gsub('^PROJ', 'ACT.PROJ', projects)
 
 table_name <- c('otn_resources_metadata_points',
                 'project_metadata')
@@ -132,7 +132,9 @@ mt <- merge(
 
 mt <- merge(mt, pis[, .(trackercode, PI, POC, emails)])
 mt[, trackercode := ifelse(grepl('^PROJ', trackercode),
-                           paste0('ACT.', trackercode), trackercode)]
+                           paste0('ACT.', trackercode),
+                           ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', trackercode),
+                                  paste0('OTN.', trackercode), trackercode))]
 
 mt <- merge(mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
 
