@@ -13,7 +13,7 @@ reference:
   - starts_with('get_')
 - title: Summarizing
 - contents:
-  - act_push_summary
+  - starts_with('make_')
 - title: Uploading
 - contents:
   - upload_file
