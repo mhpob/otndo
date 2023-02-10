@@ -6,7 +6,9 @@ params:
   unqualified: NULL
   push_log: system.file("push_log.csv", package="matos")
   deployment: NULL
-format: html
+format:
+  html:
+    self-contained: true
 execute:
   echo: false
 title: "`r paste('Receiver data push summary:', params$project_name)`"

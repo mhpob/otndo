@@ -167,8 +167,13 @@ make_receiver_push_summary <- function(
 
   cli::cli_alert_info('Writing report...')
 
+  file.copy(from = system.file('qmd_template',
+                        'make_receiver_push_summary.qmd',
+                        package = 'matos'),
+            to = td)
+
   quarto::quarto_render(
-    input = 'inst/qmd_template/make_receiver_push_summary.qmd',
+    input = file.path(td, 'make_receiver_push_summary.qmd'),
     execute_params = list(
       project_name = project_name,
       project_number = project_number,
@@ -177,6 +182,9 @@ make_receiver_push_summary <- function(
       push_log = push_log,
       deployment = deployment_filepath
     ))
+
+  file.copy(from = file.path(td,'make_receiver_push_summary.html'),
+            to = file.path(getwd(), paste0(Sys.Date(), '_receiver_push_summary.html')))
 
   cli::cli_alert_success('   Done.')
 
