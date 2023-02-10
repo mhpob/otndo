@@ -125,7 +125,7 @@ A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(
 
 ```{r}
 #| label: otn-match-table
-#| column: page-inset
+#| column: page
 
 mt <- merge(
   qualified[, .(detections = .N), by = 'trackercode'],
