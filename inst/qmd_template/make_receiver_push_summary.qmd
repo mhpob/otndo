@@ -57,7 +57,11 @@ pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi')) |>
                                function(.) paste(., collapse = ', '))),
             POC = unlist(lapply(X = POC,
                                 function(.) paste(., collapse = ', '))),
-            emails = t(mapply(c, PI_emails, POC_emails)))) |> 
+            emails = t(mapply(c, PI_emails, POC_emails,
+                              # Need simplify=F arg to mapply in case no rows have
+                              # multiple emails in a column: simplify=T
+                              # will "simplify" to a matrix rather than keep as a list
+                              SIMPLIFY = FALSE)))) |> 
   DT(, emails := unlist(
     lapply(
       lapply(emails, unique),
