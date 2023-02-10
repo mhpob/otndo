@@ -29,13 +29,13 @@
 #' @examples
 #' \dontrun{
 #' # Using only the ACT/MATOS project number:
-#' review_receiver_push(87)
+#' make_receiver_push_summary(87)
 #'
 #' # Providing a local file:
-#' review_receiver_push(87, deployment = "my_master_deployment_metadata.xlsx")
+#' make_receiver_push_summary(87, deployment = "my_master_deployment_metadata.xlsx")
 #' }
 
-review_receiver_push <- function(
+make_receiver_push_summary <- function(
     matos_project = NULL,
     qualified = NULL,
     unqualified = NULL,
@@ -168,7 +168,7 @@ review_receiver_push <- function(
   cli::cli_alert_info('Writing report...')
 
   quarto::quarto_render(
-    input = 'inst/qmd_template/review_receiver_push.qmd',
+    input = 'inst/qmd_template/make_receiver_push_summary.qmd',
     execute_params = list(
       project_name = project_name,
       project_number = project_number,
@@ -183,7 +183,7 @@ review_receiver_push <- function(
   unlink(td)
 }
 
-#' Utility function for reveiew_receiver_push
+#' Utility function for make_receiver_push_summary
 #' @keywords internal
 clean_otn_deployment <- function(deployment){
 
