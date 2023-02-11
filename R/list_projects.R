@@ -32,8 +32,8 @@ list_projects <- function(what = c('all', 'mine'), read_access = T){
     )
 
     projects_info <- httr::content(project_list) %>%
-      rvest::html_node('.project_list') %>%
-      rvest::html_nodes('a')
+    projects_info <- rvest::html_node(projects_info, '.project_list')
+    projects_info <- rvest::html_nodes(projects_info, 'a')
 
     urls <- rvest::html_attr(projects_info, 'href')
 

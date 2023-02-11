@@ -165,10 +165,10 @@ get_project_name <- function(project){
 #'
 html_table_to_df <- function(html_file_list){
 
-  df <- httr::content(html_file_list, 'parsed') %>%
-    rvest::html_element(xpath = '//*[@id="content"]/table') %>%
-    rvest::html_table() %>%
-    data.frame()
+  df <- httr::content(html_file_list, 'parsed')
+  df <- rvest::html_element(df, xpath = '//*[@id="content"]/table')
+  df <- rvest::html_table(df)
+  df <- data.frame(df)
   names(df) <- tolower(gsub('\\.', '_', names(df)))
 
 
@@ -213,10 +213,10 @@ login_check <- function(url = 'https://matos.asascience.com/report/submit'){
 #' @rdname utilities
 #'
 scrape_file_urls <- function(html_file_list){
-  urls <- httr::content(html_file_list, 'parsed') %>%
-    rvest::html_node('body') %>%
-    rvest::html_nodes('a') %>%
-    rvest::html_attr('href')
+  urls <- httr::content(html_file_list, 'parsed')
+  urls <- rvest::html_node(urls, 'body')
+  urls <- rvest::html_nodes(urls, 'a')
+  urls <- rvest::html_attr(urls, 'href')
 
   urls <- grep('projectfile', urls, value = T)
 
