@@ -4,7 +4,7 @@
 \alias{matos_login}
 \title{Log in to your MATOS account}
 \usage{
-matos_login(UserName = NULL, Password = NULL)
+matos_login()
 }
 \arguments{
 \item{UserName, Password}{Character. These arguments should not be used! They
