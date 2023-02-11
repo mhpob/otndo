@@ -236,7 +236,7 @@ download_process <- function(url, out_dir, overwrite, to_vue){
     url,
     httr::write_disk(
       path = file.path(out_dir,
-                       sub('.*filename=', '',
+                       gsub('.*filename=|\\"', '',
                            httr::headers(GET_header)$'content-disposition')),
       overwrite = overwrite)
   )
