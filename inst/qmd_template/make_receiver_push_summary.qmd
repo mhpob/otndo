@@ -47,14 +47,14 @@ push_log <- data.table::fread(params$push_log)
 #| label: n-pis
 #| warning: false
 
-pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi')) |> 
-  DT(, ':='(PI = strsplit(tag_contact_pi, ' \\(|\\)(, )?'),
-            POC = strsplit(tag_contact_poc, ' \\(|\\)(, )?'))) |>
-  DT(, ':='(PI = lapply(X = PI, function(.) .[!grepl('@', .)]),
+pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi'))
+pis[, ':='(PI = strsplit(tag_contact_pi, ' \\(|\\)(, )?'),
+            POC = strsplit(tag_contact_poc, ' \\(|\\)(, )?'))]
+pis[, ':='(PI = lapply(X = PI, function(.) .[!grepl('@', .)]),
             POC = lapply(X = POC, function(.) .[!grepl('@', .)]),
             PI_emails = lapply(X = PI, function(.) .[grepl('@', .)]),
-            POC_emails = lapply(X = POC, function(.) .[grepl('@', .)]))) |> 
-  DT(, ':='(PI = unlist(lapply(X = PI,
+            POC_emails = lapply(X = POC, function(.) .[grepl('@', .)]))]
+pis[, ':='(PI = unlist(lapply(X = PI,
                                function(.) paste(., collapse = ', '))),
             POC = unlist(lapply(X = POC,
                                 function(.) paste(., collapse = ', '))),
@@ -62,11 +62,13 @@ pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi')) |>
                               # Need simplify=F arg to mapply in case no rows have
                               # multiple emails in a column: simplify=T
                               # will "simplify" to a matrix rather than keep as a list
-                              SIMPLIFY = FALSE)))) |> 
-  DT(, emails := unlist(
-    lapply(
-      lapply(emails, unique),
-      paste, collapse = '\n')))
+                              SIMPLIFY = FALSE)))] 
+pis[, emails := unlist(
+  lapply(
+    lapply(emails,
+           unique),
+    paste, collapse = '\n')
+)]
 ```
 
 ```{r}
@@ -222,11 +224,12 @@ if(!is.null(params$deployment)){
 
 station_summary <- merge(
   qualified[, .(detections = .N), by = 'station'],
-  unique(qualified, by = c('fieldnumber', 'station')) |>
-    DT(, .(individuals = .N,
-           long = mean(longitude),
-           lat = mean(latitude)), by = 'station')) #|>
-  # DT(, station := sapply(station, .simpleCap))
+  unique(qualified, by = c('fieldnumber', 'station'))[, .(individuals = .N,
+                                                          long = mean(longitude),
+                                                          lat = mean(latitude)),
+                                                      by = 'station'] 
+)
+# DT(, station := sapply(station, .simpleCap))
 
 setorder(station_summary, -lat, long)
 
@@ -245,9 +248,10 @@ station_summary |>
 #| label: station-spatial
 
 station_spatial <- qualified |>
-  unique(by = 'station') |>
-  DT(station_summary[, Station := toupper(Station)], , on = c('station'= 'Station'))|>
-  DT(, .(station, Detections, Individuals, longitude, latitude)) |> 
+  unique(by = 'station')
+station_spatial <- station_spatial[station_summary[, Station := toupper(Station)],,
+                                   on = c('station'= 'Station')]
+station_spatial <- station_spatial[, .(station, Detections, Individuals, longitude, latitude)] |> 
   st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) 
 
 station_center <- st_centroid(st_union(station_spatial))
@@ -266,9 +270,11 @@ mapview::mapview(station_spatial,
 #| label: detection-map
 #| eval: false
 
+# This gives a static map. Currently not run bc we have the js map. Will need
+#   better basemap (more refined than 110m Natural Earth) if this is used in the future
 station_spatial <- qualified |>
-  unique(by = 'station') |>
-  DT(station_summary[, Station := toupper(Station)], , on = c('station'= 'Station')) |>
+  unique(by = 'station')
+station_spatial <- station_spatial[station_summary[, Station := toupper(Station)], , on = c('station'= 'Station')] |>
   data.frame() |>
   st_as_sf(coords = c('longitude', 'latitude'), crs = 4326)
 
@@ -306,8 +312,7 @@ Since the last data push in `r format(push_log$date[nrow(push_log) - 1], '%B %Y'
 
 new_mt <- merge(
   new_matches[, .(detections = .N), by = 'trackercode'],
-  unique(new_matches, by  = 'fieldnumber') |>
-    DT(, .(individuals = .N), by = 'trackercode')
+  unique(new_matches, by  = 'fieldnumber')[, .(individuals = .N), by = 'trackercode']
 )
 
 new_mt <- merge(new_mt, pis[, .(trackercode, PI)])
@@ -354,11 +359,10 @@ ggplot() +
 
 station_summary <- merge(
   new_matches[, .(detections = .N), by = 'station'],
-  unique(new_matches, by  = c('fieldnumber', 'station')) |> 
-    DT(, .(individuals = .N,
+  unique(new_matches, by  = c('fieldnumber', 'station'))[, .(individuals = .N,
            long = mean(longitude),
-           lat = mean(latitude)), by = 'station')) #|>
-  # DT(, station := sapply(station, .simpleCap))
+           lat = mean(latitude)), by = 'station']) #|>
+  # DT(, station := sapply(station, .simpleCap)]
 
 setorder(station_summary, -lat, long)
 
