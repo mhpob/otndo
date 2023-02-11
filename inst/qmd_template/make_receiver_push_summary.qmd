@@ -30,7 +30,6 @@ act_eval <- !is.null(params$project_number)
 library(data.table)
 library(sf)
 library(mapview)
-library(geoarrow)
 library(ggplot2)
 library(gt)
 ```
@@ -164,8 +163,8 @@ otn_sf <- otn_tables[[1]] |>
   st_as_sf(wkt = 'the_geom', crs = 4326)
 otn_limits <- st_bbox(otn_sf)
 
-natural_earth <- read_geoparquet_sf(system.file("ne_10m_coastline.parquet", 
-                                                package="matos"), quiet = T)
+natural_earth <- st_read(system.file("ne_110m_coastline.gpkg", 
+                                     package="matos"), quiet = T)
 
 ggplot() +
   geom_sf(data = natural_earth) +
