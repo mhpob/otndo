@@ -31,10 +31,4 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: GitHub secrets to environment
-        run: |
-          matos_username = Sys.getenv('MATOS_USER')
-          matos_password = Sys.getenv('MATOS_PASS')
-        shell: Rscript {0}
-
       - uses: r-lib/actions/check-r-package@v2
