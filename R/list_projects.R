@@ -31,7 +31,7 @@ list_projects <- function(what = c('all', 'mine'), read_access = T){
       'https://matos.asascience.com/project'
     )
 
-    projects_info <- httr::content(project_list) %>%
+    projects_info <- httr::content(project_list)
     projects_info <- rvest::html_node(projects_info, '.project_list')
     projects_info <- rvest::html_nodes(projects_info, 'a')
 
