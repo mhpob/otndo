@@ -22,22 +22,26 @@
 #' # ...then follow the on-screen prompts
 #' }
 
-matos_login <- function(UserName = NULL, Password = NULL){
+matos_login <- function(){
+
+  # This uses a secret to allow vignettes to build and tests to run
+  username <- Sys.getenv('MATOS_USER')
+  password <- Sys.getenv('MATOS_PASS')
 
   cli::cli_alert_warning('Please log in.')
 
-  if(any(is.null(UserName), is.null(Password))){
-    credentials <- list(
-      UserName = getPass::getPass('Username:', noblank = T),
-      Password = getPass::getPass('Password:', noblank = T)
-    )
-  }else{
-    credentials <- list(
-      UserName = UserName,
-      Password = Password
-    )
+  # If no secret is present, we enter interactive mode
+  if(username == ''){
+    username = getPass::getPass('Username:', noblank = T)
+  }
+  if(password == ''){
+    password = getPass::getPass('Password:', noblank = T)
   }
 
+  credentials <- list(
+    UserName = username,
+    Password = password
+  )
 
   login_response <- httr::POST(
     'https://matos.asascience.com/account/login',

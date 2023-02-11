@@ -31,10 +31,6 @@ head(all_projects)
 
 I can also view the files that I've uploaded to my projects using `list_project_files`, but that requires logging in first. The family of `list_` functions in this package will prompt you to log in before moving on. Note that I'll be entering my MATOS username and password behind the scenes here.
 
-```{r echo=FALSE}
-matos_login(UserName = Sys.getenv('MATOS_USER'), Password = Sys.getenv('MATOS_PASS'))
-```
-
 ```{r}
 project_files <- list_project_files(project = 'umces boem offshore wind energy')
 
