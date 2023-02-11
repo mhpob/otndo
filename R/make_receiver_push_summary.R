@@ -42,8 +42,8 @@ make_receiver_push_summary <- function(
     update_push_log = F,
     deployment = NULL
 ){
-  if(all(is.null(matos_project), is.null(qualified), is.null(unqualified))){
-    cli::cli_abort('Must provide some detections or an ACT/MATOS project from where they can be fetched.')
+  if(is.null(matos_project) & any(is.null(qualified), is.null(unqualified), is.null(deployment))){
+    cli::cli_abort('Must provide an ACT/MATOS project or at least one each of qualified detections, unqualified detections, and deployment.')
   }
 
 
