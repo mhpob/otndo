@@ -24,6 +24,8 @@
 
 matos_login <- function(UserName = NULL, Password = NULL){
 
+  cli::cli_alert_warning('Please log in.')
+
   if(any(is.null(UserName), is.null(Password))){
     credentials <- list(
       UserName = getPass::getPass('Username:', noblank = T),
@@ -203,7 +205,6 @@ login_check <- function(url = 'https://matos.asascience.com/report/submit'){
   check_response <- httr::HEAD(url)
 
   if(nrow(check_response$cookies) == 1){
-    cli::cli_alert_warning('Please log in.')
 
     matos_login()
   }
