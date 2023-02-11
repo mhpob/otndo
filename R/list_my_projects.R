@@ -19,7 +19,7 @@ list_my_projects <- function(read_access = T){
 
   site <- httr::GET(url)
 
-  names <- httr::content(site) %>%
+  names <- httr::content(site)
   names <- rvest::html_node(names, xpath = '//*[@id="selProject"]')
   names <- rvest::html_nodes(names, 'option')
   names <- rvest::html_text(names)
