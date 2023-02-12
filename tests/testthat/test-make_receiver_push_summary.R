@@ -1,5 +1,6 @@
 ## Simulate non-ACT project
-td <- tempdir()
+td <- file.path(tempdir(), 'matos_test_files')
+dir.create(td)
 
 download.file('https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls',
               destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),

@@ -48,7 +48,8 @@ make_receiver_push_summary <- function(
 
 
   # Create a temporary directory to store intermediate files
-  td <- tempdir()
+  td <- file.path(tempdir(), 'matos_files')
+  dir.create(td)
 
   # Project ----
   ##  Find project name
@@ -188,7 +189,7 @@ make_receiver_push_summary <- function(
 
   cli::cli_alert_success('   Done.')
 
-  unlink(td)
+  unlink(td, recursive = T)
 }
 
 #' Utility function for make_receiver_push_summary
