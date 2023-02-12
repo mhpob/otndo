@@ -6,11 +6,6 @@
 \usage{
 matos_login()
 }
-\arguments{
-\item{UserName, Password}{Character. These arguments should not be used! They
-only exist to allow certain vignettes to build using secret keys stored
-by GitHub. Again, you should not script out your username and password!}
-}
 \description{
 This function prompts you for the username (email) and password associated with
 your MATOS account. This is necessary so that you may interface with any

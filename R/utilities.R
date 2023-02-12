@@ -10,10 +10,6 @@
 #' will not be saved -- this was done intentionally so that you don't accidentally
 #' save credentials in a public script.
 #'
-#' @param UserName,Password Character. These arguments should not be used! They
-#'      only exist to allow certain vignettes to build using secret keys stored
-#'      by GitHub. Again, you should not script out your username and password!
-#'
 #' @export
 #' @examples
 #' \dontrun{
