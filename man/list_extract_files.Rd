@@ -6,7 +6,8 @@
 \usage{
 list_extract_files(
   project = NULL,
-  detection_type = c("all", "matched", "qualified", "sentinel_tag", "unqualified"),
+  detection_type = c("all", "matched", "external", "qualified", "sentinel_tag",
+    "unqualified"),
   since = NULL
 )
 }
@@ -15,10 +16,11 @@ list_extract_files(
 or the full name of the project (the big name in bold on your project page,
 *not* the "Project Title").}
 
-\item{detection_type}{one of NULL (default), "matched", "qualified", "sentinel_tag",
-or "unqualified". Partial matching is allowed, and will repair
-to the correct argument if spaces or the words "detection(s)" are included.
-More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.}
+\item{detection_type}{one of "all" (default), "matched", "external",
+"qualified", "sentinel_tag", or "unqualified". Partial matching is
+allowed, and will repair to the correct argument if spaces or the words
+"detection(s)" are included.
+ More information on data types can be found on \href{https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals}{OTN's website}.}
 
 \item{since}{Only list files uploaded after this date. Optional, but must be
 in YYYY-MM-DD format.}
