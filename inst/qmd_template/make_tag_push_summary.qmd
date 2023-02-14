@@ -163,9 +163,12 @@ setnames(mt, c('PIs', 'POC', 'Project name', 'Network', 'Project code',
 
 setorder(mt, -'Detections', -'Individuals')
 
-gt(mt) |>
-  # tab_header(title = 'Matched detecions') |>
-  as_raw_html()
+reactable(mt,
+          columns = list(
+            PIs = colDef(minWidth = 100),
+            POC = colDef(minWidth = 100),
+            `Project name` = colDef(minWidth = 200)
+          ))
 ```
 
 ```{r}
@@ -262,15 +265,15 @@ setnames(station_summary, c('PI', 'Project', 'Station', 'Detections', 'Individua
 #   #               locations = cells_title()) |>
 #   as_raw_html()
 
-reactable(station_summary,
-                     groupBy = 'PI',
-                     columns = list(
-                       Project = colDef(aggregate = 'unique'),
-                       Station = colDef(aggregate = 'count'),
-                       Detections = colDef(aggregate = 'sum'),
-                       Individuals = colDef(aggregate = 'sum')
-                     )
-)
+# reactable(station_summary,
+#                      groupBy = 'PI',
+#                      columns = list(
+#                        Project = colDef(aggregate = 'unique'),
+#                        Station = colDef(aggregate = 'count'),
+#                        Detections = colDef(aggregate = 'sum'),
+#                        Individuals = colDef(aggregate = 'sum')
+#                      )
+# )
       
 
 ```
@@ -280,9 +283,10 @@ reactable(station_summary,
 
 station_spatial <- matched |>
   unique(by = c('station', 'detectedby'))
-station_spatial <- station_spatial[station_summary[, Station := toupper(Station)],,
+station_spatial <- station_spatial[,station := toupper(station)][station_summary[, Station := toupper(Station)],,
                                    on = c('station'= 'Station')]
-station_spatial <- station_spatial[, .(station, Detections, Individuals, longitude, latitude)] |> 
+station_spatial <- station_spatial[, .(station, Detections, Individuals,
+                                       longitude, latitude, PI, detectedby)] |> 
   st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) 
 
 # For use if switching to leaflet
@@ -302,25 +306,36 @@ mapview::mapview(station_spatial,
 
 
 ```{r}
-
+#| label: tags-remaining
 last_record <- matched[, .(last_record = max(datecollected)), by = 'tagname']
-k <- last_record[release[, .(tagname, datecollected)], ,on='tagname']
-setnames(k, 'datecollected', 'first_record')
-k[, last_record := fifelse(is.na(last_record), first_record, last_record)]
+transmitter_life <- last_record[release[, .(tagname, datecollected)], ,on = 'tagname']
+setnames(transmitter_life, 'datecollected', 'first_record')
+transmitter_life[, last_record := fifelse(is.na(last_record), first_record, last_record)]
 
-k[, ':='(first_record = as.Date(first_record),
-         last_record = as.Date(last_record))]
+transmitter_life[, ':='(first_record = as.Date(first_record),
+                        last_record = as.Date(last_record))]
 
-date_seq <- data.table(date = seq(
-  min(k$first_record, na.rm =T),
-  max(k$last_record, na.rm = T),
-  by = 'day'
+date_seq <- data.table(
+  date = seq(
+    min(transmitter_life$first_record, na.rm =T),
+    push_log$date[nrow(push_log)],
+    by = 'day'
+  )
 )
-)
-k[, sapply(date_seq,
-           function(.){
-             sum(between(., first_record, last_record) == T)
-           })]
+
+date_seq[, remaining := sapply(date,
+                               function(.){
+                                 sum(
+                                   between(.,
+                                           transmitter_life$first_record,
+                                           transmitter_life$last_record) == T
+                                 )
+                               })]
+
+ggplot(data = date_seq) +
+  geom_step(aes(x = date, y = remaining)) +
+  labs(x = NULL, y = 'Project transmitters remaining') +
+  theme_minimal()
 ```
 
 
@@ -342,7 +357,7 @@ Since the last data push in `r format(push_log$date[nrow(push_log) - 1], '%B %Y'
 
 new_mt <- merge(
   new_matches[, .(detections = .N), by = 'detectedby'],
-  unique(new_matches, by  = 'tagname')[, .(individuals = .N), by = 'detectedby']
+  unique(new_matches, by  = c('tagname', 'detectedby'))[, .(individuals = .N), by = 'detectedby']
 )
 
 new_mt <- merge(new_mt, pis[, .(detectedby, PI)])
@@ -362,9 +377,7 @@ setnames(new_mt, c('PIs', 'Project name', 'Network', 'Project code',
 
 setorder(new_mt, -'Detections', -'Individuals')
 
-gt(new_mt) |>
-  # tab_header(title = 'New matched detections') |>
-  as_raw_html()
+reactable(new_mt)
 ```
 
 
@@ -373,7 +386,7 @@ gt(new_mt) |>
 #| label: new-otn-match-map
 
 new_otn_sf <- otn_sf[grepl(
-    paste(unique(new_matches$trackercode), collapse = '|'),
+    paste(unique(new_matches$detectedby), collapse = '|'),
     otn_sf$collectioncode
   ),]
 otn_limits <- st_bbox(new_otn_sf)
@@ -389,27 +402,51 @@ ggplot() +
 
 ```{r}
 #| label: new-station-summary-table
-
 station_summary <- merge(
-  new_matches[, .(detections = .N), by = 'station'],
-  unique(new_matches, by  = c('tagname', 'station'))[, .(individuals = .N,
-           long = mean(longitude),
-           lat = mean(latitude)), by = 'station']) #|>
-  # DT(, station := sapply(station, .simpleCap)]
+  new_matches[, .(detections = .N), by = c('station', 'detectedby')],
+  unique(new_matches, by = c('tagname', 'station'))[, .(individuals = .N,
+                                                    long = mean(longitude),
+                                                    lat = mean(latitude)),
+                                                      by = 'station'] 
+)
+station_summary <- merge(
+  station_summary,
+  pis[, .(detectedby, PI)],
+  by = 'detectedby'
+)
+# DT(, station := sapply(station, .simpleCap))
 
 setorder(station_summary, -lat, long)
 
-station_summary <- station_summary[, .(station, detections, individuals)]
-setnames(station_summary, c('Station', 'Detections', 'Individuals'))
+station_summary <- station_summary[, .(PI, detectedby, station, detections, individuals)]
+setnames(station_summary, c('PI', 'Project', 'Station', 'Detections', 'Individuals'))
 
-setnames(station_summary, c('Station', 'Detections', 'Individuals'))
+reactable(station_summary)
+```
 
-station_summary |>
-  gt() |>
-  # tab_header(title = 'Records by receivers') |>
-  # tab_footnote('statons listed N-S, W-E',
-  #               locations = cells_title()) |>
-  as_raw_html()
+
+
+```{r}
+#| label: new-station-spatial
+
+station_spatial <- new_matches |>
+  unique(by = c('station', 'detectedby'))
+station_spatial <- station_spatial[,station := toupper(station)][station_summary[, Station := toupper(Station)],,
+                                   on = c('station'= 'Station')]
+station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Project, longitude, latitude)] |> 
+  st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) 
+
+# For use if switching to leaflet
+# station_center <- st_centroid(st_union(station_spatial))
+# station_center <- st_coordinates(station_center)
+```
+
+```{r}
+#| label: new-detection-map-leaflet
+mapview::mapview(station_spatial,
+                 zcol = 'Detections',
+                 cex = 'Individuals',
+                 layer.name = "Matched detections") 
 ```
 
 ```{r results='asis', echo=FALSE}

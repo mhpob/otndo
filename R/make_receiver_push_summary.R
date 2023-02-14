@@ -5,6 +5,7 @@
 #' @param unqualified Default is NULL; OTN unqualified detections will be downloaded and unzipped. If you do not wish to download your unqualified detections, this argument also accepts a character vector of file paths of your unqualified detections.
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
 #' @param deployment File path of user-supplied master OTN receiver deployment metadata.
+#' @param out_dir Defaults to working directory. In which directory would you like to save the report?
 #'
 #' @section Push log:
 #'
@@ -40,7 +41,8 @@ make_receiver_push_summary <- function(
     qualified = NULL,
     unqualified = NULL,
     update_push_log = F,
-    deployment = NULL
+    deployment = NULL,
+    out_dir = getwd()
 ){
   if(is.null(matos_project) & any(is.null(qualified), is.null(unqualified), is.null(deployment))){
     cli::cli_abort('Must provide an ACT/MATOS project or at least one each of qualified detections, unqualified detections, and deployment.')
@@ -49,6 +51,12 @@ make_receiver_push_summary <- function(
 
   # Create a temporary directory to store intermediate files
   td <- file.path(tempdir(), 'matos_files')
+
+  # remove previous files. Needed if things errored out.
+  if(file.exists(td)){
+    unlink(td, recursive = T)
+  }
+
   dir.create(td)
 
   # Project ----
@@ -188,7 +196,7 @@ make_receiver_push_summary <- function(
     ))
 
   file.copy(from = file.path(td,'make_receiver_push_summary.html'),
-            to = file.path(getwd(), paste0(Sys.Date(), '_receiver_push_summary.html')))
+            to = file.path(out_dir, paste0(Sys.Date(), '_receiver_push_summary.html')))
 
   cli::cli_alert_success('   Done.')
 

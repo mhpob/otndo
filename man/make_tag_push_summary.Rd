@@ -8,7 +8,8 @@ make_tag_push_summary(
   matos_project = NULL,
   matched = NULL,
   update_push_log = F,
-  sensor_decoding = NULL
+  sensor_decoding = NULL,
+  out_dir = getwd()
 )
 }
 \arguments{
@@ -18,8 +19,14 @@ make_tag_push_summary(
 
 \item{update_push_log}{Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.}
 
-\item{sensor_decoding}{Not yet implemented. Will be a place to provide information to decode and summarize sensor data,}
+\item{sensor_decoding}{Not yet implemented. Will be a place to provide information to decode and summarize sensor data,
+#' @param out_dir Defaults to working directory. In which directory would you like to save the report?}
 }
 \description{
 Create summary reports of receiver project data from the OTN data push
+}
+\examples{
+\dontrun{
+make_tag_push_summary(87)
+}
 }
