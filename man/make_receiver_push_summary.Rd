@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_receiver_push_summary.R
 \name{make_receiver_push_summary}
 \alias{make_receiver_push_summary}
-\title{Create summary reports of the ACT data push}
+\title{Create summary reports of receiver project data from the OTN data push}
 \usage{
 make_receiver_push_summary(
   matos_project = NULL,
@@ -24,7 +24,7 @@ make_receiver_push_summary(
 \item{deployment}{File path of user-supplied master OTN receiver deployment metadata.}
 }
 \description{
-Create summary reports of the ACT data push
+Create summary reports of receiver project data from the OTN data push
 }
 \section{Push log}{
 

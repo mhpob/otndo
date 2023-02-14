@@ -19,7 +19,7 @@
 #' @importFrom data.table .NGRP
 #' @importFrom data.table .EACHI
 #' @importFrom ggplot2 ggplot
-#' @importFrom gt gt
+#' @importFrom reactable reactable
 #' @importFrom mapview mapview
 #' @importFrom sf read_sf
 #' @keywords internal

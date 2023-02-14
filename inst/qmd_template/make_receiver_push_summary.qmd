@@ -31,7 +31,7 @@ library(data.table)
 library(sf)
 library(mapview)
 library(ggplot2)
-library(gt)
+library(reactable)
 ```
 
 ```{r}
@@ -152,9 +152,7 @@ setnames(mt, c('PIs', 'POC', 'Project name', 'Network', 'Project code', 'Detecti
 
 setorder(mt, -'Detections', -'Individuals')
 
-gt(mt) |>
-  # tab_header(title = 'Matched detecions') |>
-  as_raw_html()
+reactable(mt)
 ```
 
 ```{r}
@@ -236,12 +234,7 @@ setorder(station_summary, -lat, long)
 station_summary <- station_summary[, .(station, detections, individuals)]
 setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
-station_summary |>
-  gt() |>
-  # tab_header(title = 'Records by receivers') |>
-  # tab_footnote('statons listed N-S, W-E',
-  #               locations = cells_title()) |>
-  as_raw_html()
+reactable(station_summary)
 ```
 
 ```{r}
@@ -331,9 +324,7 @@ setnames(new_mt, c('PIs', 'Project name', 'Network', 'Project code',
 
 setorder(new_mt, -'Detections', -'Individuals')
 
-gt(new_mt) |>
-  # tab_header(title = 'New matched detections') |>
-  as_raw_html()
+reactable(new_mt)
 ```
 
 ```{r}
@@ -371,12 +362,7 @@ setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
 setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
-station_summary |>
-  gt() |>
-  # tab_header(title = 'Records by receivers') |>
-  # tab_footnote('statons listed N-S, W-E',
-  #               locations = cells_title()) |>
-  as_raw_html()
+reactable(station_summary)
 ```
 
 ```{r}
@@ -425,9 +411,7 @@ Some detections were not matched to other investigators via OTN nodes. There are
 ```{r}
 #| label: unqualified-false
 
-unqual_f |> 
-  gt() |> 
-  as_raw_html()
+reactable(unqual_f)
 ```
 
 ### Possibly real detections
@@ -435,9 +419,7 @@ unqual_f |>
 ```{r}
 #| label: unqualified-real
 
-unqual_real |> 
-  gt() |> 
-  as_raw_html()
+reactable(unqual_real)
 ```
 
 ```{r}

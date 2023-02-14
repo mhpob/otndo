@@ -1,4 +1,4 @@
-#' Create summary reports of the ACT data push
+#' Create summary reports of receiver project data from the OTN data push
 #'
 #' @param matos_project MATOS project number or name that you wish to have summarized
 #' @param qualified Default is NULL; OTN qualified detections will be downloaded and unzipped. If you do not wish to download your qualified detections, this argument also accepts a character vector of file paths of your qualified detections.

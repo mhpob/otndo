@@ -14,7 +14,7 @@ Imports:
     getPass,
     quarto,
     readxl,
-    gt,
+    reactable,
     data.table (>= 1.14.6),
     ggplot2,
     mapview,
