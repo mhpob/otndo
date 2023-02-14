@@ -85,7 +85,8 @@ make_receiver_push_summary <- function(
     qualified <- project_files[project_files$detection_type == 'qualified',]
     qualified <- lapply(qualified$url,
                         function(.){
-                          get_extract_file(url = .)
+                          get_extract_file(url = .,
+                                           out_dir = td)
                         }
     )
 
@@ -114,7 +115,8 @@ make_receiver_push_summary <- function(
     unqualified <- project_files[project_files$detection_type == 'unqualified',]
     unqualified <- lapply(unqualified$url,
                           function(.){
-                            get_extract_file(url = .)
+                            get_extract_file(url = .,
+                                             out_dir = td)
                           }
     )
 
@@ -152,7 +154,8 @@ make_receiver_push_summary <- function(
 
     deployment_files <- lapply(deployment_files$url,
                         function(.){
-                          get_project_file(url = .)
+                          get_project_file(url = .,
+                                           out_dir = td)
                         })
 
     deployment <- unlist(deployment_files)
