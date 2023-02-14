@@ -1,3 +1,15 @@
+# matos 0.2.1
+
+  - The website has moved to [https://matos.obrien.page/](https://matos.obrien.page/).
+  - [`set_matos_credentials`](https://matos.obrien.page/reference/set_matos_credentials.html) 
+    - *NEW* function!
+    - Allows you to store your MATOS credentials in your [.Renviron](https://rstats.wtf/r-startup.html#renviron) for seamless log in.
+  - [`make_tag_push_summary`](https://matos.obrien.page/reference/make_tag_push_summary.html)
+    - *NEW* function!
+    - Undergoing heavy development, so please file issues with bugs and suggestions.
+    - Summarize your your TON returns of tagged fish!
+  -
+
 # matos 0.2
 
   - The package has a pkgdown website at [https://mhpob.github.io/matos/](https://mhpob.github.io/matos/)
