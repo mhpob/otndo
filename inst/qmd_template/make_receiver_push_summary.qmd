@@ -64,12 +64,24 @@ pis[, ':='(PI = unlist(lapply(X = PI,
                               # multiple emails in a column: simplify=T
                               # will "simplify" to a matrix rather than keep as a list
                               SIMPLIFY = FALSE)))] 
-pis[, emails := unlist(
+pis[, ':='(emails = unlist(
   lapply(
     lapply(emails,
            unique),
     paste, collapse = '\n')
-)]
+),
+PI_emails = unlist(
+  lapply(
+    lapply(PI_emails,
+           unique),
+    paste, collapse = ',')
+),
+POC_emails = unlist(
+  lapply(
+    lapply(POC_emails,
+           unique),
+    paste, collapse = ',')
+))]
 ```
 
 ```{r}
@@ -134,7 +146,8 @@ mt <- merge(
   unique(qualified, by  = 'fieldnumber')[, .(individuals = .N), by = 'trackercode']
 )
 
-mt <- merge(mt, pis[, .(trackercode, PI, POC, emails)])
+# mt <- merge(mt, pis[, .(trackercode, PI, POC, emails)])
+mt <- merge(mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
 mt[, trackercode := ifelse(grepl('^PROJ', trackercode),
                            paste0('ACT.', trackercode),
                            ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', trackercode),
@@ -148,12 +161,30 @@ mt[, ':='(network = gsub('\\..*', '', trackercode),
           PI = fifelse(PI == 'NA', '', PI),
           POC = fifelse(POC == 'NA', '', POC))]
 
-mt <- mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, emails)]
-setnames(mt, c('PIs', 'POC', 'Project name', 'Network', 'Project code', 'Detections', 'Individuals', 'Contact info'))
+mt <- mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
+setnames(mt, c('PI', 'POC', 'Project name', 'Network', 'Project code', 'Detections', 'Individuals', 'PI_emails', 'POC_emails'))
 
 setorder(mt, -'Detections', -'Individuals')
 
-reactable(mt)
+reactable(mt,
+          columns = list(
+            PI = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$PI_emails[index], value)
+                         },
+                        minWidth = 150),
+            POC = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$POC_emails[index], value)
+                         },
+                         minWidth = 150),
+            PI_emails = colDef(show = F),
+            POC_emails = colDef(show = F),
+            `Project name` = colDef(minWidth = 200)
+          )
+)
 ```
 
 ```{r}
@@ -312,7 +343,7 @@ if(!act_eval & is.null(params$since)) {cat("<!---")}
 ## What's new?
 
 ```{r}
-#\ label: new-matches
+#| label: new-matches
 if(act_eval){
   since_date <- push_log$date[nrow(push_log) - 1]
 }
@@ -325,14 +356,14 @@ new_matches <- qualified[datelastmodified > since_date]
 Since `r format(since_date, '%B %Y')`, `r format(nrow(qualified[datelastmodified > since_date]), big.mark = ',')` detections of `r uniqueN(qualified[datelastmodified > since_date], by  = 'fieldnumber')` individuals have been updated or newly-matched.
 
 ```{r}
-#\ label: new-otn-match-table
-
+#| label: new-otn-match-table
+#| column: page
 new_mt <- merge(
   new_matches[, .(detections = .N), by = 'trackercode'],
   unique(new_matches, by  = 'fieldnumber')[, .(individuals = .N), by = 'trackercode']
 )
 
-new_mt <- merge(new_mt, pis[, .(trackercode, PI)])
+new_mt <- merge(new_mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
 new_mt[, trackercode := ifelse(grepl('^PROJ', trackercode),
                            paste0('ACT.', trackercode),
                            ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', trackercode),
@@ -344,13 +375,30 @@ new_mt[, ':='(network = gsub('\\..*', '', trackercode),
           code = gsub('.*\\.', '', trackercode),
           trackercode = NULL)]
 
-new_mt <- new_mt[, .(PI, resource_full_name, network, code, detections, individuals)]
-setnames(new_mt, c('PIs', 'Project name', 'Network', 'Project code',
-                   'Detections', 'Individuals'))
+new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
+setnames(new_mt, c('PI', 'POC', 'Project name', 'Network', 'Project code', 'Detections', 'Individuals', 'PI_emails', 'POC_emails'))
 
 setorder(new_mt, -'Detections', -'Individuals')
 
-reactable(new_mt)
+reactable(new_mt,
+          columns = list(
+            PI = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$PI_emails[index], value)
+                         },
+                        minWidth = 150),
+            POC = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$POC_emails[index], value)
+                         },
+                         minWidth = 150),
+            PI_emails = colDef(show = F),
+            POC_emails = colDef(show = F),
+            `Project name` = colDef(minWidth = 200)
+          )
+)
 ```
 
 ```{r}
