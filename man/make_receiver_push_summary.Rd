@@ -10,7 +10,8 @@ make_receiver_push_summary(
   unqualified = NULL,
   update_push_log = F,
   deployment = NULL,
-  out_dir = getwd()
+  out_dir = getwd(),
+  since = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ make_receiver_push_summary(
 \item{deployment}{File path of user-supplied master OTN receiver deployment metadata.}
 
 \item{out_dir}{Defaults to working directory. In which directory would you like to save the report?}
+
+\item{since}{Date in YYYY-MM-DD format. If you're an ACT-ite, this is mostly covered by the embedded ACT push log.}
 }
 \description{
 Create summary reports of receiver project data from the OTN data push
@@ -36,6 +39,8 @@ Create summary reports of receiver project data from the OTN data push
  \href{https://raw.githubusercontent.com/mhpob/matos/master/inst/push_log.csv}{on the package's GitHub page}. This is automatically downloaded every time you download
  or update the package, but you can avoid re-downloading the package by changing
  \code{update_push_log} to \code{TRUE}.
+
+ If you're not an ACTee, you can get similar behavior by providing a date to the \code{since} argument.
 }
 
 \section{No files provided}{

@@ -46,7 +46,8 @@ test_that("Non-ACT projects are summarized", {
     make_receiver_push_summary(
       qualified = qualified,
       unqualified = unqualified,
-      deployment = deployment
+      deployment = deployment,
+      since = '2018-05-06'
     )
   )
 

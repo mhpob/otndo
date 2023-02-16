@@ -6,6 +6,7 @@ params:
   unqualified: NULL
   push_log: system.file("push_log.csv", package="matos")
   deployment: NULL
+  since: NULL
 format:
   html:
     self-contained: true
@@ -275,30 +276,53 @@ station_limits <- st_bbox(station_spatial)
 x_nudge <- (station_limits[3] - station_limits[1]) * (1/10)
 y_nudge <- (station_limits[4] - station_limits[2]) * (1/10)
 
-ggplot() +
-  geom_sf(data = natural_earth, fill = 'lightgray') +
-  geom_sf(data = station_spatial,
-          aes(size = Detections, color = Individuals)) +
-  labs(subtitle = 'Records by receivers') +
-  scale_color_viridis_c() +
-  coord_sf(xlim = c(station_limits['xmin'] - x_nudge, station_limits['xmax'] + x_nudge),
-           ylim = c(station_limits['ymin'] - y_nudge, station_limits['ymax'] + y_nudge)) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# ggplot() +
+#   geom_sf(data = natural_earth, fill = 'lightgray') +
+#   geom_sf(data = station_spatial,
+#           aes(size = Detections, color = Individuals)) +
+#   labs(subtitle = 'Records by receivers') +
+#   scale_color_viridis_c() +
+#   coord_sf(xlim = c(station_limits['xmin'] - x_nudge, station_limits['xmax'] + x_nudge),
+#            ylim = c(station_limits['ymin'] - y_nudge, station_limits['ymax'] + y_nudge)) +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("<!---")}
+if(!act_eval & is.null(params$since)) {cat("<!---")}
 ```
 ## What's new?
 
 ```{r}
 #\ label: new-matches
-
-new_matches <- qualified[datelastmodified > push_log$date[nrow(push_log) - 1]]
+if(act_eval){
+  since_date <- push_log$date[nrow(push_log) - 1]
+}
+if(!is.null(params$since)){
+  since_date <- as.IDate(params$since)
+}
+new_matches <- qualified[datelastmodified > since_date]
 ```
 
-Since the last data push in `r format(push_log$date[nrow(push_log) - 1], '%B %Y')`, `r format(nrow(qualified[datelastmodified > push_log$date[nrow(push_log) - 1]]), big.mark = ',')` detections of `r uniqueN(qualified[datelastmodified > push_log$date[nrow(push_log) - 1]], by  = 'fieldnumber')` individuals have been updated or newly-matched.
+Since `r format(since_date, '%B %Y')`, `r format(nrow(qualified[datelastmodified > since_date]), big.mark = ',')` detections of `r uniqueN(qualified[datelastmodified > since_date], by  = 'fieldnumber')` individuals have been updated or newly-matched.
 
 ```{r}
 #\ label: new-otn-match-table
@@ -310,7 +334,9 @@ new_mt <- merge(
 
 new_mt <- merge(new_mt, pis[, .(trackercode, PI)])
 new_mt[, trackercode := ifelse(grepl('^PROJ', trackercode),
-                           paste0('ACT.', trackercode), trackercode)]
+                           paste0('ACT.', trackercode),
+                           ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', trackercode),
+                                  paste0('OTN.', trackercode), trackercode))]
 
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
 
@@ -387,7 +413,7 @@ reactable(station_summary)
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 ```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("-->")}
+if(!act_eval & is.null(params$since)) {cat("-->")}
 ```
 
 ## Unmatched detections
