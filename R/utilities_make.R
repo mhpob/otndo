@@ -3,7 +3,11 @@
 #' @param deployment blah blah blah document here
 #' @param type blah blah blah document here
 #' @param files blah blah blah document here
-#' @param td blahblah
+#' @param matos_project blah
+#' @param project_files blah
+#' @param temp_dir blahblah
+#'
+#'
 #' @name utilities-make
 #' @keywords internal
 clean_otn_deployment <- function(deployment){

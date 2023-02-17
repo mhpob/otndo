@@ -9,16 +9,25 @@
 \usage{
 clean_otn_deployment(deployment)
 
-act_file_download(type, td)
+act_file_download(
+  type,
+  temp_dir = NULL,
+  matos_project = NULL,
+  project_files = NULL
+)
 
-write_to_tempdir(type, files, td)
+write_to_tempdir(type, files, temp_dir)
 }
 \arguments{
 \item{deployment}{blah blah blah document here}
 
 \item{type}{blah blah blah document here}
 
-\item{td}{blahblah}
+\item{temp_dir}{blahblah}
+
+\item{matos_project}{blah}
+
+\item{project_files}{blah}
 
 \item{files}{blah blah blah document here}
 }

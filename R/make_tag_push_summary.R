@@ -6,6 +6,7 @@
 #' @param since date in YYYY-MM-DD format. Provides a summary of detections that were matched/edited since that date.
 #' @param sensor_decoding Not yet implemented. Will be a place to provide information to decode and summarize sensor data,
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
+#' @param rmd Logical. Compile via RMarkdown rather than Quarto?
 #'
 #' @export
 #' @examples
@@ -13,7 +14,8 @@
 #' # If you're an ACT-ee, you can just use your project number
 #' make_tag_push_summary(87)
 #'
-#' # If you're not an ACT-ee, you need to provide your matched detections directly. The code below downloads some matched detections from OTN to show
+#' # If you're not an ACT-ee, you need to provide your matched detections
+#' # directly. The code below downloads some matched detections from OTN to show
 #' # this.
 #' td <- file.path(tempdir(), 'matos_test_files')
 #' dir.create(td)
