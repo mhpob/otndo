@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 
+files_for_testing/
 *.html
-shhh.R
 docs
 inst/doc
