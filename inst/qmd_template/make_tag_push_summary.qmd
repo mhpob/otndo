@@ -4,6 +4,7 @@ params:
   project_number: NULL
   matched: NULL
   push_log: system.file("push_log.csv", package="matos")
+  since: NULL
 format:
   html:
     self-contained: true
@@ -57,20 +58,32 @@ pis[, ':='(PI = lapply(X = PI, function(.) .[!grepl('@', .)]),
            PI_emails = lapply(X = PI, function(.) .[grepl('@', .)]),
            POC_emails = lapply(X = POC, function(.) .[grepl('@', .)]))]
 pis[, ':='(PI = unlist(lapply(X = PI,
-                              function(.) paste(., collapse = ', '))),
-           POC = unlist(lapply(X = POC,
                                function(.) paste(., collapse = ', '))),
-           emails = t(mapply(c, PI_emails, POC_emails,
-                             # Need simplify=F arg to mapply in case no rows have
-                             # multiple emails in a column: simplify=T
-                             # will "simplify" to a matrix rather than keep as a list
-                             SIMPLIFY = FALSE)))] 
-pis[, emails := unlist(
+            POC = unlist(lapply(X = POC,
+                                function(.) paste(., collapse = ', '))),
+            emails = t(mapply(c, PI_emails, POC_emails,
+                              # Need simplify=F arg to mapply in case no rows have
+                              # multiple emails in a column: simplify=T
+                              # will "simplify" to a matrix rather than keep as a list
+                              SIMPLIFY = FALSE)))] 
+pis[, ':='(emails = unlist(
   lapply(
     lapply(emails,
            unique),
     paste, collapse = '\n')
-)]
+),
+PI_emails = unlist(
+  lapply(
+    lapply(PI_emails,
+           unique),
+    paste, collapse = ',')
+),
+POC_emails = unlist(
+  lapply(
+    lapply(POC_emails,
+           unique),
+    paste, collapse = ',')
+))]
 ```
 
 ```{r}
@@ -141,7 +154,7 @@ mt <- merge(
                                                       by = 'detectedby']
 )
 
-mt <- merge(mt, pis[, .(detectedby, PI, POC, emails)])
+mt <- merge(mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
 mt[, detectedby := ifelse(grepl('^PROJ', detectedby),
                            paste0('ACT.', detectedby),
                            ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', detectedby),
@@ -157,18 +170,31 @@ mt[, ':='(network = gsub('\\..*', '', detectedby),
           POC = fifelse(POC == 'NA', '', POC))]
 
 mt <- mt[, .(PI, POC, resource_full_name, network, code,
-             detections, individuals, emails)]
-setnames(mt, c('PIs', 'POC', 'Project name', 'Network', 'Project code',
-               'Detections', 'Individuals', 'Contact info'))
+             detections, individuals,PI_emails, POC_emails)]
+setnames(mt, c('PI', 'POC', 'Project name', 'Network', 'Project code',
+               'Detections', 'Individuals', 'PI_emails', 'POC_emails'))
 
 setorder(mt, -'Detections', -'Individuals')
 
 reactable(mt,
           columns = list(
-            PIs = colDef(minWidth = 100),
-            POC = colDef(minWidth = 100),
+            PI = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$PI_emails[index], value)
+                         },
+                        minWidth = 150),
+            POC = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$POC_emails[index], value)
+                         },
+                         minWidth = 150),
+            PI_emails = colDef(show = F),
+            POC_emails = colDef(show = F),
             `Project name` = colDef(minWidth = 200)
-          ))
+          )
+)
 ```
 
 ```{r}
@@ -340,17 +366,29 @@ ggplot(data = date_seq) +
 
 
 ```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("<!---")}
+if(!act_eval & is.null(params$since)){
+  # further lines are not shown (the HTML is commented out)...
+  cat("<!---")
+  
+  # ...BUT they are still evaluated, so putting this in here to make the code run.
+  # It will be nonsense.
+  since_date <- min(matched$datelastmodified)
+  }
 ```
 ## What's new?
 
 ```{r}
 #\ label: new-matches
-
-new_matches <- matched[datelastmodified > push_log$date[nrow(push_log) - 1]]
+if(act_eval){
+  since_date <- push_log$date[nrow(push_log) - 1]
+}
+if(!is.null(params$since)){
+  since_date <- as.IDate(params$since)
+}
+new_matches <- matched[datelastmodified > since_date]
 ```
 
-Since the last data push in `r format(push_log$date[nrow(push_log) - 1], '%B %Y')`, `r format(nrow(matched[datelastmodified > push_log$date[nrow(push_log) - 1]]), big.mark = ',')` detections of `r uniqueN(matched[datelastmodified > push_log$date[nrow(push_log) - 1]], by  = 'tagname')` individuals have been updated or newly-matched.
+Since `r format(since_date, '%B %Y')`, `r format(nrow(matched[datelastmodified > since_date]), big.mark = ',')` detections of `r uniqueN(matched[datelastmodified > since_date], by  = 'tagname')` individuals have been updated or newly-matched.
 
 ```{r}
 #\ label: new-otn-match-table
@@ -360,10 +398,12 @@ new_mt <- merge(
   unique(new_matches, by  = c('tagname', 'detectedby'))[, .(individuals = .N), by = 'detectedby']
 )
 
-new_mt <- merge(new_mt, pis[, .(detectedby, PI)])
+new_mt <- merge(new_mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
 
 new_mt[, detectedby := ifelse(grepl('^PROJ', detectedby),
-                           paste0('ACT.', detectedby), detectedby)]
+                           paste0('ACT.', detectedby),
+                           ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', detectedby),
+                                  paste0('OTN.', detectedby), detectedby))]
 
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, detectedby = collectioncode)])
 
@@ -371,13 +411,30 @@ new_mt[, ':='(network = gsub('\\..*', '', detectedby),
           code = gsub('.*\\.', '', detectedby),
           detectedby = NULL)]
 
-new_mt <- new_mt[, .(PI, resource_full_name, network, code, detections, individuals)]
-setnames(new_mt, c('PIs', 'Project name', 'Network', 'Project code',
-                   'Detections', 'Individuals'))
+new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
+setnames(new_mt, c('PI', 'POC', 'Project name', 'Network', 'Project code', 'Detections', 'Individuals', 'PI_emails', 'POC_emails'))
 
 setorder(new_mt, -'Detections', -'Individuals')
 
-reactable(new_mt)
+reactable(new_mt,
+          columns = list(
+            PI = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$PI_emails[index], value)
+                         },
+                        minWidth = 150),
+            POC = colDef(html = T,
+                         cell = function(value, index){
+                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
+                                   mt$POC_emails[index], value)
+                         },
+                         minWidth = 150),
+            PI_emails = colDef(show = F),
+            POC_emails = colDef(show = F),
+            `Project name` = colDef(minWidth = 200)
+          )
+)
 ```
 
 
@@ -446,7 +503,7 @@ station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Pro
 mapview::mapview(station_spatial,
                  zcol = 'Detections',
                  cex = 'Individuals',
-                 layer.name = "Matched detections") 
+                 layer.name = "Matched detections")
 ```
 
 ```{r results='asis', echo=FALSE}

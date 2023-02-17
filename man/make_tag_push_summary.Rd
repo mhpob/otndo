@@ -8,6 +8,7 @@ make_tag_push_summary(
   matos_project = NULL,
   matched = NULL,
   update_push_log = F,
+  since = NULL,
   sensor_decoding = NULL,
   out_dir = getwd()
 )

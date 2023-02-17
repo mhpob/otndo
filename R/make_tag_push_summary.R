@@ -3,6 +3,7 @@
 #' @param matos_project MATOS project number or name that you wish to have summarized
 #' @param matched Default is NULL; OTN matched detections will be downloaded and unzipped. If you do not wish to download your files, this argument also accepts a character vector of file paths of your matched detections.
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
+#' @param since
 #' @param sensor_decoding Not yet implemented. Will be a place to provide information to decode and summarize sensor data,
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
 #'
@@ -16,6 +17,7 @@ make_tag_push_summary <- function(
     matos_project = NULL,
     matched = NULL,
     update_push_log = F,
+    since = NULL,
     sensor_decoding = NULL,
     out_dir = getwd()
 ){
@@ -88,7 +90,8 @@ make_tag_push_summary <- function(
       project_name = project_name,
       project_number = project_number,
       matched = matched_filepath,
-      push_log = push_log
+      push_log = push_log,
+      since = since
     ))
 
   file.copy(from = file.path(td,'make_tag_push_summary.html'),
