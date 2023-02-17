@@ -37,7 +37,8 @@ make_tag_push_summary <- function(
     update_push_log = F,
     since = NULL,
     sensor_decoding = NULL,
-    out_dir = getwd()
+    out_dir = getwd(),
+    rmd = FALSE
 ){
   # matos_project = 87
   # matched = NULL
@@ -84,11 +85,15 @@ make_tag_push_summary <- function(
     matched <- list_extract_files(project_number, 'all')
     cli::cli_alert_success('   Files found.\n')
 
-    matched <- act_file_download('matched')
+    matched <- act_file_download(type = 'matched',
+                                 project_files = matched,
+                                 temp_dir = td)
   }
 
   ##  Bind files together
-  matched_filepath <- write_to_tempdir('matched', matched, td)
+  matched_filepath <- write_to_tempdir(type = 'matched',
+                                       files = matched,
+                                       temp_dir = td)
 
 
   ## Tag metadata ----
@@ -102,7 +107,7 @@ make_tag_push_summary <- function(
                                package = 'matos'),
             to = td)
 
-  if(Sys.which('quarto') != ''){
+  if(Sys.which('quarto') != '' & rmd == FALSE){
     quarto::quarto_render(
       input = file.path(td, 'make_tag_push_summary.qmd'),
       execute_params = list(

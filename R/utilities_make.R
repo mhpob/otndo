@@ -50,8 +50,8 @@ clean_otn_deployment <- function(deployment){
 
 #' @rdname utilities-make
 #' @keywords internal
-act_file_download <- function(type, td = td, matos_project = NULL,
-                              project_files = nULL){
+act_file_download <- function(type, temp_dir = NULL, matos_project = NULL,
+                              project_files = NULL){
   cli::cli_alert_info(paste('Downloading', type, 'detections...'))
 
 
@@ -69,7 +69,7 @@ act_file_download <- function(type, td = td, matos_project = NULL,
   files <- lapply(files$url,
                   function(.){
                     get_extract_file(url = .,
-                                     out_dir = td)
+                                     out_dir = temp_dir)
                   }
   )
 
@@ -87,7 +87,7 @@ act_file_download <- function(type, td = td, matos_project = NULL,
 
 #' @rdname utilities-make
 #' @keywords internal
-write_to_tempdir <- function(type, files, td){
+write_to_tempdir <- function(type, files, temp_dir){
 
   if(type == 'deployment'){
     # Read in and clean deployment data
@@ -102,7 +102,7 @@ write_to_tempdir <- function(type, files, td){
   files <- do.call(rbind, files)
 
   ##  Write file to temporary directory
-  filepath <- file.path(td, paste0(type, '.csv'))
+  filepath <- file.path(temp_dir, paste0(type, '.csv'))
   write.csv(files, filepath,
             row.names = F)
 

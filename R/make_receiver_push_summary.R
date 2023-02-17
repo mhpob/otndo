@@ -94,11 +94,15 @@ make_receiver_push_summary <- function(
   # Qualified detections ----
   ##  Download qualified detections if not provided
   if(is.null(qualified)){
-    qualified <- act_file_download('qualified')
+    qualified <- act_file_download(type = 'qualified',
+                                   project_files = project_files,
+                                   temp_dir = td)
   }
 
   ## Import and write to tempdir
-  qualified_filepath <- write_to_tempdir('qualified', qualified)
+  qualified_filepath <- write_to_tempdir(type = 'qualified',
+                                         files = qualified,
+                                         temp_dir = td)
 
 
 
@@ -106,11 +110,15 @@ make_receiver_push_summary <- function(
   # Unqualified detections ----
   ##  Download unqualified detections if not provided
   if(is.null(unqualified)){
-    unqualified <- act_file_download('unqualified')
+    unqualified <- act_file_download(type = 'unqualified',
+                                     project_files = project_files,
+                                     temp_dir = td)
   }
 
   ## Import and write to tempdir
-  unqualified_filepath <- write_to_tempdir('unqualified', unqualified)
+  unqualified_filepath <- write_to_tempdir(type = 'unqualified',
+                                           files = unqualified,
+                                           temp_dir = td)
 
 
 
@@ -118,11 +126,15 @@ make_receiver_push_summary <- function(
   # Deployment log ----
   ##  Download deployment metadata if not provided
   if(is.null(deployment)){
-    deployment <- act_file_download('deployment')
+    deployment <- act_file_download(type = 'deployment',
+                                    matos_project = matos_project,
+                                    temp_dir = td)
   }
 
   ## Import and write to tempdir
-  deployment_filepath <- write_to_tempdir('deployment', deployment)
+  deployment_filepath <- write_to_tempdir(type = 'deployment',
+                                          files = deployment,
+                                          temp_dir = td)
 
 
   # Push log ----
