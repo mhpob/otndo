@@ -14,7 +14,7 @@
 #' make_tag_push_summary(87)
 #'
 #' # If you're not an ACT-ee, you need to provide your matched detections directly. The code below downloads some matched detections from OTN to show
-#' this.
+#' # this.
 #' td <- file.path(tempdir(), 'matos_test_files')
 #' dir.create(td)
 #'
@@ -28,8 +28,7 @@
 #' # that date.
 #' make_tag_push_summary(matched = file.path(td,
 #'                        'pbsm_matched_detections_2018.csv'),
-#'                        since = '2018-11-01)
-
+#'                        since = '2018-11-01')
 #' }
 
 make_tag_push_summary <- function(
@@ -103,15 +102,27 @@ make_tag_push_summary <- function(
                                package = 'matos'),
             to = td)
 
-  quarto::quarto_render(
-    input = file.path(td, 'make_tag_push_summary.qmd'),
-    execute_params = list(
-      project_name = project_name,
-      project_number = project_number,
-      matched = matched_filepath,
-      push_log = push_log,
-      since = since
-    ))
+  if(Sys.which('quarto') != ''){
+    quarto::quarto_render(
+      input = file.path(td, 'make_tag_push_summary.qmd'),
+      execute_params = list(
+        project_name = project_name,
+        project_number = project_number,
+        matched = matched_filepath,
+        push_log = push_log,
+        since = since
+      ))
+  }else{
+    rmarkdown::render(
+      input = file.path(td, 'make_tag_push_summary.qmd'),
+      params = list(
+        project_name = project_name,
+        project_number = project_number,
+        matched = matched_filepath,
+        push_log = push_log,
+        since = since
+      ))
+  }
 
   file.copy(from = file.path(td,'make_tag_push_summary.html'),
             to = file.path(out_dir, paste0(Sys.Date(), '_tag_push_summary.html')))

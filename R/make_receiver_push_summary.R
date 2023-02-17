@@ -141,17 +141,33 @@ make_receiver_push_summary <- function(
                         package = 'matos'),
             to = td)
 
-  quarto::quarto_render(
-    input = file.path(td, 'make_receiver_push_summary.qmd'),
-    execute_params = list(
-      project_name = project_name,
-      project_number = project_number,
-      qualified = qualified_filepath,
-      unqualified = unqualified_filepath,
-      deployment = deployment_filepath,
-      push_log = push_log,
-      since = since
-    ))
+  if(Sys.which('quarto') != ''){
+    quarto::quarto_render(
+      input = file.path(td, 'make_receiver_push_summary.qmd'),
+      execute_params = list(
+        project_name = project_name,
+        project_number = project_number,
+        qualified = qualified_filepath,
+        unqualified = unqualified_filepath,
+        deployment = deployment_filepath,
+        push_log = push_log,
+        since = since
+      )
+    )
+  }else{
+    rmarkdown::render(
+      input = file.path(td, 'make_receiver_push_summary.qmd'),
+      params = list(
+        project_name = project_name,
+        project_number = project_number,
+        qualified = qualified_filepath,
+        unqualified = unqualified_filepath,
+        deployment = deployment_filepath,
+        push_log = push_log,
+        since = since
+      )
+    )
+  }
 
   file.copy(from = file.path(td,'make_receiver_push_summary.html'),
             to = file.path(out_dir, paste0(Sys.Date(), '_receiver_push_summary.html')))
