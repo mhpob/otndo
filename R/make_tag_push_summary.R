@@ -3,14 +3,33 @@
 #' @param matos_project MATOS project number or name that you wish to have summarized
 #' @param matched Default is NULL; OTN matched detections will be downloaded and unzipped. If you do not wish to download your files, this argument also accepts a character vector of file paths of your matched detections.
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
-#' @param since
+#' @param since date in YYYY-MM-DD format. Provides a summary of detections that were matched/edited since that date.
 #' @param sensor_decoding Not yet implemented. Will be a place to provide information to decode and summarize sensor data,
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
 #'
 #' @export
 #' @examples
 #' \dontrun{
+#' # If you're an ACT-ee, you can just use your project number
 #' make_tag_push_summary(87)
+#'
+#' # If you're not an ACT-ee, you need to provide your matched detections directly. The code below downloads some matched detections from OTN to show
+#' this.
+#' td <- file.path(tempdir(), 'matos_test_files')
+#' dir.create(td)
+#'
+#' download.file('https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_matched_detections_2018.zip',
+#'                destfile = file.path(td, 'pbsm_matched_detections_2018.zip'))
+#' unzip(file.path(td, 'pbsm_matched_detections_2018.zip'),
+#'       exdir = td)
+#'
+#' # Provide the detection file(s) to the \code{matched} argument, with an
+#' # optional date to the \code{since} argument to summarize what was new since
+#' # that date.
+#' make_tag_push_summary(matched = file.path(td,
+#'                        'pbsm_matched_detections_2018.csv'),
+#'                        since = '2018-11-01)
+
 #' }
 
 make_tag_push_summary <- function(
