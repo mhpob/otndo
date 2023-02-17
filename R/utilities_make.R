@@ -50,7 +50,7 @@ clean_otn_deployment <- function(deployment){
 
 #' @rdname utilities-make
 #' @keywords internal
-act_file_download <- function(type, td){
+act_file_download <- function(type, td, matos_project, file_type, project_files){
   cli::cli_alert_info(paste('Downloading', type, 'detections...'))
 
 
