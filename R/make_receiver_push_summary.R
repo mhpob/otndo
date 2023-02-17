@@ -84,69 +84,45 @@ make_receiver_push_summary <- function(
   # }
 
   if(any(is.null(qualified), is.null(unqualified))){
-    cli::cli_alert_info('Listing extraction files...')
+    cli::cli_alert_info('Finding extraction files...')
     project_files <- list_extract_files(project_number, 'all')
-    cli::cli_alert_success('   Done.')
+    cli::cli_alert_success('   Files found.')
   }
+
+
 
   # Qualified detections ----
   ##  Download qualified detections if not provided
   if(is.null(qualified)){
-    cli::cli_alert_info('Downloading qualified detections...')
-
-    qualified <- project_files[project_files$detection_type == 'qualified',]
-    qualified <- lapply(qualified$url,
-                        function(.){
-                          get_extract_file(url = .,
-                                           out_dir = td)
-                        }
-    )
-
-    qualified <- unlist(qualified)
-    qualified <- grep('\\.csv$', qualified, value = T)
-
-    cli::cli_alert_success('   Done.')
+    qualified <- act_file_download('qualified')
   }
 
-  ##  Bind files together
-  qualified <- lapply(qualified, read.csv)
-  qualified <- do.call(rbind, qualified)
+  ## Import and write to tempdir
+  qualified_filepath <- write_to_tempdir('qualified', qualified)
 
-  ##  Write file to temporary directory
-  qualified_filepath <- file.path(td, 'qualified.csv')
-  write.csv(qualified, qualified_filepath,
-            row.names = F)
 
 
 
   # Unqualified detections ----
   ##  Download unqualified detections if not provided
   if(is.null(unqualified)){
-    cli::cli_alert_info('Downloading unqualified detections...')
-
-    unqualified <- project_files[project_files$detection_type == 'unqualified',]
-    unqualified <- lapply(unqualified$url,
-                          function(.){
-                            get_extract_file(url = .,
-                                             out_dir = td)
-                          }
-    )
-
-    unqualified <- unlist(unqualified)
-    unqualified <- grep('\\.csv$', unqualified, value = T)
-
-    cli::cli_alert_success('   Done.')
+    unqualified <- act_file_download('unqualified')
   }
 
-  ##  Bind files together
-  unqualified <- lapply(unqualified, read.csv)
-  unqualified <- do.call(rbind, unqualified)
+  ## Import and write to tempdir
+  unqualified_filepath <- write_to_tempdir('unqualified', unqualified)
 
-  ##  Write file to temporary directory
-  unqualified_filepath <- file.path(td, 'unqualified.csv')
-  write.csv(unqualified, unqualified_filepath,
-            row.names = F)
 
+
+
+  # Deployment log ----
+  ##  Download deployment metadata if not provided
+  if(is.null(deployment)){
+    deployment <- act_file_download('deployment')
+  }
+
+  ## Import and write to tempdir
+  deployment_filepath <- write_to_tempdir('deployment', deployment)
 
 
   # Push log ----
@@ -157,29 +133,6 @@ make_receiver_push_summary <- function(
                             package="matos")
   }
 
-
-  # Deployment log ----
-  if(is.null(deployment)){
-    deployment_files <- list_project_files(matos_project)
-
-    deployment_files <- deployment_files[grepl('Deployment', deployment_files$file_type),]
-
-    deployment_files <- lapply(deployment_files$url,
-                        function(.){
-                          get_project_file(url = .,
-                                           out_dir = td)
-                        })
-
-    deployment <- unlist(deployment_files)
-  }
-
-  deployment_data <- lapply(deployment,
-                            clean_otn_deployment)
-  deployment_data <- do.call(rbind, deployment_data)
-
-  deployment_filepath <- file.path(td, 'deployment.csv')
-  write.csv(deployment_data, deployment_filepath,
-            row.names = F)
 
   cli::cli_alert_info('Writing report...')
 
@@ -195,8 +148,8 @@ make_receiver_push_summary <- function(
       project_number = project_number,
       qualified = qualified_filepath,
       unqualified = unqualified_filepath,
-      push_log = push_log,
       deployment = deployment_filepath,
+      push_log = push_log,
       since = since
     ))
 
@@ -208,49 +161,7 @@ make_receiver_push_summary <- function(
   unlink(td, recursive = T)
 }
 
-#' Utility function for make_receiver_push_summary
-#' @keywords internal
-clean_otn_deployment <- function(deployment){
 
-  # check for header
-  if(ncol(readxl::read_excel(deployment,
-                             sheet = 2,
-                             range = 'A1')) == 0){
-    deployment <- readxl::read_excel(deployment, sheet = 2,
-                                     skip = 3)
-  }else{
-    deployment <- readxl::read_excel(deployment, sheet = 2)
-  }
-
-  names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
-  deployment <- deployment[!is.na(deployment$deploy_date_time),]
-
-  deployment$deploy_date_time  <-  as.POSIXct(deployment$deploy_date_time,
-                                              tz = 'UTC',
-                                              format = '%Y-%m-%dT%H:%M:%S')
-  deployment$recover_date_time <-  as.POSIXct(deployment$recover_date_time,
-                                              tz = 'UTC',
-                                              format = '%Y-%m-%dT%H:%M:%S')
-
-  deployment <- deployment[!is.na(deployment$deploy_date_time) &
-                             !is.na(deployment$recover_date_time),]
-  deployment$receiver <- paste(deployment$ins_model_no,
-                               deployment$ins_serial_no,
-                               sep = '-')
-  deployment$stationname <- deployment$station_no
-
-  if('transmitter' %in% names(deployment)){
-    deployment$internal_transmitter <- deployment$transmitter
-    deployment[, c('stationname', 'receiver', 'internal_transmitter',
-                   'deploy_date_time', 'deploy_lat', 'deploy_long',
-                   'recover_date_time')]
-  }else(
-    deployment[, c('stationname', 'receiver',
-                   'deploy_date_time', 'deploy_lat', 'deploy_long',
-                   'recover_date_time')]
-  )
-
-}
 # matos_project <- 192
 # qualified <- c('proj192_qualified_detections_2021.csv',
 #                'proj192_qualified_detections_2022.csv')

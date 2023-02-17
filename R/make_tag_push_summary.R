@@ -61,32 +61,14 @@ make_tag_push_summary <- function(
 
   if(is.null(matched)){
     cli::cli_alert_info('Finding extraction files...')
-    matched <- list_extract_files(project_number, 'matched')
+    matched <- list_extract_files(project_number, 'all')
     cli::cli_alert_success('   Files found.\n')
 
-    cli::cli_alert_info('Downloading matched detections...')
-
-    matched <- lapply(matched$url,
-                      function(.){
-                        get_extract_file(url = .,
-                                         out_dir = td)
-                      }
-    )
-
-    matched <- unlist(matched)
-    matched <- grep('\\.csv$', matched, value = T)
-
-    cli::cli_alert_success('   Downloads complete.\n')
+    matched <- act_file_download('matched')
   }
 
   ##  Bind files together
-  matched <- lapply(matched, read.csv)
-  matched <- do.call(rbind, matched)
-
-  ##  Write file to temporary directory
-  matched_filepath <- file.path(td, 'matched.csv')
-  write.csv(matched, matched_filepath,
-            row.names = F)
+  matched_filepath <- write_to_tempdir('matched', matched)
 
 
   ## Tag metadata ----
@@ -110,7 +92,7 @@ make_tag_push_summary <- function(
     ))
 
   file.copy(from = file.path(td,'make_tag_push_summary.html'),
-            to = file.path(out_dir(), paste0(Sys.Date(), '_tag_push_summary.html')))
+            to = file.path(out_dir, paste0(Sys.Date(), '_tag_push_summary.html')))
 
   cli::cli_alert_success('   Done.')
 
