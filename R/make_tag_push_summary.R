@@ -88,7 +88,7 @@ make_tag_push_summary <- function(
   }
 
   ##  Bind files together
-  matched_filepath <- write_to_tempdir('matched', matched)
+  matched_filepath <- write_to_tempdir('matched', matched, td)
 
 
   ## Tag metadata ----
