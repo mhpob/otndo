@@ -3,7 +3,7 @@
 #' @param deployment blah blah blah document here
 #' @param type blah blah blah document here
 #' @param files blah blah blah document here
-#'
+#' @param td blahblah
 #' @name utilities-make
 #' @keywords internal
 clean_otn_deployment <- function(deployment){
@@ -50,7 +50,7 @@ clean_otn_deployment <- function(deployment){
 
 #' @rdname utilities-make
 #' @keywords internal
-act_file_download <- function(type){
+act_file_download <- function(type, td){
   cli::cli_alert_info(paste('Downloading', type, 'detections...'))
 
 
@@ -86,7 +86,7 @@ act_file_download <- function(type){
 
 #' @rdname utilities-make
 #' @keywords internal
-write_to_tempdir <- function(type, files){
+write_to_tempdir <- function(type, files, td){
 
   if(type == 'deployment'){
     # Read in and clean deployment data
