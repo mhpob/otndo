@@ -26,3 +26,4 @@ articles:
     navbar: ~
     contents:
     - introduction
+    - data-push-summaries
