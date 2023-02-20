@@ -8,10 +8,11 @@ make_receiver_push_summary(
   matos_project = NULL,
   qualified = NULL,
   unqualified = NULL,
-  update_push_log = F,
+  update_push_log = FALSE,
   deployment = NULL,
   out_dir = getwd(),
-  since = NULL
+  since = NULL,
+  rmd = FALSE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ make_receiver_push_summary(
 \item{out_dir}{Defaults to working directory. In which directory would you like to save the report?}
 
 \item{since}{Date in YYYY-MM-DD format. If you're an ACT-ite, this is mostly covered by the embedded ACT push log.}
+
+\item{rmd}{Logical. Compile via RMarkdown rather than Quarto?}
 }
 \description{
 Create summary reports of receiver project data from the OTN data push

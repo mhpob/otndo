@@ -6,6 +6,7 @@
 #' @param deployment File path of user-supplied master OTN receiver deployment metadata.
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
 #' @param since Date in YYYY-MM-DD format. If you're an ACT-ite, this is mostly covered by the embedded ACT push log.
+#' @param rmd Logical. Compile via RMarkdown rather than Quarto?
 #'
 #' @section Push log:
 #'
@@ -42,10 +43,11 @@ make_receiver_push_summary <- function(
     matos_project = NULL,
     qualified = NULL,
     unqualified = NULL,
-    update_push_log = F,
+    update_push_log = FALSE,
     deployment = NULL,
     out_dir = getwd(),
-    since = NULL
+    since = NULL,
+    rmd = FALSE
 ){
   if(is.null(matos_project) & any(is.null(qualified), is.null(unqualified), is.null(deployment))){
     cli::cli_abort('Must provide an ACT/MATOS project or at least one each of qualified detections, unqualified detections, and deployment.')
@@ -166,7 +168,7 @@ make_receiver_push_summary <- function(
                         package = 'matos'),
             to = td)
 
-  if(Sys.which('quarto') != ''){
+  if(Sys.which('quarto') != '' & rmd == FALSE){
     quarto::quarto_render(
       input = file.path(td, 'make_receiver_push_summary.qmd'),
       execute_params = list(
