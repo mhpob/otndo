@@ -60,7 +60,7 @@ make_tag_push_summary(87)
 
 If you are a member of OTN or an OTN node, such as [FACT](https://secoora.org/fact/), your data extract files are compatible with `make_receiver_push_summary` and `make_tag_push_summmary`. The only difference is that you'll have to manually provide your data files -- `matos` is not set up to download them for you.
 
-We'll use data from @trudel2018 (<https://members.oceantrack.org/data/repository/pbsm>) to show how this might work.
+We'll use data from [Trudel 2018](#references) (<https://members.oceantrack.org/data/repository/pbsm>) to show how this might work.
 
 ### `make_receiver_push_summary`
 
@@ -132,3 +132,5 @@ This error is created by an old version of the [`mapview` package](https://r-spa
 2.  Run `mapviewOptions(fgb = FALSE)` before attempting to run `make_receiver_push_summary` or `make_tag_push_summary`. Note that this will make the report build more slowly.
 
 ## References
+
+Trudel, Marc. \"A Pilot Study to Investigate the Migration of Atlantic Salmon Post-Smolts and Their Interactions with Aquaculture in Passamaquoddy Bay, New Brunswick, Canada.\" Ocean Tracking Network, 2018. <https://members.oceantrack.org/project?ccode=PBSM>.
