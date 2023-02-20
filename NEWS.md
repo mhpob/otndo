@@ -8,7 +8,7 @@
     - *NEW* function!
     - Undergoing heavy development, so please file issues with bugs and suggestions.
     - Summarize your your TON returns of tagged fish!
-  -
+  - [`make_tag_push_summary`](https://matos.obrien.page/reference/make_tag_push_summary.html) and [`make_receiver_push_summary`](https://matos.obrien.page/reference/make_receiver_push_summary.html) now accept zipped folders as input.
 
 # matos 0.2
 
