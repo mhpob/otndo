@@ -17,9 +17,7 @@ make_receiver_push_summary(
 \arguments{
 \item{matos_project}{MATOS project number or name that you wish to have summarized}
 
-\item{qualified}{Default is NULL; OTN qualified detections will be downloaded and unzipped. If you do not wish to download your qualified detections, this argument also accepts a character vector of file paths of your qualified detections.}
-
-\item{unqualified}{Default is NULL; OTN unqualified detections will be downloaded and unzipped. If you do not wish to download your unqualified detections, this argument also accepts a character vector of file paths of your unqualified detections.}
+\item{qualified, unqualified}{Default is NULL: OTN qualified or unqualified detections will be downloaded from MATOS and unzipped. If you do not wish to download your files (or you're not a member of ACT), this argument also accepts a character vector of file paths of your qualified/unqualified detections. These can be CSVs or zipped folders.}
 
 \item{update_push_log}{Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.}
 

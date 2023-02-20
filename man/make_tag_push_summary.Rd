@@ -17,7 +17,7 @@ make_tag_push_summary(
 \arguments{
 \item{matos_project}{MATOS project number or name that you wish to have summarized}
 
-\item{matched}{Default is NULL; OTN matched detections will be downloaded and unzipped. If you do not wish to download your files, this argument also accepts a character vector of file paths of your matched detections.}
+\item{matched}{Default is NULL: OTN matched detections will be downloaded from MATOS and unzipped. If you do not wish to download your files (or you're not a member of ACT), this argument also accepts a character vector of file paths of your matched detections. These can be CSVs or zipped folders.}
 
 \item{update_push_log}{Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.}
 

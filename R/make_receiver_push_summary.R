@@ -1,8 +1,7 @@
 #' Create summary reports of receiver project data from the OTN data push
 #'
 #' @param matos_project MATOS project number or name that you wish to have summarized
-#' @param qualified Default is NULL; OTN qualified detections will be downloaded and unzipped. If you do not wish to download your qualified detections, this argument also accepts a character vector of file paths of your qualified detections.
-#' @param unqualified Default is NULL; OTN unqualified detections will be downloaded and unzipped. If you do not wish to download your unqualified detections, this argument also accepts a character vector of file paths of your unqualified detections.
+#' @param qualified,unqualified Default is NULL: OTN qualified or unqualified detections will be downloaded from MATOS and unzipped. If you do not wish to download your files (or you're not a member of ACT), this argument also accepts a character vector of file paths of your qualified/unqualified detections. These can be CSVs or zipped folders.
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
 #' @param deployment File path of user-supplied master OTN receiver deployment metadata.
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
@@ -99,6 +98,13 @@ make_receiver_push_summary <- function(
                                    temp_dir = td)
   }
 
+  ## Unzip if zipped detections were provided
+  if(any(grepl('\\.zip$', qualified))){
+    qualified <- provided_file_unzip(files = qualified,
+                                     temp_dir = td)
+
+  }
+
   ## Import and write to tempdir
   qualified_filepath <- write_to_tempdir(type = 'qualified',
                                          files = qualified,
@@ -113,6 +119,13 @@ make_receiver_push_summary <- function(
     unqualified <- act_file_download(type = 'unqualified',
                                      project_files = project_files,
                                      temp_dir = td)
+  }
+
+  ## Unzip if zipped detections were provided
+  if(any(grepl('\\.zip$', unqualified))){
+    unqualified <- provided_file_unzip(files = unqualified,
+                                       temp_dir = td)
+
   }
 
   ## Import and write to tempdir

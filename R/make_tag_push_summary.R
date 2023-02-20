@@ -1,7 +1,7 @@
 #' Create summary reports of receiver project data from the OTN data push
 #'
 #' @param matos_project MATOS project number or name that you wish to have summarized
-#' @param matched Default is NULL; OTN matched detections will be downloaded and unzipped. If you do not wish to download your files, this argument also accepts a character vector of file paths of your matched detections.
+#' @param matched Default is NULL: OTN matched detections will be downloaded from MATOS and unzipped. If you do not wish to download your files (or you're not a member of ACT), this argument also accepts a character vector of file paths of your matched detections. These can be CSVs or zipped folders.
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
 #' @param since date in YYYY-MM-DD format. Provides a summary of detections that were matched/edited since that date.
 #' @param sensor_decoding Not yet implemented. Will be a place to provide information to decode and summarize sensor data,
@@ -90,6 +90,13 @@ make_tag_push_summary <- function(
     matched <- act_file_download(type = 'matched',
                                  project_files = matched,
                                  temp_dir = td)
+  }
+
+  ## Unzip if zipped detections were provided
+  if(any(grepl('\\.zip$', matched))){
+    matched <- provided_file_unzip(files = matched,
+                                   temp_dir = td)
+
   }
 
   ##  Bind files together

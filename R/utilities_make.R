@@ -91,6 +91,30 @@ act_file_download <- function(type, temp_dir = NULL, matos_project = NULL,
 
 #' @rdname utilities-make
 #' @keywords internal
+provided_file_unzip <- function(files, temp_dir){
+
+  to_unzip <- grep('\\.zip$', files, value = T)
+
+  cli::cli_alert_info(paste(length(to_unzip), 'zipped files detected...'))
+
+  unzipped <- lapply(to_unzip,
+                     function(.){
+                       unzip(.,
+                             exdir = temp_dir,
+                             setTimes = FALSE)
+                     })
+
+  unzipped <- unlist(unzipped)
+
+  unzipped <- grep('\\.csv$', unzipped, value = T)
+
+  cli::cli_alert_success('   Unzipped.')
+
+  unzipped
+}
+
+#' @rdname utilities-make
+#' @keywords internal
 write_to_tempdir <- function(type, files, temp_dir){
 
   if(type == 'deployment'){

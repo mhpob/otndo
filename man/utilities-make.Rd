@@ -4,6 +4,7 @@
 \alias{utilities-make}
 \alias{clean_otn_deployment}
 \alias{act_file_download}
+\alias{provided_file_unzip}
 \alias{write_to_tempdir}
 \title{Place where functions live for the make_*_summary family of functions}
 \usage{
@@ -15,6 +16,8 @@ act_file_download(
   matos_project = NULL,
   project_files = NULL
 )
+
+provided_file_unzip(files, temp_dir)
 
 write_to_tempdir(type, files, temp_dir)
 }
