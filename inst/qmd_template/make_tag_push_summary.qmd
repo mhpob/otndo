@@ -11,7 +11,7 @@ format:
 execute:
   echo: false
 title: "`r paste('Transmitter data push summary:', params$project_name)`"
-author: "[Mike O'Brien](mailto:obrien@umces.edu) via the [`matos` R package](https://mhpob.github.io/matos)"
+author: "Created with the [`matos` R package](https://matos.obrien.page)"
 ---
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
