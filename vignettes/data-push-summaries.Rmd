@@ -5,7 +5,6 @@ vignette: >
   %\VignetteIndexEntry{Data Push Summaries}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: references.bib
 ---
 
 ```{r, include = FALSE}
@@ -131,6 +130,6 @@ This error is created by an old version of the [`mapview` package](https://r-spa
 1.  Update `mapview` (suggested), or
 2.  Run `mapviewOptions(fgb = FALSE)` before attempting to run `make_receiver_push_summary` or `make_tag_push_summary`. Note that this will make the report build more slowly.
 
-## References
+## References {#references}
 
-Trudel, Marc. \"A Pilot Study to Investigate the Migration of Atlantic Salmon Post-Smolts and Their Interactions with Aquaculture in Passamaquoddy Bay, New Brunswick, Canada.\" Ocean Tracking Network, 2018. <https://members.oceantrack.org/project?ccode=PBSM>.
+Trudel, Marc. "A Pilot Study to Investigate the Migration of Atlantic Salmon Post-Smolts and Their Interactions with Aquaculture in Passamaquoddy Bay, New Brunswick, Canada." Ocean Tracking Network, 2018. <https://members.oceantrack.org/project?ccode=PBSM>.
