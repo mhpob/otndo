@@ -37,6 +37,10 @@ project_files <- list_project_files(project = 'umces boem offshore wind energy')
 head(project_files)
 ```
 
+### User credentials
+A side note on your MATOS username and password: `matos` defaults to asking you for your login credentials every time you start a new session. To skirt around this you can use `set_matos_credentials()`, which installs your username and password in your [.Renviron file](https://rstats.wtf/r-startup.html#renviron). You will be automatically logged in every time you use your current computer after doing this, but beware: someone else could theoretically access your username and password if they gain access to your computer.
+
+### Back to the regularly-scheduled programming
 I can also list any of my OTN node *Data Extraction Files*.
 
 ```{r}

@@ -20,6 +20,7 @@ reference:
 - title: Utilities
 - contents:
   - matos_login
+  - set_matos_credentials
 
 articles:
   - title: Articles
