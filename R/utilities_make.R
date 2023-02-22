@@ -156,6 +156,7 @@ extract_proj_name <- function(detection_file){
                                "'") |>
     URLencode()
 
-  list(project_name = otn_metadata_query$resource_full_name,
-       project_code = gsub('.*\\.', '', otn_metadata_query$collectioncode))
+  otn_response <- read.csv(otn_metadata_query)
+  list(project_name = otn_response$resource_full_name,
+       project_code = gsub('.*\\.', '', otn_response$collectioncode))
 }
