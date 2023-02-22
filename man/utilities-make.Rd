@@ -6,6 +6,7 @@
 \alias{act_file_download}
 \alias{provided_file_unzip}
 \alias{write_to_tempdir}
+\alias{extract_proj_name}
 \title{Place where functions live for the make_*_summary family of functions}
 \usage{
 clean_otn_deployment(deployment)
@@ -20,6 +21,8 @@ act_file_download(
 provided_file_unzip(files, temp_dir)
 
 write_to_tempdir(type, files, temp_dir)
+
+extract_proj_name(detection_file)
 }
 \arguments{
 \item{deployment}{blah blah blah document here}
@@ -33,6 +36,8 @@ write_to_tempdir(type, files, temp_dir)
 \item{project_files}{blah}
 
 \item{files}{blah blah blah document here}
+
+\item{detection_file}{blah}
 }
 \description{
 Place where functions live for the make_*_summary family of functions

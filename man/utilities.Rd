@@ -45,6 +45,8 @@ below it. Will be coerced to all lower case, so capitalization doesn't matter.}
 
 \item{url}{The (protected) URL that the overlapping function is trying to call.}
 
+\item{project}{MATOS projecct ID. Can be the name or number of the project.}
+
 \item{return_projects}{Logical. Do you want \code{project_check} to return the list
 of projects? Used to not ping the website too much in one function call.}
 

@@ -49,7 +49,8 @@ make_receiver_push_summary <- function(
     since = NULL,
     rmd = FALSE
 ){
-  if(is.null(matos_project) & any(is.null(qualified), is.null(unqualified), is.null(deployment))){
+  if(is.null(matos_project) &
+     any(is.null(qualified), is.null(unqualified), is.null(deployment))){
     cli::cli_abort('Must provide an ACT/MATOS project or at least one each of qualified detections, unqualified detections, and deployment.')
   }
 
@@ -69,20 +70,14 @@ make_receiver_push_summary <- function(
   if(is.numeric(matos_project)){
     project_number <- matos_project
     project_name <- get_project_name(matos_project)
+    project_code <- paste0('PROJ', project_number)
   }
   if(is.character(matos_project)){
     project_name <- matos_project
     project_number <- get_project_number(matos_project)
-  }
-  if(is.null(matos_project)){
-    project_name <- NULL
-    project_number <- NULL
+    project_code <- paste0('PROJ', project_number)
   }
 
-  ##  Check that project name exists as written
-  # if(length(get_project_number(matos_project)) == 0){
-  #   stop('No project matching that name.')
-  # }
 
   if(any(is.null(qualified), is.null(unqualified))){
     cli::cli_alert_info('Finding extraction files...')
@@ -161,6 +156,20 @@ make_receiver_push_summary <- function(
   }
 
 
+  # If not an ACT project, scrape OTN's geoserver for name information ----
+  if(is.null(matos_project)){
+    cli::cli_alert_info('Scraping OTN geoserver for project information...')
+
+    project_info <- extract_proj_name(qualified_filepath)
+
+    project_name <- project_info$project_name
+    project_code <- project_info$project_code
+
+    project_number <- NULL
+  }
+
+
+
   cli::cli_alert_info('Writing report...')
 
   file.copy(from = system.file('qmd_template',
@@ -196,8 +205,12 @@ make_receiver_push_summary <- function(
     )
   }
 
-  file.copy(from = file.path(td,'make_receiver_push_summary.html'),
-            to = file.path(out_dir, paste0(Sys.Date(), '_receiver_push_summary.html')))
+  file.copy(from = file.path(td, 'make_receiver_push_summary.html'),
+            to = file.path(out_dir,
+                           paste(Sys.Date(),
+                                 project_code,
+                                 'receiver_push_summary.html',
+                                 sep = '_')))
 
   cli::cli_alert_success('   Done.')
 

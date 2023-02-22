@@ -6,6 +6,7 @@
 #' @param matos_project blah
 #' @param project_files blah
 #' @param temp_dir blahblah
+#' @param detection_file blah
 #'
 #'
 #' @name utilities-make
@@ -136,4 +137,25 @@ write_to_tempdir <- function(type, files, temp_dir){
 
 
   filepath
+}
+
+
+#' @rdname utilities-make
+#' @keywords internal
+
+extract_proj_name <- function(detection_file){
+  # Pull in the first row of the data ser in order to grab the collection code
+  project <- read.csv(detection_file, nrows = 1)$collectioncode
+  project <- gsub('OTN.', '', project)
+  project <- gsub('^PROJ', 'ACT.PROJ', project)
+
+  otn_metadata_query <- paste0("https://members.oceantrack.org/geoserver/otn/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=otn:",
+                               "otn_resources_metadata_points",
+                               "&outputFormat=csv&CQL_FILTER=collectioncode='",
+                               project,
+                               "'") |>
+    URLencode()
+
+  list(project_name = otn_metadata_query$resource_full_name,
+       project_code = gsub('.*\\.', '', otn_metadata_query$collectioncode))
 }
