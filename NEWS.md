@@ -1,3 +1,10 @@
+# matos 0.2.13
+
+  - [`matos_logoff`](https://matos.obrien.page/reference/matos_logoff.html), allowing you to log out of your MATOS session.
+  - A draft vignette on how to manage multiple telemetry projects by using `matos` in parallel.
+  - [`make_receiver_push_summary`](https://matos.obrien.page/reference/make_receiver_push_summary.html) and [`make_tag_push_summary`](https://matos.obrien.page/reference/make_tag_push_summary.html) now scrape the OTN GeoServer in order to get a correct title for your project summaries!
+  - A more-informative error now appears if you try to find information on a project that doesn't exist.
+
 # matos 0.2.1
 
   - The website has moved to [https://matos.obrien.page/](https://matos.obrien.page/).
