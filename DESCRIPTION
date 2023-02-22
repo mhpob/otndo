@@ -1,7 +1,7 @@
 Package: matos
 Type: Package
 Title: Interface with the Mid-Atlantic Acoustic Telemetry Observing System (MATOS)
-Version: 0.2
+Version: 0.2.1.1
 Authors@R: person("Mike", "O'Brien", email = "obrien@umces.edu",
                   role = c("aut", "cre"))
 Description: This package provides HTML-scaping functions to interact with the
