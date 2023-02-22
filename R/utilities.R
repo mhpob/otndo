@@ -187,26 +187,49 @@ html_table_to_df <- function(html_file_list){
   df <- data.frame(df)
   names(df) <- tolower(gsub('\\.', '_', names(df)))
 
-
   df <- df[, names(df) != 'var_4']
   df$upload_date <- as.Date(df$upload_date, format = '%m/%d/%Y')
-  df$project <- gsub('.*/', '', html_file_list$url)
 
-  urls <- scrape_file_urls(html_file_list)
+  # Make a blank data frame if there are no files to be listed.
+  if(nrow(df) == 0){
+    df <- cbind(df,
+                data.frame(project = character(),
+                           url = character())
+    )
 
-  df <- cbind(df, url = urls)
+    if(grepl('dataextractionfiles', html_file_list$url)){
+      df <- cbind(df,
+                  data.frame(
+                    detection_type = character(),
+                    detection_year = numeric()
+                  ))
+      df <- df[, c('project', 'file_type', 'detection_type', 'detection_year',
+                   'upload_date', 'file_name', 'url')]
+    }else{
+      df <- df[, c('project', 'file_type', 'upload_date', 'file_name', 'url')]
+    }
 
-  # Parse file name for data extraction files
-  if(any(unique(df$file_type) == 'Data Extraction File')){
-    df <- data.frame(detection_type = gsub('.*\\d_|_det.*', '', df$file_name),
-                     detection_year = as.numeric(gsub('.*_|.zip', '', df$file_name)),
-                     df)
-    df <- df[, c('project', 'file_type', 'detection_type', 'detection_year',
-                 'upload_date', 'file_name', 'url')]
   }else{
-    df <- df[, c('project', 'file_type', 'upload_date', 'file_name', 'url')]
-  }
+    # otherwise continue to parse
+    df$project <- gsub('.*/', '', html_file_list$url)
 
+    urls <- scrape_file_urls(html_file_list)
+
+    df <- cbind(df, url = urls)
+
+    # Parse file name for data extraction files
+    if(grepl('dataextractionfiles', html_file_list$url)){
+      df <- data.frame(detection_type = gsub('.*\\d_|_det.*', '', df$file_name),
+                       detection_year = as.numeric(
+                         gsub('.*_|.zip', '', df$file_name)
+                       ),
+                       df)
+      df <- df[, c('project', 'file_type', 'detection_type', 'detection_year',
+                   'upload_date', 'file_name', 'url')]
+    }else{
+      df <- df[, c('project', 'file_type', 'upload_date', 'file_name', 'url')]
+    }
+  }
 
   df
 }
