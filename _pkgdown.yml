@@ -21,6 +21,7 @@ reference:
 - contents:
   - matos_login
   - set_matos_credentials
+  - matos_logoff
 
 articles:
   - title: Articles

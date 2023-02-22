@@ -86,7 +86,18 @@ matos_login <- function(){
   # }
 }
 
-
+#' Log out of your MATOS account
+#'
+#' This function takes no arguments -- just tells MATOS that you want to log out. Useful if you're chaning users or on a public computer and would like to protect your projects.
+#'
+#' @export
+#' @examples
+#'  matos_logoff()
+matos_logoff <- function(){
+  logoff_response <- httr::GET(
+    'https://matos.asascience.com/account/logoff'
+  )
+}
 
 
 
