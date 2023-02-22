@@ -125,6 +125,8 @@ matos_logoff <- function(){
 #' \code{login_check} pings protected URLs and calls \code{matos_login} when referred
 #' to the login page.
 #'
+#' \code{project_check}
+#'
 #' \code{scrape_file_urls} is used internally by \code{html_table_to_df} to extract
 #' the URLs associates with each "Download" link.
 #'
@@ -133,9 +135,14 @@ matos_logoff <- function(){
 #'
 #' @param project_number Number of the project
 #' @param data_type one of "dataextractionfiles" or "projectfiles".
-#' @param project Character string of the full MATOS project name. This will be the
+#' @param project MATOS projecct ID. Can be the name or number of the project.
+#' @param project_name Character string of the full MATOS project name. This will be the
 #'      big name in bold at the top of your project page, not the "Project Title"
 #'      below it. Will be coerced to all lower case, so capitalization doesn't matter.
+#' @param matos_projects Data frame. Used to pass the MATOS project list from
+#'      \code{project_check}.
+#' @param return_projects Logical. Do you want \code{project_check} to return the list
+#'      of projects? Used to not ping the website too much in one function call.
 #' @param url The (protected) URL that the overlapping function is trying to call.
 #' @param html_file_list Listed files in HTML form. Always the result of
 #' \code{get_file_list}
@@ -163,27 +170,26 @@ get_file_list <- function(project_number, data_type){
 
 #' @rdname utilities
 #'
-get_project_number <- function(project){
-  projects <- list_projects()
-
-  project_clean <- tolower(projects$name)
-  search_project_clean <- tolower(trimws(project))
-
-  if(!(search_project_clean %in% project_clean)){
-    cli::cli_abort(paste(project,
-                         'was not found among the MATOS project names.'))
+get_project_number <- function(project_name, matos_projects = NULL){
+  if(is.null(matos_projects)){
+    matos_projects <- list_projects()
   }
 
-  projects[project_clean == search_project_clean,]$number
+  matos_projects_clean <- tolower(matos_projects$name)
+  project_name_clean <- tolower(trimws(project_name))
+
+  matos_projects[matos_projects_clean == project_name_clean,]$number
 }
 
 
 #' @rdname utilities
 #'
-get_project_name <- function(project){
-  projects <- list_projects()
+get_project_name <- function(project_number, matos_projects = NULL){
+  if(is.null(matos_projects)){
+    matos_projects <- list_projects()
+  }
 
-  projects[projects$number == project,]$name
+  matos_projects[matos_projects$number == project_number,]$name
 }
 
 
@@ -260,24 +266,28 @@ login_check <- function(url = 'https://matos.asascience.com/report/submit'){
 
 #' @rdname utilities
 #'
-project_check <- function(project){
+project_check <- function(project, return_projects = FALSE){
   matos_projects <- list_projects()
 
   if(is.character(project)){
-    matos_projects <- tolower(matos_projects$name)
+    matos_projects_clean <- tolower(matos_projects$name)
     search_project_clean <- tolower(trimws(project))
 
-    if(!(search_project_clean %in% matos_projects)){
+    if(!(search_project_clean %in% matos_projects_clean)){
       cli::cli_abort(paste(project,
                            'was not found among the MATOS project names.'))
     }
   }
 
   if(is.numeric(project)){
-    if(!(project %in% projects$number)){
+    if(!(project %in% matos_projects$number)){
       cli::cli_abort(paste(project,
                            'was not found among the MATOS project numbers.'))
     }
+  }
+
+  if(return_projects == TRUE){
+    matos_projects
   }
 }
 

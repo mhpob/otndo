@@ -56,9 +56,12 @@ list_extract_files <- function(project = NULL,
     detection_type <- 'matched_external_partners'
   }
 
+  # Make sure project exists
+  matos_projects <- project_check(project, return_projects = T)
+
   # Convert project name to number
   if(is.character(project)){
-    project <- get_project_number(project)
+    project <- get_project_number(project, matos_projects)
   }
 
   # Scrape table and list files
