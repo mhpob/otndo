@@ -165,7 +165,16 @@ get_file_list <- function(project_number, data_type){
 #'
 get_project_number <- function(project){
   projects <- list_projects()
-  projects[tolower(projects$name) == tolower(trimws(project)),]$number
+
+  project_clean <- tolower(projects$name)
+  search_project_clean <- tolower(trimws(project))
+
+  if(!(search_project_clean %in% project_clean)){
+    cli::cli_abort(paste(project,
+                         'was not found among the MATOS project names.'))
+  }
+
+  projects[project_clean == search_project_clean,]$number
 }
 
 
@@ -173,6 +182,7 @@ get_project_number <- function(project){
 #'
 get_project_name <- function(project){
   projects <- list_projects()
+
   projects[projects$number == project,]$name
 }
 
@@ -246,6 +256,29 @@ login_check <- function(url = 'https://matos.asascience.com/report/submit'){
     matos_login()
   }
 
+}
+
+#' @rdname utilities
+#'
+project_check <- function(project){
+  matos_projects <- list_projects()
+
+  if(is.character(project)){
+    matos_projects <- tolower(matos_projects$name)
+    search_project_clean <- tolower(trimws(project))
+
+    if(!(search_project_clean %in% matos_projects)){
+      cli::cli_abort(paste(project,
+                           'was not found among the MATOS project names.'))
+    }
+  }
+
+  if(is.numeric(project)){
+    if(!(project %in% projects$number)){
+      cli::cli_abort(paste(project,
+                           'was not found among the MATOS project numbers.'))
+    }
+  }
 }
 
 #' @rdname utilities
