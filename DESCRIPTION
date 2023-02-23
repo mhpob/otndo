@@ -20,7 +20,7 @@ Imports:
     mapview,
     sf
 Suggests:
-    rstudioapi,
+    future.apply
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
