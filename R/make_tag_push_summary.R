@@ -106,9 +106,9 @@ make_tag_push_summary <- function(
   ## Tag metadata ----
 
 
-  # If not an ACT project, scrape OTN's geoserver for name information ----
+  # If not an ACT project, ask OTN's GeoServer for name information ----
   if(is.null(matos_project)){
-    cli::cli_alert_info('Scraping OTN geoserver for project information...')
+    cli::cli_alert_info('Asking OTN GeoServer for project information...')
 
     project_info <- extract_proj_name(matched_filepath)
 

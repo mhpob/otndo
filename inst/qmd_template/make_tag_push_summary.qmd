@@ -94,8 +94,6 @@ POC_emails = unlist(
 #| label: otn-query
 
 projects <- unique(matched$detectedby)
-projects <- gsub('OTN.', '', projects)
-projects <- gsub('^PROJ', 'ACT.PROJ', projects)
 
 table_name <- c('otn_resources_metadata_points',
                 'project_metadata')
@@ -103,16 +101,21 @@ table_name <- c('otn_resources_metadata_points',
 otn_metadata_query <- paste0(
   "https://members.oceantrack.org/geoserver/otn/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=otn:",
   table_name,
-  "&outputFormat=csv&CQL_FILTER=collectioncode IN (",
-  paste("\'", projects, "\'", collapse = ",", sep = ''),
-  ")") |> 
+  "&outputFormat=csv&CQL_FILTER=strMatches(collectioncode,'",
+  paste(
+    paste0('.*',
+           gsub('.*\\.', '', projects)
+    ),
+    collapse = '|'),
+  "')=true"
+) |> 
   URLencode()
 
 otn_tables <- lapply(otn_metadata_query, fread)
 
 otn_tables <- lapply(otn_tables,
                      function(.){
-                       .[!grepl('^[FA]', collectioncode),
+                       .[!grepl('\\.', collectioncode),
                          collectioncode := paste0('OTN.', collectioncode)]
                      }
 )
