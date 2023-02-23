@@ -22,7 +22,6 @@
 #' @importFrom reactable reactable
 #' @importFrom mapview mapview
 #' @importFrom sf read_sf
-#' @importFrom future.apply future_lapply
 #' @keywords internal
 "_PACKAGE"
 

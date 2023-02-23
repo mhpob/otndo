@@ -7,4 +7,4 @@
 ^docs$
 ^pkgdown$
 ^CNAME$
-^\files_for_testing$
+^\files_for_testing\$
