@@ -144,16 +144,17 @@ write_to_tempdir <- function(type, files, temp_dir){
 #' @keywords internal
 
 extract_proj_name <- function(detection_file){
-  # Pull in the first row of the data ser in order to grab the collection code
+  # Pull in the first row of the data in order to grab the collection code
   project <- read.csv(detection_file, nrows = 1)$collectioncode
 
   otn_metadata_query <- paste0(
-    "https://members.oceantrack.org/geoserver/otn/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=otn:",
-    table_name,
+    "https://members.oceantrack.org/geoserver/otn/ows?',
+    'service=WFS&version=1.0.0&request=GetFeature&typeName=otn:",
+    'otn_resources_metadata_points',
     "&outputFormat=csv&CQL_FILTER=strMatches(collectioncode,'",
     paste(
       paste0('.*',
-             gsub('.*\\.', '', projects)
+             gsub('.*\\.', '', project)
       ),
       collapse = '|'),
     "')=true"

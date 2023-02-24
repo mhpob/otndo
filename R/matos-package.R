@@ -2,6 +2,7 @@
 #' @docType package
 #'
 #' @importFrom utils browseURL
+#' @importFrom utils URLencode
 #' @importFrom utils unzip
 #' @importFrom utils read.csv
 #' @importFrom utils write.csv
