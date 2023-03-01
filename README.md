@@ -6,7 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of otndo is to …
+*entiendo*: Spanish, 1st person indicative; “*I understand*”
+***otndo***: English, bad pun; “*I understand OTN*”
 
 ## Installation
 
