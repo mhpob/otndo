@@ -4,6 +4,8 @@
 # otndo
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 *entiendo*: Spanish, 1st person indicative; “*I understand*”
