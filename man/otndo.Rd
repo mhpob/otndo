@@ -12,7 +12,7 @@ This package provides functions to summarize the various type of OTN-style data.
 Useful links:
 \itemize{
   \item \url{https://mhpob.github.io/otndo/}
-  \item \url{https://matos.obrien.page}
+  \item \url{https://otndo.obrien.page/}
   \item Report bugs at \url{https://github.com/mhpob/matos/issues}
 }
 
