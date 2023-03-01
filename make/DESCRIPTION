@@ -1,0 +1,37 @@
+Package: matos
+Type: Package
+Title: Interface with the Mid-Atlantic Acoustic Telemetry Observing System (MATOS)
+Version: 0.2.14
+Authors@R: person("Mike", "O'Brien", email = "obrien@umces.edu",
+                  role = c("aut", "cre"))
+Description: This package provides HTML-scaping functions to interact with the
+  MATOS website (https://matos.asascience.com/). Functions will allow aggreation
+  of data and the downloading and posting of files.
+Imports:
+    cli,
+    httr,
+    rvest,
+    getPass,
+    quarto,
+    readxl,
+    reactable,
+    data.table (>= 1.14.6),
+    ggplot2,
+    mapview,
+    sf
+Suggests:
+    future.apply,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+License: GPL (>= 3) + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+URL: https://github.com/mhpob/matos,
+    https://matos.obrien.page
+BugReports: https://github.com/mhpob/matos/issues
+Depends: 
+    R (>= 4.1.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr

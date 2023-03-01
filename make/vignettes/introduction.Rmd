@@ -1,0 +1,108 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(matos)
+```
+
+
+## List available files
+
+First, `list_projects` returns the [project page](https://matos.asascience.com/project), which is useful to figure out what URLs are associated with each project. You do not need MATOS permissions in order to view this page.
+
+```{r list_projs}
+all_projects <- list_projects()
+
+head(all_projects)
+```
+
+I can also view the files that I've uploaded to my projects using `list_project_files`, but that requires logging in first. The family of `list_` functions in this package will prompt you to log in before moving on. Note that I'll be entering my MATOS username and password behind the scenes here.
+
+```{r}
+project_files <- list_project_files(project = 'umces boem offshore wind energy')
+
+head(project_files)
+```
+
+### User credentials
+A side note on your MATOS username and password: `matos` defaults to asking you for your login credentials every time you start a new session. To skirt around this you can use `set_matos_credentials()`, which installs your username and password in your [.Renviron file](https://rstats.wtf/r-startup.html#renviron). You will be automatically logged in every time you use your current computer after doing this, but beware: someone else could theoretically access your username and password if they gain access to your computer.
+
+### Back to the regularly-scheduled programming
+I can also list any of my OTN node *Data Extraction Files*.
+
+```{r}
+ACT_MATOS_files <- list_extract_files(project = 'umces boem offshore wind energy',
+                                      detection_type = 'all')
+
+head(ACT_MATOS_files)
+```
+
+
+## Download project or data extraction files
+
+There are a few ways to download the different types of files held by MATOS. I can download directly if I know the URL of the file:
+
+```{r}
+project_files$url[1]
+
+get_project_file(url = project_files$url[1])
+```
+
+I can download by using an index from the `ACT_MATOS_files` table above, here the file on the second row.
+
+```{r}
+get_extract_file(file = 2, project = 'umces boem offshore wind energy')
+```
+
+## Search and download tag detections
+
+Using the `tag_search` function, I can interface with MATOS' [tag search page](https://matos.asascience.com/search). Be very careful with this function -- it can take a *very*, **VERY** long time to return your files. This function downloads the requested CSV into your working directory, and, if `import = T` is used, reads it into your R session.
+
+```{r, eval=FALSE}
+my_detections <- tag_search(tags = paste0('A69-1601-254', seq(60, 90, 1)),
+                            start_date = '03/01/2016',
+                            end_date = '04/01/2016', 
+                            import = T)
+```
+
+## Upload files to MATOS
+
+There are times when you want to upload new data to MATOS. The currently accepted data types and formats are:
+
+- newly-deployed transmitters (CSV/XLS(X))
+- detection logs (CSV/VRL)
+- receiver and glider deployment metadata (CSV/XLS(X))
+- receiver events like temperature, tilt, etc. (CSV)
+- glider GPS tracks (CSV)
+
+A few data types use designated Ocean Tracking Network templates:
+
+- tag metadata
+- receiver deployment metadata
+- glider deployment metadata
+
+If you don't have one of these templates downloaded, you can download it through the package. For example:
+```{r}
+get_otn_template('glider')
+```
+
+Then, get to uploading!
+```{r eval=FALSE}
+upload_file(project = 'umces boem offshore wind energy',
+            file = c('this_is_a_dummy_file.csv', 'so_is_this.csv'),
+            data_type = 'new_tags')
+```
+
