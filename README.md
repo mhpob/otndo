@@ -8,9 +8,11 @@
 [![R-CMD-check](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-*entiendo*: Spanish, 1st person indicative; “*I understand*”
+*entiendo* /ˌenˈtjendo/ \[ˌẽn̪ˈt̪jẽn̪.̪o\]   
+Spanish, 1st person indicative; “*I understand*”
 
-***otndo***: English, bad pun; “*I understand OTN*”
+***otndo*** /ˌoʊˈtjendo/ \[ˌoʊ̪ˈt̪jẽn̪.d̪o\]  
+English, bad pun; “*I understand (OTN data)*”
 
 ## Installation
 
