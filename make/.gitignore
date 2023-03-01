@@ -1,9 +1,0 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
-
-files_for_testing/
-*.html
-docs
-inst/doc
