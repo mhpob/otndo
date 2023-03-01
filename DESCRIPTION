@@ -13,3 +13,5 @@ RoxygenNote: 7.2.3
 URL: https://mhpob.github.io/otndo/,
     https://matos.obrien.page
 BugReports: https://github.com/mhpob/matos/issues
+Imports: 
+    data.table
