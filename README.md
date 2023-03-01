@@ -7,6 +7,7 @@
 <!-- badges: end -->
 
 *entiendo*: Spanish, 1st person indicative; “*I understand*”
+
 ***otndo***: English, bad pun; “*I understand OTN*”
 
 ## Installation
