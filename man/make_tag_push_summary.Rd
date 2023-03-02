@@ -5,7 +5,6 @@
 \title{Create summary reports of receiver project data from the OTN data push}
 \usage{
 make_tag_push_summary(
-  matos_project = NULL,
   matched = NULL,
   update_push_log = F,
   since = NULL,
@@ -15,9 +14,7 @@ make_tag_push_summary(
 )
 }
 \arguments{
-\item{matos_project}{MATOS project number or name that you wish to have summarized}
-
-\item{matched}{Default is NULL: OTN matched detections will be downloaded from MATOS and unzipped. If you do not wish to download your files (or you're not a member of ACT), this argument also accepts a character vector of file paths of your matched detections. These can be CSVs or zipped folders.}
+\item{matched}{This argument also accepts a character vector of file paths of your matched detections. These can be CSVs or zipped folders.}
 
 \item{update_push_log}{Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.}
 
@@ -34,12 +31,7 @@ Create summary reports of receiver project data from the OTN data push
 }
 \examples{
 \dontrun{
-# If you're an ACT-ee, you can just use your project number
-make_tag_push_summary(87)
-
-# If you're not an ACT-ee, you need to provide your matched detections
-# directly. The code below downloads some matched detections from OTN to show
-# this.
+# The code below downloads some matched detections from OTN, then calls the function.
 td <- file.path(tempdir(), 'matos_test_files')
 dir.create(td)
 

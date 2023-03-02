@@ -3,7 +3,7 @@ params:
   project_name: NULL
   project_number: NULL
   matched: NULL
-  push_log: system.file("push_log.csv", package="matos")
+  push_log: system.file("push_log.csv", package = "otndo")
   since: NULL
 format:
   html:
@@ -11,19 +11,14 @@ format:
 execute:
   echo: false
 title: "`r paste('Transmitter data push summary:', params$project_name)`"
-author: "Created with the [`matos` R package](https://matos.obrien.page)"
+author: "Created with the [`otndo` R package](https://otndo.obrien.page)"
 ---
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE
 )
 ```
-```{r}
-#| label: act-eval-key
-#| echo: false
 
-act_eval <- !is.null(params$project_number)
-```
 
 ```{r}
 #| label: packages
@@ -125,27 +120,22 @@ otn_tables <- lapply(otn_tables,
 ```{r}
 #| label: proper-urls
 
-if(act_eval){
-  act <- paste0('https://matos.asascience.com/project/detail/',
-                params$project_number)
-  otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
-                params$project_number)
-}else{
+## check what the proj name comes out as... send to proper URL if ACT
+
+# if(act_eval){
+#   act <- paste0('https://matos.asascience.com/project/detail/',
+#                 params$project_number)
+#   otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
+#                 params$project_number)
+# }else{
   act <- 'https://matos.asascience.com/project'
   otn <- 'https://members.oceantrack.org/OTN/projects'
-}
+# }
 ```
 
-
-```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("<!---")}
-```
 
 These are data related to matched transmitter data from the `r format(push_log$date[nrow(push_log)], '%B %Y')` OTN data push. New matched-to-animal files (["matched" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-1)) were uploaded on `r format(push_log$date[nrow(push_log)], '%B %d')`. The previous data push occurred on `r format(push_log$date[nrow(push_log) - 1], '%B %d, %Y')`.
 
-```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("-->")}
-```
 
 ## Overall
 
@@ -373,7 +363,7 @@ ggplot(data = date_seq) +
 
 
 ```{r results='asis', echo=FALSE}
-if(!act_eval & is.null(params$since)){
+if(is.null(params$since)){
   # further lines are not shown (the HTML is commented out)...
   cat("<!---")
   
@@ -386,9 +376,6 @@ if(!act_eval & is.null(params$since)){
 
 ```{r}
 #\ label: new-matches
-if(act_eval){
-  since_date <- push_log$date[nrow(push_log) - 1]
-}
 if(!is.null(params$since)){
   since_date <- as.IDate(params$since)
 }
@@ -514,5 +501,5 @@ mapview::mapview(station_spatial,
 ```
 
 ```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("-->")}
+if(is.null(params$since)) {cat("-->")}
 ```

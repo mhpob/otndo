@@ -1,5 +1,5 @@
-## Simulate non-ACT project
-td <- file.path(tempdir(), 'matos_test_files')
+## Simulate OTN project
+td <- file.path(tempdir(), 'otndo_test_files')
 dir.create(td)
 
 download.file('https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls',
@@ -26,21 +26,8 @@ test_that('Deployment metadata can be cleaned',{
   expect_no_error(clean_otn_deployment(deployment))
 })
 
-## ACT project
-test_that('ACT projects are summarized', {
 
-  expect_no_error(
-    make_receiver_push_summary(
-      matos_project = 161
-    )
-  )
-
-  expect_true(any(grepl('receiver_push_summary', list.files(getwd()))))
-
-})
-
-# Non-ACT project
-test_that("Non-ACT projects are summarized", {
+test_that("Projects are summarized", {
 
   expect_no_error(
     make_receiver_push_summary(

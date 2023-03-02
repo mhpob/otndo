@@ -4,7 +4,7 @@ params:
   project_number: NULL
   qualified: NULL
   unqualified: NULL
-  push_log: system.file("push_log.csv", package="matos")
+  push_log: system.file("push_log.csv", package = "otndo")
   deployment: NULL
   since: NULL
 format:
@@ -13,19 +13,12 @@ format:
 execute:
   echo: false
 title: "`r paste('Receiver data push summary:', params$project_name)`"
-author: "Created with the [`matos` R package](https://matos.obrien.page)"
+author: "Created with the [`otndo` R package](https://otndo.obrien.page)"
 ---
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = FALSE, warning = FALSE, message = FALSE
 )
-```
-
-```{r}
-#| label: act-eval-key
-#| echo: false
-
-act_eval <- !is.null(params$project_number)
 ```
 
 
@@ -119,26 +112,19 @@ otn_tables <- lapply(otn_tables, function(.) .[!grepl('\\.', collectioncode), co
 ```{r}
 #| label: proper-urls
 
-if(act_eval){
-  act <- paste0('https://matos.asascience.com/project/detail/',
-                params$project_number)
-  otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
-                params$project_number)
-}else{
+# if(act_eval){
+#   act <- paste0('https://matos.asascience.com/project/detail/',
+#                 params$project_number)
+#   otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
+#                 params$project_number)
+# }else{
   act <- 'https://matos.asascience.com/project'
   otn <- 'https://members.oceantrack.org/OTN/projects'
-}
+# }
 ```
 
-```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("<!---")}
-```
+These are data related to receiver data from the `r format(push_log$date[nrow(push_log)], '%B %Y')` OTN data push. New matched detection files (["qualified" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)) were uploaded on `r format(push_log$date[nrow(push_log)], '%B %d')`. The previous data push occurred on `r format(push_log$date[nrow(push_log) - 1], '%B %d, %Y')`.
 
-These are data related to receiver data from the `r format(push_log$date[nrow(push_log)], '%B %Y')` ACT data push. New matched detection files (["qualified" files](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)) were uploaded on `r format(push_log$date[nrow(push_log)], '%B %d')`. The previous data push occurred on `r format(push_log$date[nrow(push_log) - 1], '%B %d, %Y')`.
-
-```{r results='asis', echo=FALSE}
-if(!act_eval) {cat("-->")}
-```
 
 ## Overall
 
@@ -347,15 +333,12 @@ y_nudge <- (station_limits[4] - station_limits[2]) * (1/10)
 
 
 ```{r results='asis', echo=FALSE}
-if(!act_eval & is.null(params$since)) {cat("<!---")}
+if(is.null(params$since)) {cat("<!---")}
 ```
 ## What's new?
 
 ```{r}
 #| label: new-matches
-if(act_eval){
-  since_date <- push_log$date[nrow(push_log) - 1]
-}
 if(!is.null(params$since)){
   since_date <- as.IDate(params$since)
 }
@@ -470,7 +453,7 @@ reactable(station_summary)
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 ```{r results='asis', echo=FALSE}
-if(!act_eval & is.null(params$since)) {cat("-->")}
+if(is.null(params$since)) {cat("-->")}
 ```
 
 ## Unmatched detections

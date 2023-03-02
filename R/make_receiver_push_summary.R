@@ -1,29 +1,20 @@
 #' Create summary reports of receiver project data from the OTN data push
 #'
-#' @param matos_project MATOS project number or name that you wish to have summarized
-#' @param qualified,unqualified Default is NULL: OTN qualified or unqualified detections will be downloaded from MATOS and unzipped. If you do not wish to download your files (or you're not a member of ACT), this argument also accepts a character vector of file paths of your qualified/unqualified detections. These can be CSVs or zipped folders.
+#' @param qualified,unqualified Default is NULL: a character vector of file paths of your qualified/unqualified detections. These can be CSVs or zipped folders.
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
 #' @param deployment File path of user-supplied master OTN receiver deployment metadata.
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
-#' @param since Date in YYYY-MM-DD format. If you're an ACT-ite, this is mostly covered by the embedded ACT push log.
+#' @param since Date in YYYY-MM-DD format. Summarizes what's new since the provided date.
 #' @param rmd Logical. Compile via RMarkdown rather than Quarto?
 #'
 #' @section Push log:
 #'
 #'  To keep track of when ACT data pushes occur, a log is kept
-#'  \href{https://raw.githubusercontent.com/mhpob/matos/master/inst/push_log.csv}{on the package's GitHub page}. This is automatically downloaded every time you download
+#'  \href{https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv}{on the package's GitHub page}. This is automatically downloaded every time you download
 #'  or update the package, but you can avoid re-downloading the package by changing
 #'  \code{update_push_log} to \code{TRUE}.
 #'
-#'  If you're not an ACTee, you can get similar behavior by providing a date to the \code{since} argument.
-#'
-#'
-#' @section No files provided:
-#'
-#'  If you only provide your ACT project number or title and leave all of the
-#'  arguments as their defaults, this function will ask you to log in then proceed
-#'  to download all of the necessary files. If you provide already-downloaded files
-#'  you can speed up this process substantially.
+#'  You can get similar behavior by providing a date to the \code{since} argument.
 #'
 #' @section Output:
 #'
@@ -32,15 +23,45 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' # Using only the ACT/MATOS project number:
-#' make_receiver_push_summary(87)
+#' td <- file.path(tempdir(), 'matos_test_files')
+#' dir.create(td)
 #'
-#' # Providing a local file:
-#' make_receiver_push_summary(87, deployment = "my_master_deployment_metadata.xlsx")
+#' download.file(
+#'   paste0('https://members.oceantrack.org/data/repository/pbsm/',
+#'          'data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls'),
+#'   destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),
+#'   mode = 'wb'
+#' )
+#'
+#'
+#' download.file(
+#'   paste0('https://members.oceantrack.org/data/repository/pbsm/',
+#'          'detection-extracts/pbsm_qualified_detections_2018.zip'),
+#'   destfile = file.path(td, 'pbsm_qualified_detections_2018.zip')
+#' )
+#' unzip(file.path(td, 'pbsm_qualified_detections_2018.zip'),
+#'       exdir = td)
+
+#' download.file(
+#'    paste0('https://members.oceantrack.org/data/repository/pbsm/',
+#'            'detection-extracts/pbsm_unqualified_detections_2018.zip'),
+#'    destfile = file.path(td, 'pbsm_unqualified_detections_2018.zip')
+#' )
+#' unzip(file.path(td, 'pbsm_unqualified_detections_2018.zip'),
+#'       exdir = td)
+#'
+#' qualified_files <- file.path(td, 'pbsm_qualified_detections_2018.csv')
+#' unqualified_files <- file.path(td, 'pbsm_unqualified_detections_2018.csv')
+#' deployment_files <- file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls')
+#'
+#' make_receiver_push_summary(
+#'      qualified = qualified_files,
+#'      unqualified = unqualified_files,
+#'      deployment = deployment_files,
+#'      since = '2018-11-01')
 #' }
 
 make_receiver_push_summary <- function(
-    matos_project = NULL,
     qualified = NULL,
     unqualified = NULL,
     update_push_log = FALSE,
@@ -49,14 +70,25 @@ make_receiver_push_summary <- function(
     since = NULL,
     rmd = FALSE
 ){
-  if(is.null(matos_project) &
-     any(is.null(qualified), is.null(unqualified), is.null(deployment))){
-    cli::cli_abort('Must provide an ACT/MATOS project or at least one each of qualified detections, unqualified detections, and deployment.')
+  # Try to provide a helpful error if there are missing files.
+  if(any(is.null(qualified), is.null(unqualified), is.null(deployment))){
+    cli::cli_abort('Must provide at least one each of {.href [qualified detections, unqualified detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)}, and deployment metadata.')
   }
 
 
-  # Create a temporary directory to store intermediate files
-  td <- file.path(tempdir(), 'matos_files')
+
+  # Push log ----
+  if(update_push_log == TRUE){
+    push_log <- 'https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv'
+  }else{
+    push_log <- system.file("push_log.csv",
+                            package = "otndo")
+  }
+
+
+
+  # Create a temporary directory to store intermediate files ----
+  td <- file.path(tempdir(), 'otndo_files')
 
   # remove previous files. Needed if things errored out.
   if(file.exists(td)){
@@ -65,36 +97,9 @@ make_receiver_push_summary <- function(
 
   dir.create(td)
 
-  # Project ----
-  ##  Find project name
-  if(is.numeric(matos_project)){
-    project_number <- matos_project
-    project_name <- get_project_name(matos_project)
-    project_code <- paste0('PROJ', project_number)
-  }
-  if(is.character(matos_project)){
-    project_name <- matos_project
-    project_number <- get_project_number(matos_project)
-    project_code <- paste0('PROJ', project_number)
-  }
-
-
-  if(any(is.null(qualified), is.null(unqualified))){
-    cli::cli_alert_info('Finding extraction files...')
-    project_files <- list_extract_files(project_number, 'all')
-    cli::cli_alert_success('   Files found.')
-  }
-
 
 
   # Qualified detections ----
-  ##  Download qualified detections if not provided
-  if(is.null(qualified)){
-    qualified <- act_file_download(type = 'qualified',
-                                   project_files = project_files,
-                                   temp_dir = td)
-  }
-
   ## Unzip if zipped detections were provided
   if(any(grepl('\\.zip$', qualified))){
     qualified <- provided_file_unzip(files = qualified,
@@ -111,13 +116,6 @@ make_receiver_push_summary <- function(
 
 
   # Unqualified detections ----
-  ##  Download unqualified detections if not provided
-  if(is.null(unqualified)){
-    unqualified <- act_file_download(type = 'unqualified',
-                                     project_files = project_files,
-                                     temp_dir = td)
-  }
-
   ## Unzip if zipped detections were provided
   if(any(grepl('\\.zip$', unqualified))){
     unqualified <- provided_file_unzip(files = unqualified,
@@ -134,47 +132,32 @@ make_receiver_push_summary <- function(
 
 
   # Deployment log ----
-  ##  Download deployment metadata if not provided
-  if(is.null(deployment)){
-    deployment <- act_file_download(type = 'deployment',
-                                    matos_project = matos_project,
-                                    temp_dir = td)
-  }
-
   ## Import and write to tempdir
   deployment_filepath <- write_to_tempdir(type = 'deployment',
                                           files = deployment,
                                           temp_dir = td)
 
 
-  # Push log ----
-  if(update_push_log == TRUE){
-    push_log <- 'https://raw.githubusercontent.com/mhpob/matos/master/inst/push_log.csv'
-  }else{
-    push_log <- system.file("push_log.csv",
-                            package="matos")
-  }
-
-
-  # If not an ACT project, ask OTN's GeoServer for name information ----
-  if(is.null(matos_project)){
-    cli::cli_alert_info('Asking OTN GeoServer for project information...')
-
-    project_info <- extract_proj_name(qualified_filepath)
-
-    project_name <- project_info$project_name
-    project_code <- project_info$project_code
-
-    project_number <- NULL
-  }
 
 
 
+  # Ask OTN's GeoServer for name information ----
+  cli::cli_alert_info('Asking OTN GeoServer for project information...')
+
+  project_info <- extract_proj_name(qualified_filepath)
+
+  project_name <- project_info$project_name
+  project_code <- project_info$project_code
+
+  project_number <- NULL
+
+
+  # Write report ----
   cli::cli_alert_info('Writing report...')
 
   file.copy(from = system.file('qmd_template',
-                        'make_receiver_push_summary.qmd',
-                        package = 'matos'),
+                               'make_receiver_push_summary.qmd',
+                               package = 'otndo'),
             to = td)
 
   if(Sys.which('quarto') != '' & rmd == FALSE){

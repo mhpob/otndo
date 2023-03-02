@@ -5,7 +5,6 @@
 \title{Create summary reports of receiver project data from the OTN data push}
 \usage{
 make_receiver_push_summary(
-  matos_project = NULL,
   qualified = NULL,
   unqualified = NULL,
   update_push_log = FALSE,
@@ -16,9 +15,7 @@ make_receiver_push_summary(
 )
 }
 \arguments{
-\item{matos_project}{MATOS project number or name that you wish to have summarized}
-
-\item{qualified, unqualified}{Default is NULL: OTN qualified or unqualified detections will be downloaded from MATOS and unzipped. If you do not wish to download your files (or you're not a member of ACT), this argument also accepts a character vector of file paths of your qualified/unqualified detections. These can be CSVs or zipped folders.}
+\item{qualified, unqualified}{Default is NULL: a character vector of file paths of your qualified/unqualified detections. These can be CSVs or zipped folders.}
 
 \item{update_push_log}{Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.}
 
@@ -26,7 +23,7 @@ make_receiver_push_summary(
 
 \item{out_dir}{Defaults to working directory. In which directory would you like to save the report?}
 
-\item{since}{Date in YYYY-MM-DD format. If you're an ACT-ite, this is mostly covered by the embedded ACT push log.}
+\item{since}{Date in YYYY-MM-DD format. Summarizes what's new since the provided date.}
 
 \item{rmd}{Logical. Compile via RMarkdown rather than Quarto?}
 }
@@ -37,20 +34,11 @@ Create summary reports of receiver project data from the OTN data push
 
 
 To keep track of when ACT data pushes occur, a log is kept
-\href{https://raw.githubusercontent.com/mhpob/matos/master/inst/push_log.csv}{on the package's GitHub page}. This is automatically downloaded every time you download
+\href{https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv}{on the package's GitHub page}. This is automatically downloaded every time you download
 or update the package, but you can avoid re-downloading the package by changing
 \code{update_push_log} to \code{TRUE}.
 
-If you're not an ACTee, you can get similar behavior by providing a date to the \code{since} argument.
-}
-
-\section{No files provided}{
-
-
-If you only provide your ACT project number or title and leave all of the
-arguments as their defaults, this function will ask you to log in then proceed
-to download all of the necessary files. If you provide already-downloaded files
-you can speed up this process substantially.
+You can get similar behavior by providing a date to the \code{since} argument.
 }
 
 \section{Output}{
@@ -61,10 +49,40 @@ This function creates an HTML report that can be viewed in your web browser.
 
 \examples{
 \dontrun{
-# Using only the ACT/MATOS project number:
-make_receiver_push_summary(87)
+td <- file.path(tempdir(), 'matos_test_files')
+dir.create(td)
 
-# Providing a local file:
-make_receiver_push_summary(87, deployment = "my_master_deployment_metadata.xlsx")
+download.file(
+  paste0('https://members.oceantrack.org/data/repository/pbsm/',
+         'data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls'),
+  destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),
+  mode = 'wb'
+)
+
+
+download.file(
+  paste0('https://members.oceantrack.org/data/repository/pbsm/',
+         'detection-extracts/pbsm_qualified_detections_2018.zip'),
+  destfile = file.path(td, 'pbsm_qualified_detections_2018.zip')
+)
+unzip(file.path(td, 'pbsm_qualified_detections_2018.zip'),
+      exdir = td)
+download.file(
+   paste0('https://members.oceantrack.org/data/repository/pbsm/',
+           'detection-extracts/pbsm_unqualified_detections_2018.zip'),
+   destfile = file.path(td, 'pbsm_unqualified_detections_2018.zip')
+)
+unzip(file.path(td, 'pbsm_unqualified_detections_2018.zip'),
+      exdir = td)
+
+qualified_files <- file.path(td, 'pbsm_qualified_detections_2018.csv')
+unqualified_files <- file.path(td, 'pbsm_unqualified_detections_2018.csv')
+deployment_files <- file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls')
+
+make_receiver_push_summary(
+     qualified = qualified_files,
+     unqualified = unqualified_files,
+     deployment = deployment_files,
+     since = '2018-11-01')
 }
 }
