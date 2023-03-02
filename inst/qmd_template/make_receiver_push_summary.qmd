@@ -341,10 +341,10 @@ if(is.null(params$since)) {cat("<!---")}
 #| label: new-matches
 if(!is.null(params$since)){
   since_date <- as.IDate(params$since)
-  new_matches <- qualified[datelastmodified > since_date]
 }else{
-  new_matches <- qualified
+  since_date <- as.IDate('1970-01-01')
 }
+new_matches <- qualified[datelastmodified > since_date]
 ```
 
 Since `r format(since_date, '%B %Y')`, `r format(nrow(qualified[datelastmodified > since_date]), big.mark = ',')` detections of `r uniqueN(qualified[datelastmodified > since_date], by  = 'fieldnumber')` individuals have been updated or newly-matched.
