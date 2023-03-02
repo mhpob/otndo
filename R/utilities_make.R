@@ -148,8 +148,8 @@ extract_proj_name <- function(detection_file){
   project <- read.csv(detection_file, nrows = 1)$collectioncode
 
   otn_metadata_query <- paste0(
-    "https://members.oceantrack.org/geoserver/otn/ows?',
-    'service=WFS&version=1.0.0&request=GetFeature&typeName=otn:",
+    'https://members.oceantrack.org/geoserver/otn/ows',
+    '?service=WFS&version=1.0.0&request=GetFeature&typeName=otn:',
     'otn_resources_metadata_points',
     "&outputFormat=csv&CQL_FILTER=strMatches(collectioncode,'",
     paste(
