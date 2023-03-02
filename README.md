@@ -5,6 +5,12 @@
 
 <!-- badges: start -->
 
+[![Project Status: WIP – Initial development is in progress, but there
+has not yet been a stable, usable release suitable for the
+public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/otndo)
 [![R-CMD-check](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
