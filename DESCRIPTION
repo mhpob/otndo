@@ -12,6 +12,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 URL: https://mhpob.github.io/otndo/,
     https://otndo.obrien.page/
-BugReports: https://github.com/mhpob/matos/issues
+BugReports: https://github.com/mhpob/otndo/issues
 Imports: 
     data.table
