@@ -32,9 +32,52 @@ remotes::install_github("mhpob/otndo")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example:
 
 ``` r
-#library(otndo)
-## basic example code
+# Download some example data
+td <- file.path(tempdir(), 'otndo_test_files')
+dir.create(td)
+
+download.file(
+  paste0('https://members.oceantrack.org/data/repository/pbsm/',
+         'detection-extracts/pbsm_matched_detections_2018.zip'),
+  destfile = file.path(td, 'pbsm_matched_detections_2018.zip')
+)
+unzip(file.path(td, 'pbsm_matched_detections_2018.zip'),
+      exdir = td)
+
+
+# Make a tag push summary
+library(otndo)
+
+make_tag_push_summary(matched = file.path(td, 'pbsm_matched_detections_2018.csv'))
+#> ℹ Asking OTN GeoServer for project information...
+#> ℹ Writing report...
+#> 
+#> 
+#> processing file: make_tag_push_summary.qmd
+#>   |                                                  |                                          |   0%  |                                                  |.                                         |   2%                              |                                                  |..                                        |   4% (setup)                      |                                                  |...                                       |   7%                              |                                                  |....                                      |   9% (packages)                   |                                                  |.....                                     |  11%                              |                                                  |......                                    |  13% (extraction-files-read)      |                                                  |.......                                   |  16%                              |                                                  |.......                                   |  18% (n-pis)                      |                                                  |........                                  |  20%                              |                                                  |.........                                 |  22% (otn-query)                  |                                                  |..........                                |  24%                              |                                                  |...........                               |  27% (proper-urls)                |                                                  |............                              |  29%                              |                                                  |.............                             |  31% (otn-match-table)            |                                                  |..............                            |  33%                              |                                                  |...............                           |  36% (otn-match-map)              |                                                  |................                          |  38%                              |                                                  |.................                         |  40% (temporal-distribution)      |                                                  |..................                        |  42%                              |                                                  |...................                       |  44% (abacus-plot)                |                                                  |....................                      |  47%                              |                                                  |.....................                     |  49% (station-summary-table)      |                                                  |.....................                     |  51%                              |                                                  |......................                    |  53% (station-spatial)            |                                                  |.......................                   |  56%                              |                                                  |........................                  |  58% (detection-map-leaflet)      |                                                  |.........................                 |  60%                              |                                                  |..........................                |  62% (tags-remaining)             |                                                  |...........................               |  64%                              |                                                  |............................              |  67% (unnamed-chunk-14)           |                                                  |.............................             |  69%                              |                                                  |..............................            |  71% (unnamed-chunk-15)           |                                                  |...............................           |  73%                              |                                                  |................................          |  76% (unnamed-chunk-16)           |                                                  |.................................         |  78%                              |                                                  |..................................        |  80% (new-otn-match-map)          |                                                  |...................................       |  82%                              |                                                  |...................................       |  84% (new-station-summary-table)  |                                                  |....................................      |  87%                              |                                                  |.....................................     |  89% (new-station-spatial)        |                                                  |......................................    |  91%                              |                                                  |.......................................   |  93% (new-detection-map-leaflet)  |                                                  |........................................  |  96%                              |                                                  |......................................... |  98% (unnamed-chunk-21)           |                                                  |..........................................| 100%                                                                                                                                                  
+#> output file: make_tag_push_summary.knit.md
+#> 
+#> pandoc 
+#>   to: html
+#>   output-file: make_tag_push_summary.html
+#>   standalone: true
+#>   self-contained: true
+#>   section-divs: true
+#>   html-math-method: mathjax
+#>   wrap: none
+#>   default-image-extension: png
+#>   
+#> metadata
+#>   document-css: false
+#>   link-citations: true
+#>   date-format: long
+#>   lang: en
+#>   title: '`r paste(''Transmitter data push summary:'', params$project_name)`'
+#>   author: 'Created with the [`otndo` R package](https://otndo.obrien.page)'
+#>   
+#> Output created: make_tag_push_summary.html
+#> ✔    Done.
 ```

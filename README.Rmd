@@ -39,9 +39,24 @@ remotes::install_github("mhpob/otndo")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example:
 
 ```{r example}
-#library(otndo)
-## basic example code
+# Download some example data
+td <- file.path(tempdir(), 'otndo_test_files')
+dir.create(td)
+
+download.file(
+  paste0('https://members.oceantrack.org/data/repository/pbsm/',
+         'detection-extracts/pbsm_matched_detections_2018.zip'),
+  destfile = file.path(td, 'pbsm_matched_detections_2018.zip')
+)
+unzip(file.path(td, 'pbsm_matched_detections_2018.zip'),
+      exdir = td)
+
+
+# Make a tag push summary
+library(otndo)
+
+make_tag_push_summary(matched = file.path(td, 'pbsm_matched_detections_2018.csv'))
 ```

@@ -1,4 +1,4 @@
-# td <- file.path(tempdir(), 'matos_test_files')
+# td <- file.path(tempdir(), 'otndo_test_files')
 # dir.create(td)
 #
 # download.file('https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_matched_detections_2018.zip',
