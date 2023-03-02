@@ -11,7 +11,9 @@
 #' @importFrom data.table .SD
 #' @importFrom data.table :=
 #' @importFrom data.table data.table
+#' @importFrom utils read.csv
 #' @importFrom utils unzip
 #' @importFrom utils URLencode
+#' @importFrom utils write.csv
 ## usethis namespace: end
 NULL
