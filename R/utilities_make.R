@@ -3,8 +3,6 @@
 #' @param deployment blah blah blah document here
 #' @param type blah blah blah document here
 #' @param files blah blah blah document here
-#' @param matos_project blah
-#' @param project_files blah
 #' @param temp_dir blahblah
 #' @param detection_file blah
 #'
@@ -53,42 +51,6 @@ clean_otn_deployment <- function(deployment){
 
 }
 
-#' @rdname utilities-make
-#' @keywords internal
-act_file_download <- function(type, temp_dir = NULL, matos_project = NULL,
-                              project_files = NULL){
-  cli::cli_alert_info(paste('Downloading', type, 'detections...'))
-
-
-  if(type == 'deployment'){
-    # list project files and select deployment metadata
-    files <- list_project_files(matos_project)
-
-    files <- files[grepl('Deployment', files$file_type),]
-  }else{
-    # select the appropriate detection type
-    files <- project_files[project_files$detection_type == type,]
-  }
-
-  # ping the server and download the file(s).
-  files <- lapply(files$url,
-                  function(.){
-                    get_extract_file(url = .,
-                                     out_dir = temp_dir)
-                  }
-  )
-
-
-  files <- unlist(files)
-
-  if(type != 'deployment'){
-    files <- grep('\\.csv$', files, value = T)
-  }
-
-  cli::cli_alert_success('   Done.')
-
-  files
-}
 
 #' @rdname utilities-make
 #' @keywords internal

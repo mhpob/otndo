@@ -3,20 +3,12 @@
 \name{utilities-make}
 \alias{utilities-make}
 \alias{clean_otn_deployment}
-\alias{act_file_download}
 \alias{provided_file_unzip}
 \alias{write_to_tempdir}
 \alias{extract_proj_name}
 \title{Place where functions live for the make_*_summary family of functions}
 \usage{
 clean_otn_deployment(deployment)
-
-act_file_download(
-  type,
-  temp_dir = NULL,
-  matos_project = NULL,
-  project_files = NULL
-)
 
 provided_file_unzip(files, temp_dir)
 
@@ -27,15 +19,11 @@ extract_proj_name(detection_file)
 \arguments{
 \item{deployment}{blah blah blah document here}
 
-\item{type}{blah blah blah document here}
+\item{files}{blah blah blah document here}
 
 \item{temp_dir}{blahblah}
 
-\item{matos_project}{blah}
-
-\item{project_files}{blah}
-
-\item{files}{blah blah blah document here}
+\item{type}{blah blah blah document here}
 
 \item{detection_file}{blah}
 }
