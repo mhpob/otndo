@@ -14,7 +14,13 @@ URL: https://mhpob.github.io/otndo/,
     https://otndo.obrien.page/
 BugReports: https://github.com/mhpob/otndo/issues
 Imports: 
-    data.table
+    cli,
+    data.table,
+    ggplot2,
+    quarto,
+    readxl,
+    rmarkdown,
+    utils
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
