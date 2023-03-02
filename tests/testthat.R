@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(matos)
+library(otndo)
 
-test_check("matos")
+test_check("otndo")
