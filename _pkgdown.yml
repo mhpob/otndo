@@ -2,3 +2,8 @@ url: https://otndo.obrien.page/
 template:
   bootstrap: 5
 
+articles:
+  - title: Articles
+    navbar: ~
+    contents:
+    - data-push-summaries
