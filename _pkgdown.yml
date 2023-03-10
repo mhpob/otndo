@@ -2,6 +2,10 @@ url: https://otndo.obrien.page/
 template:
   bootstrap: 5
 
+authors:
+  Michael O'Brien:
+    href: "https://www.obrien.page/"
+
 articles:
   - title: Articles
     navbar: ~
