@@ -152,10 +152,8 @@ mt <- merge(
 )
 
 mt <- merge(mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
-mt[, detectedby := ifelse(grepl('^PROJ', detectedby),
-                           paste0('ACT.', detectedby),
-                           ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', detectedby),
-                                  paste0('OTN.', detectedby), detectedby))]
+mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
+                          paste0('ACT.', detectedby), detectedby)]
 
 mt <- merge(mt, otn_tables[[1]][, .(resource_full_name,
                                     detectedby = collectioncode)])
@@ -394,10 +392,8 @@ new_mt <- merge(
 
 new_mt <- merge(new_mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
 
-new_mt[, detectedby := ifelse(grepl('^PROJ', detectedby),
-                           paste0('ACT.', detectedby),
-                           ifelse(!grepl('^PROJ|^ACT|^FACT|^OTN', detectedby),
-                                  paste0('OTN.', detectedby), detectedby))]
+new_mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
+                          paste0('ACT.', detectedby), detectedby)]
 
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, detectedby = collectioncode)])
 
