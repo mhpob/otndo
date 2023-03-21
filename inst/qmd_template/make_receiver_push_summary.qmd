@@ -143,8 +143,8 @@ mt <- merge(
 
 # mt <- merge(mt, pis[, .(trackercode, PI, POC, emails)])
 mt <- merge(mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
-mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
-                          paste0('ACT.', detectedby), detectedby)]
+mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
+                          paste0('ACT.', trackercode), trackercode)]
 
 mt <- merge(mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
 
@@ -356,8 +356,8 @@ new_mt <- merge(
 )
 
 new_mt <- merge(new_mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
-new_mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
-                          paste0('ACT.', detectedby), detectedby)]
+new_mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
+                          paste0('ACT.', trackercode), trackercode)]
 
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
 
