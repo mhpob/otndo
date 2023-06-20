@@ -11,14 +11,21 @@
 #' @keywords internal
 clean_otn_deployment <- function(deployment){
 
+  # check if data dictionary sheet was deleted
+  if(length(readxl::excel_sheets(deployment)) != 2){
+    sheet_id <- 1
+  }else{
+    sheet_id <- 2
+  }
+
   # check for header
   if(ncol(readxl::read_excel(deployment,
-                             sheet = 2,
+                             sheet = sheet_id,
                              range = 'A1')) == 0){
-    deployment <- readxl::read_excel(deployment, sheet = 2,
+    deployment <- readxl::read_excel(deployment, sheet = sheet_id,
                                      skip = 3)
   }else{
-    deployment <- readxl::read_excel(deployment, sheet = 2)
+    deployment <- readxl::read_excel(deployment, sheet = sheet_id)
   }
 
   names(deployment) <- tolower(gsub(' .*', '', names(deployment)))
