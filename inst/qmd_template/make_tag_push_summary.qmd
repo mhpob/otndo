@@ -144,6 +144,8 @@ A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(ma
 ```{r}
 #| label: otn-match-table
 #| column: page
+#| fig-cap: Table 1. Total detections and number of individual fish heard by other OTN node projects.
+#| fig-cap-location: top
 
 mt <- merge(
   matched[, .(detections = .N), by = 'detectedby'],
@@ -194,6 +196,7 @@ reactable(mt,
 
 ```{r}
 #| label: otn-match-map
+#| fig-cap: Figure 1. Bounding box of external projects that recorded a transmitter from this project. This does not necessarily reflect the distribution of this project's fish.
 
 otn_sf <- otn_tables[[1]] |>
   data.frame() |>
@@ -214,6 +217,8 @@ ggplot() +
 
 ```{r}
 #| label: temporal-distribution
+#| fig-cap: Figure 2. Temporal distribution of detections by external project, i.e., the dates when other projects heard this project's fish.
+
 proj_order_ns <- matched[, .(lat = median(latitude)), by = 'detectedby']
 setorder(proj_order_ns, lat)
 
@@ -231,6 +236,7 @@ ggplot(matched_time) +
 
 ```{r}
 #| label: abacus-plot
+#| fig-cap: Figure 3. Abacus plot of detected transmitters, colored by OTN node projects.
 matched_abacus <- unique(matched, by = c('detectedby', 'day', 'tagname'))
 
 ggplot() +
@@ -319,6 +325,7 @@ station_spatial <- station_spatial[, .(station, Detections, Individuals,
 
 ```{r}
 #| label: detection-map-leaflet
+#| fig-cap: Figure 4. Number of detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
 mapview::mapview(station_spatial,
                  zcol = 'Detections',
                  cex = 'Individuals',
@@ -328,6 +335,8 @@ mapview::mapview(station_spatial,
 
 ```{r}
 #| label: tags-remaining
+#| fig-cap: Figure 5. Transmitters estimated to be at liberty.
+
 last_record <- matched[, .(last_record = max(datecollected)), by = 'tagname']
 transmitter_life <- last_record[release[, .(tagname, datecollected)], ,on = 'tagname']
 setnames(transmitter_life, 'datecollected', 'first_record')
@@ -383,7 +392,10 @@ new_matches <- matched[datelastmodified > since_date]
 Since `r format(since_date, '%B %Y')`, `r format(nrow(matched[datelastmodified > since_date]), big.mark = ',')` detections of `r uniqueN(matched[datelastmodified > since_date], by  = 'tagname')` individuals have been updated or newly-matched.
 
 ```{r}
-#\ label: new-otn-match-table
+#| label: new-otn-match-table
+#| column: page
+#| fig-cap: Table 2. Total newly-added detections and number of individual fish heard by other OTN node projects.
+#| fig-cap-location: top
 
 new_mt <- merge(
   new_matches[, .(detections = .N), by = 'detectedby'],
@@ -431,6 +443,7 @@ reactable(new_mt,
 
 ```{r}
 #| label: new-otn-match-map
+#| fig-cap: Figure 6. Bounding box of external projects providing detections added since the last data push. This does not necessarily reflect the distribution of fish heard by the project's receivers.
 
 new_otn_sf <- otn_sf[grepl(
     paste(unique(new_matches$detectedby), collapse = '|'),
@@ -449,6 +462,8 @@ ggplot() +
 
 ```{r}
 #| label: new-station-summary-table
+#| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
+#| fig-cap-location: top
 station_summary <- merge(
   new_matches[, .(detections = .N), by = c('station', 'detectedby')],
   unique(new_matches, by = c('tagname', 'station'))[, .(individuals = .N,
@@ -490,6 +505,7 @@ station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Pro
 
 ```{r}
 #| label: new-detection-map-leaflet
+#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
 mapview::mapview(station_spatial,
                  zcol = 'Detections',
                  cex = 'Individuals',
