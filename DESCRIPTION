@@ -1,6 +1,6 @@
 Package: otndo
 Title: Understand your OTN data
-Version: 0.0.0.901
+Version: 0.1.0
 Authors@R: 
     person("Michael", "O'Brien", , "mike@obrien.page", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1420-6395"))
