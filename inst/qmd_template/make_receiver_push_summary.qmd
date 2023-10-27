@@ -134,7 +134,7 @@ A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(
 ```{r}
 #| label: otn-match-table
 #| column: page
-#| fig-cap: Table 1. Number of total detections and individual fish per OTN node project along with points of contact.figcap
+#| fig-cap: Table 1. Number of total detections and individual fish per OTN node project along with points of contact.
 #| fig-cap-location: top
 
 mt <- merge(
