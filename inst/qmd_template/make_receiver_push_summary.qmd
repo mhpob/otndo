@@ -131,10 +131,11 @@ These are data related to receiver data from the `r format(push_log$date[nrow(pu
 A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(qualified, by  = 'fieldnumber')` individuals have been matched via [ACT](`r act`), [FACT](https://secoora.org/fact/projects/), and/or [OTN](`r otn`). The detections span across `r uniqueN(qualified, by = 'trackercode')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
 
 
-
 ```{r}
 #| label: otn-match-table
 #| column: page
+#| fig-cap: Table 1. Number of total detections and individual fish per OTN node project along with points of contact.figcap
+#| fig-cap-location: top
 
 mt <- merge(
   qualified[, .(detections = .N), by = 'trackercode'],
@@ -182,6 +183,7 @@ reactable(mt,
 
 ```{r}
 #| label: otn-match-map
+#| fig-cap: Figure 1. Bounding box of detected external projects. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
 otn_sf <- otn_tables[[1]] |>
   data.frame() |>
@@ -200,8 +202,10 @@ ggplot() +
   theme_minimal()
 ```
 
+
 ```{r}
 #| label: temporal-distribution
+#| fig-cap: Figure 2. Temporal distribution of detections by external project, i.e., the dates when this project heard other project's fish.
 
 qualified[, day := as.Date(datecollected)]
 qualified_time <- unique(qualified, by = c('trackercode', 'day'))
@@ -213,8 +217,11 @@ ggplot(qualified_time) +
   theme_minimal()
 ```
 
+
 ```{r}
 #| label: deployment-gantt
+#| fig-cap: Figure 3. Temporal coverage of receivers across time. Black bars indicate periods of deployments, while red bars denote download dates.
+
 if(!is.null(params$deployment)){
   
   deployment <- fread(params$deployment)
@@ -235,8 +242,11 @@ if(!is.null(params$deployment)){
 }
 ```
 
+
 ```{r}
 #| label: station-summary-table
+#| fig-cap: Table 2. Total number of detections and number of individual fish heard per project receiver.
+#| fig-cap-location: top
 
 # .simpleCap <- function(x) {
 #   x <- tolower(x)
@@ -262,6 +272,7 @@ setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 reactable(station_summary)
 ```
 
+
 ```{r}
 #| label: station-spatial
 
@@ -276,13 +287,17 @@ station_center <- st_centroid(st_union(station_spatial))
 station_center <- st_coordinates(station_center)
 ```
 
+
 ```{r}
 #| label: detection-map-leaflet
+#| fig-cap: Figure 4. Number of detections per project receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
+
 mapview::mapview(station_spatial,
                  zcol = 'Detections',
                  cex = 'Individuals',
                  layer.name = "Matched detections") 
 ```
+
 
 ```{r}
 #| label: detection-map
@@ -316,20 +331,6 @@ y_nudge <- (station_limits[4] - station_limits[2]) * (1/10)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```{r results='asis', echo=FALSE}
 if(is.null(params$since)) {cat("<!---")}
 ```
@@ -350,6 +351,8 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(qualified[datelastmodified
 ```{r}
 #| label: new-otn-match-table
 #| column: page
+#| fig-cap: Table 3. Total number of detections and number of individual fish heard per project receiver.
+#| fig-cap-location: top
 new_mt <- merge(
   new_matches[, .(detections = .N), by = 'trackercode'],
   unique(new_matches, by  = 'fieldnumber')[, .(individuals = .N), by = 'trackercode']
@@ -393,6 +396,7 @@ reactable(new_mt,
 
 ```{r}
 #| label: new-otn-match-map
+#| fig-cap: Figure 5. Bounding box of external projects detected since the last data push. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
 new_otn_sf <- otn_sf[grepl(
     paste(unique(new_matches$trackercode), collapse = '|'),
@@ -409,8 +413,11 @@ ggplot() +
   theme_minimal()
 ```
 
+
 ```{r}
 #| label: new-station-summary-table
+#| fig-cap: Table 4. Total number of detections and number of individual fish heard per project receiver since the last data push.
+#| fig-cap-location: top
 
 station_summary <- merge(
   new_matches[, .(detections = .N), by = 'station'],
@@ -428,6 +435,7 @@ setnames(station_summary, c('Station', 'Detections', 'Individuals'))
 
 reactable(station_summary)
 ```
+</figure>
 
 ```{r}
 #| label: new-detection-map
@@ -470,7 +478,7 @@ Some detections were not matched to other investigators via OTN nodes. There are
 
 `r nrow(unqual_f)` of these are very likely false, as they only have one detection; this leaves detections of `r nrow(unqual_real)` transmitters that could find a home elsewhere.
 
-### Likely false detections
+### Likely false detections (N detections = 1)
 
 ```{r}
 #| label: unqualified-false
@@ -478,7 +486,7 @@ Some detections were not matched to other investigators via OTN nodes. There are
 reactable(unqual_f)
 ```
 
-### Possibly real detections
+### Possibly real detections (N detections > 1)
 
 ```{r}
 #| label: unqualified-real
@@ -486,8 +494,10 @@ reactable(unqual_f)
 reactable(unqual_real)
 ```
 
+
 ```{r}
 #| label: temporal-distribution-unqual
+#| fig-cap: Figure 6. Temporal distribution of unmatched detections by receiver, i.e., the dates when a receiver in this project heard a transmitter that was not matched to an external project.
 
 unqualified[, day := as.Date(datecollected)]
 unqualified_time <- unique(unqualified, by = c('station', 'day'))
