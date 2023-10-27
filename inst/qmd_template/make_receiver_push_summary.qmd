@@ -13,7 +13,7 @@ format:
 execute:
   echo: false
 title: "`r paste('Receiver data push summary:', params$project_name)`"
-author: "Created with the [`otndo` R package](https://otndo.obrien.page)"
+author: "Created with the [`otndo` R package](https://otndo.obrien.page) (v. `r packageVersion('otndo')`)"
 ---
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
