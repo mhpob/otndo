@@ -2,7 +2,7 @@
 title: "Data Push Summaries"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data Push Summaries}
+  %\VignetteIndexEntry{data-push-summaries}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
