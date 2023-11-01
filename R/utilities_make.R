@@ -1,10 +1,10 @@
 #' Place where functions live for the make_*_summary family of functions
 #'
-#' @param deployment blah blah blah document here
-#' @param type blah blah blah document here
-#' @param files blah blah blah document here
-#' @param temp_dir blahblah
-#' @param detection_file blah
+#' @param deployment Character. File path of deployment metadata.
+#' @param type Character. Type of data (deployment, qualified, or unqualified).
+#' @param files Character. File paths of files to be unzipped or written to a directory
+#' @param temp_dir Character. File path of temporary directory
+#' @param detection_file Character. File path of detections.
 #'
 #'
 #' @name utilities-make

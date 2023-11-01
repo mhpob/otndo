@@ -17,15 +17,15 @@ write_to_tempdir(type, files, temp_dir)
 extract_proj_name(detection_file)
 }
 \arguments{
-\item{deployment}{blah blah blah document here}
+\item{deployment}{Character. File path of deployment metadata.}
 
-\item{files}{blah blah blah document here}
+\item{files}{Character. File paths of files to be unzipped or written to a directory}
 
-\item{temp_dir}{blahblah}
+\item{temp_dir}{Character. File path of temporary directory}
 
-\item{type}{blah blah blah document here}
+\item{type}{Character. Type of data (deployment, qualified, or unqualified).}
 
-\item{detection_file}{blah}
+\item{detection_file}{Character. File path of detections.}
 }
 \description{
 Place where functions live for the make_*_summary family of functions
