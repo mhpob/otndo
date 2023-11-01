@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 ![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/otndo)
 [![R-CMD-check](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml)
+[![otndo status badge](https://mhpob.r-universe.dev/badges/otndo)](https://mhpob.r-universe.dev/otndo)
 <!-- badges: end -->
 
 *entiendo* /ˌenˈtjendo/ [ˌẽn̪ˈt̪jẽn̪.̪o]\   
