@@ -11,14 +11,15 @@
 #' @keywords internal
 clean_otn_deployment <- function(deployment){
 
-  # check if data dictionary sheet was deleted
-  if(length(readxl::excel_sheets(deployment)) != 2){
+  # Find which sheet has deployment data. If none are explicitly labeled, assume
+  #   it's sheet 1
+  sheet_id <- grep('dep', readxl::excel_sheets(deployment),
+                   ignore.case = T, value = T)
+  if(length(sheet_id) == 0){
     sheet_id <- 1
-  }else{
-    sheet_id <- 2
   }
 
-  # check for header
+  # Check for header: If the first row has no columns, it likely contains it.
   if(ncol(readxl::read_excel(deployment,
                              sheet = sheet_id,
                              range = 'A1')) == 0){
