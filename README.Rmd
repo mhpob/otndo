@@ -71,3 +71,10 @@ library(otndo)
 
 make_tag_push_summary(matched = file.path(td, 'pbsm_matched_detections_2018.csv'))
 ```
+
+````{=html}
+```{r, echo=FALSE, results='asis'}
+xfun::file_string('2023-11-17_PBSM_tag_push_summary.html')
+```
+````
+
