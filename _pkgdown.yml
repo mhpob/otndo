@@ -11,3 +11,4 @@ articles:
     navbar: ~
     contents:
     - data-push-summaries
+    - product
