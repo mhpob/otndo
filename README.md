@@ -24,21 +24,8 @@ English, bad pun; “*I understand (OTN data)*”
 
 ## Installation
 
-You can install the most-up-to-date version from
-[R-universe](https://mhpob.r-universe.dev/otndo) or
-[GitHub](https://github.com/mhpob/otndo).
-
-R-universe:
-
-``` r
-install.packages(
-  'otndo',
-  repos = c('https://mhpob.r-universe.dev',
-            'https://cloud.r-project.org')
-)
-```
-
-GitHub:
+You can install the development version of otndo from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("remotes")
