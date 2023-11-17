@@ -97,5 +97,5 @@ make_tag_push_summary(matched = file.path(td, 'pbsm_matched_detections_2018.csv'
 #> ✔    Done.
 ```
 
-<iframe src="https://github.com/mhpob/otndo/blob/incl-readme/inst/2023-11-17_PBSM_tag_push_summary.html" height="650" width="800">
+<iframe src="https://raw.githubusercontent.com/mhpob/otndo/incl-readme/inst/2023-11-17_PBSM_tag_push_summary.html" height="650" width="800">
 </iframe>
