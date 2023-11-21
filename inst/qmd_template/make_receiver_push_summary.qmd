@@ -46,7 +46,7 @@ push_log <- data.table::fread(params$push_log)
 #| label: n-pis
 #| warning: false
 
-pis <-  unique(qualified, by = c('trackercode', 'tag_contact_pi'))
+pis <-  unique(qualified, by = c('trackercode'))
 pis[, ':='(PI = strsplit(tag_contact_pi, ' \\(|\\)(, )?'),
             POC = strsplit(tag_contact_poc, ' \\(|\\)(, )?'))]
 pis[, ':='(PI = lapply(X = PI, function(.) .[!grepl('@', .)]),
@@ -105,7 +105,8 @@ otn_metadata_query <- paste0(
 
 otn_tables <- lapply(otn_metadata_query, fread)
 
-otn_tables <- lapply(otn_tables, function(.) .[!grepl('\\.', collectioncode), collectioncode := paste0('OTN.', collectioncode)])
+# otn_tables <- lapply(otn_tables, function(.) .[!grepl('\\.', collectioncode), collectioncode := paste0('OTN.', collectioncode)])
+otn_tables <- lapply(otn_tables, function(.) .[, collectioncode := gsub('.*\\.', '', collectioncode)])
 ```
 
 
@@ -144,8 +145,9 @@ mt <- merge(
 
 # mt <- merge(mt, pis[, .(trackercode, PI, POC, emails)])
 mt <- merge(mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
-mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
-                          paste0('OTN.', trackercode), trackercode)]
+# mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
+#                           paste0('OTN.', trackercode), trackercode)]
+mt[, trackercode := gsub('.*\\.', '', trackercode)]
 
 mt <- merge(mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
 
@@ -359,8 +361,9 @@ new_mt <- merge(
 )
 
 new_mt <- merge(new_mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
-new_mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
-                          paste0('ACT.', trackercode), trackercode)]
+# new_mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
+#                           paste0('ACT.', trackercode), trackercode)]
+new_mt[, trackercode := gsub('.*\\.', '', trackercode)]
 
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
 
@@ -378,13 +381,13 @@ reactable(new_mt,
             PI = colDef(html = T,
                          cell = function(value, index){
                            sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   mt$PI_emails[index], value)
+                                   new_mt$PI_emails[index], value)
                          },
                         minWidth = 150),
             POC = colDef(html = T,
                          cell = function(value, index){
                            sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   mt$POC_emails[index], value)
+                                   new_mt$POC_emails[index], value)
                          },
                          minWidth = 150),
             PI_emails = colDef(show = F),
