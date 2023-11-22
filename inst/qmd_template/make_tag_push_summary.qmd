@@ -108,13 +108,13 @@ otn_metadata_query <- paste0(
 
 otn_tables <- lapply(otn_metadata_query, fread)
 
-otn_tables <- lapply(otn_tables,
-                     function(.){
-                       .[!grepl('\\.', collectioncode),
-                         collectioncode := paste0('OTN.', collectioncode)]
-                     }
-)
-
+# otn_tables <- lapply(otn_tables,
+#                      function(.){
+#                        .[!grepl('\\.', collectioncode),
+#                          collectioncode := paste0('OTN.', collectioncode)]
+#                      }
+# )
+otn_tables <- lapply(otn_tables, function(.) .[, collectioncode := gsub('.*\\.', '', collectioncode)])
 ```
 
 ```{r}
@@ -154,8 +154,9 @@ mt <- merge(
 )
 
 mt <- merge(mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
-mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
-                          paste0('OTN.', detectedby), detectedby)]
+# mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
+#                           paste0('OTN.', detectedby), detectedby)]
+mt[, detectedby := gsub('.*\\.', '', detectedby)]
 
 mt <- merge(mt, otn_tables[[1]][, .(resource_full_name,
                                     detectedby = collectioncode)])
@@ -404,8 +405,9 @@ new_mt <- merge(
 
 new_mt <- merge(new_mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
 
-new_mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
-                          paste0('ACT.', detectedby), detectedby)]
+# new_mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
+#                           paste0('ACT.', detectedby), detectedby)]
+new_mt[, detectedby := gsub('.*\\.', '', detectedby)]
 
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, detectedby = collectioncode)])
 
@@ -423,13 +425,13 @@ reactable(new_mt,
             PI = colDef(html = T,
                          cell = function(value, index){
                            sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   mt$PI_emails[index], value)
+                                   new_mt$PI_emails[index], value)
                          },
                         minWidth = 150),
             POC = colDef(html = T,
                          cell = function(value, index){
                            sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   mt$POC_emails[index], value)
+                                   new_mt$POC_emails[index], value)
                          },
                          minWidth = 150),
             PI_emails = colDef(show = F),
