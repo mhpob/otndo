@@ -37,9 +37,11 @@ R-universe:
 
 ``` r
 install.packages(
-  'otndo',
-  repos = c('https://mhpob.r-universe.dev',
-            'https://cloud.r-project.org')
+  "otndo",
+  repos = c(
+    "https://mhpob.r-universe.dev",
+    "https://cloud.r-project.org"
+  )
 )
 ```
 
@@ -57,16 +59,19 @@ transmitter data:
 
 ``` r
 # Download some example data
-td <- file.path(tempdir(), 'otndo_test_files')
+td <- file.path(tempdir(), "otndo_test_files")
 dir.create(td)
 
 download.file(
-  paste0('https://members.oceantrack.org/data/repository/pbsm/',
-         'detection-extracts/pbsm_matched_detections_2018.zip'),
-  destfile = file.path(td, 'pbsm_matched_detections_2018.zip')
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_matched_detections_2018.zip"
+  ),
+  destfile = file.path(td, "pbsm_matched_detections_2018.zip")
 )
-unzip(file.path(td, 'pbsm_matched_detections_2018.zip'),
-      exdir = td)
+unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+  exdir = td
+)
 
 
 # Make a tag push summary
