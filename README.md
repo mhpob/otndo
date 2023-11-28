@@ -22,6 +22,11 @@ Spanish, 1st person indicative; “*I understand*”
 ***otndo*** /ˌoʊˈtjendo/ \[ˌoʊ̪ˈt̪jẽn̪.d̪o\]  
 English, bad pun; “*I understand (OTN data)*”
 
+The purpose of `otndo` is to provide a high-level summary of your
+acoustic telemetry transmitter matches from the Ocean Tracking Network,
+all while putting the “network” back in “tracking network” by noting the
+related projects and investigators.
+
 ## Installation
 
 You can install the most-up-to-date version from
@@ -45,9 +50,10 @@ GitHub:
 remotes::install_github("mhpob/otndo")
 ```
 
-## Example
+## Tag push summary example
 
-This is a basic example:
+This is a basic example of how you might use `otndo` to summarize your
+transmitter data:
 
 ``` r
 # Download some example data
@@ -66,33 +72,108 @@ unzip(file.path(td, 'pbsm_matched_detections_2018.zip'),
 # Make a tag push summary
 library(otndo)
 
-make_tag_push_summary(matched = file.path(td, 'pbsm_matched_detections_2018.csv'))
-#> ℹ Asking OTN GeoServer for project information...
-#> ℹ Writing report...
-#> 
-#> 
-#> processing file: make_tag_push_summary.qmd
-#>   |                                                  |                                          |   0%  |                                                  |.                                         |   2%                              |                                                  |..                                        |   4% [setup]                      |                                                  |...                                       |   7%                              |                                                  |....                                      |   9% [packages]                   |                                                  |.....                                     |  11%                              |                                                  |......                                    |  13% [extraction-files-read]      |                                                  |.......                                   |  16%                              |                                                  |.......                                   |  18% [n-pis]                      |                                                  |........                                  |  20%                              |                                                  |.........                                 |  22% [otn-query]                  |                                                  |..........                                |  24%                              |                                                  |...........                               |  27% [proper-urls]                |                                                  |............                              |  29%                              |                                                  |.............                             |  31% [otn-match-table]            |                                                  |..............                            |  33%                              |                                                  |...............                           |  36% [otn-match-map]              |                                                  |................                          |  38%                              |                                                  |.................                         |  40% [temporal-distribution]      |                                                  |..................                        |  42%                              |                                                  |...................                       |  44% [abacus-plot]                |                                                  |....................                      |  47%                              |                                                  |.....................                     |  49% [station-summary-table]      |                                                  |.....................                     |  51%                              |                                                  |......................                    |  53% [station-spatial]            |                                                  |.......................                   |  56%                              |                                                  |........................                  |  58% [detection-map-leaflet]      |                                                  |.........................                 |  60%                              |                                                  |..........................                |  62% [tags-remaining]             |                                                  |...........................               |  64%                              |                                                  |............................              |  67% [unnamed-chunk-14]           |                                                  |.............................             |  69%                              |                                                  |..............................            |  71% [unnamed-chunk-15]           |                                                  |...............................           |  73%                              |                                                  |................................          |  76% [new-otn-match-table]        |                                                  |.................................         |  78%                              |                                                  |..................................        |  80% [new-otn-match-map]          |                                                  |...................................       |  82%                              |                                                  |...................................       |  84% [new-station-summary-table]  |                                                  |....................................      |  87%                              |                                                  |.....................................     |  89% [new-station-spatial]        |                                                  |......................................    |  91%                              |                                                  |.......................................   |  93% [new-detection-map-leaflet]  |                                                  |........................................  |  96%                              |                                                  |......................................... |  98% [unnamed-chunk-21]           |                                                  |..........................................| 100%                                                                                                                                                  
-#> output file: make_tag_push_summary.knit.md
-#> 
-#> pandoc 
-#>   to: html
-#>   output-file: make_tag_push_summary.html
-#>   standalone: true
-#>   self-contained: true
-#>   section-divs: true
-#>   html-math-method: mathjax
-#>   wrap: none
-#>   default-image-extension: png
-#>   
-#> metadata
-#>   document-css: false
-#>   link-citations: true
-#>   date-format: long
-#>   lang: en
-#>   title: '`r paste(''Transmitter data push summary:'', params$project_name)`'
-#>   author: 'Created with the [`otndo` R package](https://otndo.obrien.page) (v. `r packageVersion(''otndo'')`)'
-#>   
-#> Output created: make_tag_push_summary.html
-#> ✔    Done.
+make_tag_push_summary(
+  matched = file.path(td, 'pbsm_matched_detections_2018.csv')
+)
 ```
+
+You will get a report in your working directory with a few goodies!
+
+A summary of the number of matched individuals and detections by
+researcher and project:
+![](man/figures/readme-tag_t1_detection_table.png)
+
+The overall extent of the projects to which your tags have been matched:
+![](man/figures/README-tag_f1_geographic_extent.png)
+
+When your fish were heard in each project:
+![](man/figures/README-tag_f2_time.png)
+
+The ever-ubiquitous “abacus plot”, showing when each tag was heard,
+colored by project: ![](man/figures/README-tag_f3_abacus.png)
+
+An interactive map showing detections by receiver:
+![](man/figures/README-tag_f4_leaflet.png)
+
+A general estimate of the number of transmitters that were active at a
+given date: ![](man/figures/README-tag_f5_transmitter_loss.png)
+
+## Receiver push summary example
+
+This is a basic example of how you might use `otndo` to summarize your
+receiver data:
+
+``` r
+# Download some example data
+
+## Deployment metadata
+download.file('https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls',
+              destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),
+              mode = 'wb')
+
+## Qualified detections
+download.file('https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip',
+              destfile = file.path(td, 'pbsm_qualified_detections_2018.zip'))
+unzip(file.path(td, 'pbsm_qualified_detections_2018.zip'),
+      exdir = td)
+
+## Unqualified detections
+download.file('https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_unqualified_detections_2018.zip',
+              destfile = file.path(td, 'pbsm_unqualified_detections_2018.zip'))
+unzip(file.path(td, 'pbsm_unqualified_detections_2018.zip'),
+      exdir = td)
+
+
+# Make a receiver push summary
+make_receiver_push_summary(
+  qualified = file.path(td, 'pbsm_qualified_detections_2018.csv'),
+  unqualified = file.path(td, 'pbsm_unqualified_detections_2018.csv'),
+  deployment = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls')
+)
+```
+
+A summary of the number of matched individuals and detections by
+researcher and project:
+
+![](man/figures/README-rec_t1.png)
+
+The overall extent of the projects associated with the tags your
+receivers have heard:
+
+![](man/figures/README-rec_f1.png)
+
+When your receivers heard each project’s fish:
+
+![](man/figures/README-rec_f2.png)
+
+A Gantt chart of your receivers’ deployments:
+
+![](man/figures/README-rec_f3.png)
+
+The number of detections and individuals per receiver:
+
+![](man/figures/README-rec_t2.png)
+
+An interactive map showing detections by receiver:
+
+![](man/figures/README-rec_f4.png)
+
+A summary of your unmatched detections, including those that are likely
+false…
+
+![](man/figures/README-rec_t3.png)
+
+…and those that may be real!
+
+![](man/figures/README-rec_t4.png)
+
+A summary of when the unmatched detections occurred, by receiver:
+
+![](man/figures/README-rec_f6.png)
+
+## Getting in contact
+
+If something doesn’t work the way it should or if you just need a little
+help, feel free to [open an issue on
+GitHub](https://github.com/mhpob/otndo/issues) or [email me (Mike
+O’Brien: obrien@umces.edu) directly](mailto:obrien@umces.edu).
