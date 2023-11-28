@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="index.html">otndo</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.05</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.06</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,6 +77,7 @@
 Spanish, 1st person indicative; “<em>I understand</em>”</p>
 <p><strong><em>otndo</em></strong> /ˌoʊˈtjendo/ [ˌoʊ̪ˈt̪jẽn̪.d̪o]<br>
 English, bad pun; “<em>I understand (OTN data)</em>”</p>
+<p>The purpose of <code>otndo</code> is to provide a high-level summary of your acoustic telemetry transmitter matches from the Ocean Tracking Network, all while putting the “network” back in “tracking network” by noting the related projects and investigators.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -84,9 +85,11 @@ English, bad pun; “<em>I understand (OTN data)</em>”</p>
 <p>R-universe:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span></span>
-<span>  <span class="st">'otndo'</span>,</span>
-<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://mhpob.r-universe.dev'</span>,</span>
-<span>            <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span></span>
+<span>  <span class="st">"otndo"</span>,</span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"https://mhpob.r-universe.dev"</span>,</span>
+<span>    <span class="st">"https://cloud.r-project.org"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -94,55 +97,94 @@ English, bad pun; “<em>I understand (OTN data)</em>”</p>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mhpob/otndo"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="tag-push-summary-example">Tag push summary example<a class="anchor" aria-label="anchor" href="#tag-push-summary-example"></a>
 </h2>
-<p>This is a basic example:</p>
+<p>This is a basic example of how you might use <code>otndo</code> to summarize your transmitter data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download some example data</span></span>
-<span><span class="va">td</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">'otndo_test_files'</span><span class="op">)</span></span>
+<span><span class="va">td</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"otndo_test_files"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'https://members.oceantrack.org/data/repository/pbsm/'</span>,</span>
-<span>         <span class="st">'detection-extracts/pbsm_matched_detections_2018.zip'</span><span class="op">)</span>,</span>
-<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_matched_detections_2018.zip'</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
+<span>    <span class="st">"detection-extracts/pbsm_matched_detections_2018.zip"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_matched_detections_2018.zip"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_matched_detections_2018.zip'</span><span class="op">)</span>,</span>
-<span>      exdir <span class="op">=</span> <span class="va">td</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_matched_detections_2018.zip"</span><span class="op">)</span>,</span>
+<span>  exdir <span class="op">=</span> <span class="va">td</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># Make a tag push summary</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mhpob.github.io/otndo/" class="external-link">otndo</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/make_tag_push_summary.html">make_tag_push_summary</a></span><span class="op">(</span>matched <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_matched_detections_2018.csv'</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ℹ Asking OTN GeoServer for project information...</span></span>
-<span><span class="co">#&gt; ℹ Writing report...</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; processing file: make_tag_push_summary.qmd</span></span>
-<span><span class="co">#&gt;   |                                                  |                                          |   0%  |                                                  |.                                         |   2%                              |                                                  |..                                        |   4% [setup]                      |                                                  |...                                       |   7%                              |                                                  |....                                      |   9% [packages]                   |                                                  |.....                                     |  11%                              |                                                  |......                                    |  13% [extraction-files-read]      |                                                  |.......                                   |  16%                              |                                                  |.......                                   |  18% [n-pis]                      |                                                  |........                                  |  20%                              |                                                  |.........                                 |  22% [otn-query]                  |                                                  |..........                                |  24%                              |                                                  |...........                               |  27% [proper-urls]                |                                                  |............                              |  29%                              |                                                  |.............                             |  31% [otn-match-table]            |                                                  |..............                            |  33%                              |                                                  |...............                           |  36% [otn-match-map]              |                                                  |................                          |  38%                              |                                                  |.................                         |  40% [temporal-distribution]      |                                                  |..................                        |  42%                              |                                                  |...................                       |  44% [abacus-plot]                |                                                  |....................                      |  47%                              |                                                  |.....................                     |  49% [station-summary-table]      |                                                  |.....................                     |  51%                              |                                                  |......................                    |  53% [station-spatial]            |                                                  |.......................                   |  56%                              |                                                  |........................                  |  58% [detection-map-leaflet]      |                                                  |.........................                 |  60%                              |                                                  |..........................                |  62% [tags-remaining]             |                                                  |...........................               |  64%                              |                                                  |............................              |  67% [unnamed-chunk-14]           |                                                  |.............................             |  69%                              |                                                  |..............................            |  71% [unnamed-chunk-15]           |                                                  |...............................           |  73%                              |                                                  |................................          |  76% [new-otn-match-table]        |                                                  |.................................         |  78%                              |                                                  |..................................        |  80% [new-otn-match-map]          |                                                  |...................................       |  82%                              |                                                  |...................................       |  84% [new-station-summary-table]  |                                                  |....................................      |  87%                              |                                                  |.....................................     |  89% [new-station-spatial]        |                                                  |......................................    |  91%                              |                                                  |.......................................   |  93% [new-detection-map-leaflet]  |                                                  |........................................  |  96%                              |                                                  |......................................... |  98% [unnamed-chunk-21]           |                                                  |..........................................| 100%                                                                                                                                                  </span></span>
-<span><span class="co">#&gt; output file: make_tag_push_summary.knit.md</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; pandoc </span></span>
-<span><span class="co">#&gt;   to: html</span></span>
-<span><span class="co">#&gt;   output-file: make_tag_push_summary.html</span></span>
-<span><span class="co">#&gt;   standalone: true</span></span>
-<span><span class="co">#&gt;   self-contained: true</span></span>
-<span><span class="co">#&gt;   section-divs: true</span></span>
-<span><span class="co">#&gt;   html-math-method: mathjax</span></span>
-<span><span class="co">#&gt;   wrap: none</span></span>
-<span><span class="co">#&gt;   default-image-extension: png</span></span>
-<span><span class="co">#&gt;   </span></span>
-<span><span class="co">#&gt; metadata</span></span>
-<span><span class="co">#&gt;   document-css: false</span></span>
-<span><span class="co">#&gt;   link-citations: true</span></span>
-<span><span class="co">#&gt;   date-format: long</span></span>
-<span><span class="co">#&gt;   lang: en</span></span>
-<span><span class="co">#&gt;   title: '`r paste(''Transmitter data push summary:'', params$project_name)`'</span></span>
-<span><span class="co">#&gt;   author: 'Created with the [`otndo` R package](https://otndo.obrien.page) (v. `r packageVersion(''otndo'')`)'</span></span>
-<span><span class="co">#&gt;   </span></span>
-<span><span class="co">#&gt; Output created: make_tag_push_summary.html</span></span>
-<span><span class="co">#&gt; ✔    Done.</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/make_tag_push_summary.html">make_tag_push_summary</a></span><span class="op">(</span></span>
+<span>  matched <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_matched_detections_2018.csv'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>You will get a report in your working directory with a few goodies!</p>
+<p>A summary of the number of matched individuals and detections by researcher and project: <img src="reference/figures/readme-tag_t1_detection_table.png"></p>
+<p>The overall extent of the projects to which your tags have been matched: <img src="reference/figures/README-tag_f1_geographic_extent.png"></p>
+<p>When your fish were heard in each project: <img src="reference/figures/README-tag_f2_time.png"></p>
+<p>The ever-ubiquitous “abacus plot”, showing when each tag was heard, colored by project: <img src="reference/figures/README-tag_f3_abacus.png"></p>
+<p>An interactive map showing detections by receiver: <img src="reference/figures/README-tag_f4_leaflet.png"></p>
+<p>A general estimate of the number of transmitters that were active at a given date: <img src="reference/figures/README-tag_f5_transmitter_loss.png"></p>
+</div>
+<div class="section level2">
+<h2 id="receiver-push-summary-example">Receiver push summary example<a class="anchor" aria-label="anchor" href="#receiver-push-summary-example"></a>
+</h2>
+<p>This is a basic example of how you might use <code>otndo</code> to summarize your receiver data:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Download some example data</span></span>
+<span></span>
+<span><span class="co">## Deployment metadata</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="st">'https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls'</span>,</span>
+<span>              destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm-instrument-deployment-short-form-2018.xls'</span><span class="op">)</span>,</span>
+<span>              mode <span class="op">=</span> <span class="st">'wb'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Qualified detections</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="st">'https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip'</span>,</span>
+<span>              destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_qualified_detections_2018.zip'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_qualified_detections_2018.zip'</span><span class="op">)</span>,</span>
+<span>      exdir <span class="op">=</span> <span class="va">td</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Unqualified detections</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="st">'https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_unqualified_detections_2018.zip'</span>,</span>
+<span>              destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_unqualified_detections_2018.zip'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_unqualified_detections_2018.zip'</span><span class="op">)</span>,</span>
+<span>      exdir <span class="op">=</span> <span class="va">td</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Make a receiver push summary</span></span>
+<span><span class="fu"><a href="reference/make_receiver_push_summary.html">make_receiver_push_summary</a></span><span class="op">(</span></span>
+<span>  qualified <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_qualified_detections_2018.csv'</span><span class="op">)</span>,</span>
+<span>  unqualified <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_unqualified_detections_2018.csv'</span><span class="op">)</span>,</span>
+<span>  deployment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm-instrument-deployment-short-form-2018.xls'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>A summary of the number of matched individuals and detections by researcher and project:</p>
+<p><img src="reference/figures/README-rec_t1.png"></p>
+<p>The overall extent of the projects associated with the tags your receivers have heard:</p>
+<p><img src="reference/figures/README-rec_f1.png"></p>
+<p>When your receivers heard each project’s fish:</p>
+<p><img src="reference/figures/README-rec_f2.png"></p>
+<p>A Gantt chart of your receivers’ deployments:</p>
+<p><img src="reference/figures/README-rec_f3.png"></p>
+<p>The number of detections and individuals per receiver:</p>
+<p><img src="reference/figures/README-rec_t2.png"></p>
+<p>An interactive map showing detections by receiver:</p>
+<p><img src="reference/figures/README-rec_f4.png"></p>
+<p>A summary of your unmatched detections, including those that are likely false…</p>
+<p><img src="reference/figures/README-rec_t3.png"></p>
+<p>…and those that may be real!</p>
+<p><img src="reference/figures/README-rec_t4.png"></p>
+<p>A summary of when the unmatched detections occurred, by receiver:</p>
+<p><img src="reference/figures/README-rec_f6.png"></p>
+</div>
+<div class="section level2">
+<h2 id="getting-in-contact">Getting in contact<a class="anchor" aria-label="anchor" href="#getting-in-contact"></a>
+</h2>
+<p>If something doesn’t work the way it should or if you just need a little help, feel free to <a href="https://github.com/mhpob/otndo/issues" class="external-link">open an issue on GitHub</a> or <a href="mailto:obrien@umces.edu">email me (Mike O’Brien: obrien@umces.edu) directly</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
