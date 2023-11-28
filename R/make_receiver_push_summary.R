@@ -85,7 +85,10 @@ make_receiver_push_summary <- function(
                             package = "otndo")
   }
 
-
+  if(is.null(since)){
+    since <- read.csv(push_log)
+    since <- since[nrow(since),]
+  }
 
   # Create a temporary directory to store intermediate files ----
   td <- file.path(tempdir(), 'otndo_files')

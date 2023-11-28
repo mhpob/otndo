@@ -53,6 +53,10 @@ make_tag_push_summary <- function(
                             package = "otndo")
   }
 
+  if(is.null(since)){
+    since <- read.csv(push_log)
+    since <- since[nrow(since),]
+  }
 
 
   # Set up temporary directory ----
