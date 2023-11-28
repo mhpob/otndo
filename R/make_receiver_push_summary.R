@@ -23,24 +23,30 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' td <- file.path(tempdir(), 'matos_test_files')
+#' td <- file.path(tempdir(), "matos_test_files")
 #' dir.create(td)
 #'
 #' download.file(
-#'   paste0('https://members.oceantrack.org/data/repository/pbsm/',
-#'          'data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls'),
-#'   destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),
-#'   mode = 'wb'
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/pbsm/",
+#'     "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"
+#'   ),
+#'   destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
+#'   mode = "wb"
 #' )
 #'
 #'
 #' download.file(
-#'   paste0('https://members.oceantrack.org/data/repository/pbsm/',
-#'          'detection-extracts/pbsm_qualified_detections_2018.zip'),
-#'   destfile = file.path(td, 'pbsm_qualified_detections_2018.zip')
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/pbsm/",
+#'     "detection-extracts/pbsm_qualified_detections_2018.zip"
+#'   ),
+#'   destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
 #' )
-#' unzip(file.path(td, 'pbsm_qualified_detections_2018.zip'),
-#'       exdir = td)
+#' unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
+#'   exdir = td
+#' )
+#' }
 
 #' download.file(
 #'    paste0('https://members.oceantrack.org/data/repository/pbsm/',
@@ -68,30 +74,30 @@ make_receiver_push_summary <- function(
     deployment = NULL,
     out_dir = getwd(),
     since = NULL,
-    rmd = FALSE
-){
+    rmd = FALSE) {
   # Try to provide a helpful error if there are missing files.
-  if(any(is.null(qualified), is.null(unqualified), is.null(deployment))){
-    cli::cli_abort('Must provide at least one each of {.href [qualified detections, unqualified detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)}, and deployment metadata.')
+  if (any(is.null(qualified), is.null(unqualified), is.null(deployment))) {
+    cli::cli_abort("Must provide at least one each of {.href [qualified detections, unqualified detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)}, and deployment metadata.")
   }
 
 
 
   # Push log ----
-  if(update_push_log == TRUE){
-    push_log <- 'https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv'
-  }else{
+  if (update_push_log == TRUE) {
+    push_log <- "https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv"
+  } else {
     push_log <- system.file("push_log.csv",
-                            package = "otndo")
+      package = "otndo"
+    )
   }
 
 
 
   # Create a temporary directory to store intermediate files ----
-  td <- file.path(tempdir(), 'otndo_files')
+  td <- file.path(tempdir(), "otndo_files")
 
   # remove previous files. Needed if things errored out.
-  if(file.exists(td)){
+  if (file.exists(td)) {
     unlink(td, recursive = T)
   }
 
@@ -101,48 +107,56 @@ make_receiver_push_summary <- function(
 
   # Qualified detections ----
   ## Unzip if zipped detections were provided
-  if(any(grepl('\\.zip$', qualified))){
-    qualified <- provided_file_unzip(files = qualified,
-                                     temp_dir = td)
-
+  if (any(grepl("\\.zip$", qualified))) {
+    qualified <- provided_file_unzip(
+      files = qualified,
+      temp_dir = td
+    )
   }
 
   ## Import and write to tempdir
-  qualified_filepath <- write_to_tempdir(type = 'qualified',
-                                         files = qualified,
-                                         temp_dir = td)
+  qualified_filepath <- write_to_tempdir(
+    type = "qualified",
+    files = qualified,
+    temp_dir = td
+  )
 
 
 
 
   # Unqualified detections ----
   ## Unzip if zipped detections were provided
-  if(any(grepl('\\.zip$', unqualified))){
-    unqualified <- provided_file_unzip(files = unqualified,
-                                       temp_dir = td)
-
+  if (any(grepl("\\.zip$", unqualified))) {
+    unqualified <- provided_file_unzip(
+      files = unqualified,
+      temp_dir = td
+    )
   }
 
   ## Import and write to tempdir
-  unqualified_filepath <- write_to_tempdir(type = 'unqualified',
-                                           files = unqualified,
-                                           temp_dir = td)
+  unqualified_filepath <- write_to_tempdir(
+    type = "unqualified",
+    files = unqualified,
+    temp_dir = td
+  )
 
 
 
 
   # Deployment log ----
   ## Import and write to tempdir
-  deployment_filepath <- write_to_tempdir(type = 'deployment',
-                                          files = deployment,
-                                          temp_dir = td)
+  deployment_filepath <- write_to_tempdir(
+    type = "deployment",
+    files = deployment,
+    temp_dir = td
+  )
 
 
 
 
 
   # Ask OTN's GeoServer for name information ----
-  cli::cli_alert_info('Asking OTN GeoServer for project information...')
+  cli::cli_alert_info("Asking OTN GeoServer for project information...")
 
   project_info <- extract_proj_name(qualified_filepath)
 
@@ -153,16 +167,19 @@ make_receiver_push_summary <- function(
 
 
   # Write report ----
-  cli::cli_alert_info('Writing report...')
+  cli::cli_alert_info("Writing report...")
 
-  file.copy(from = system.file('qmd_template',
-                               'make_receiver_push_summary.qmd',
-                               package = 'otndo'),
-            to = td)
+  file.copy(
+    from = system.file("qmd_template",
+      "make_receiver_push_summary.qmd",
+      package = "otndo"
+    ),
+    to = td
+  )
 
-  if(Sys.which('quarto') != '' & rmd == FALSE){
+  if (Sys.which("quarto") != "" & rmd == FALSE) {
     quarto::quarto_render(
-      input = file.path(td, 'make_receiver_push_summary.qmd'),
+      input = file.path(td, "make_receiver_push_summary.qmd"),
       execute_params = list(
         project_name = project_name,
         project_number = project_number,
@@ -173,9 +190,9 @@ make_receiver_push_summary <- function(
         since = since
       )
     )
-  }else{
+  } else {
     rmarkdown::render(
-      input = file.path(td, 'make_receiver_push_summary.qmd'),
+      input = file.path(td, "make_receiver_push_summary.qmd"),
       params = list(
         project_name = project_name,
         project_number = project_number,
@@ -188,14 +205,19 @@ make_receiver_push_summary <- function(
     )
   }
 
-  file.copy(from = file.path(td, 'make_receiver_push_summary.html'),
-            to = file.path(out_dir,
-                           paste(Sys.Date(),
-                                 project_code,
-                                 'receiver_push_summary.html',
-                                 sep = '_')))
+  file.copy(
+    from = file.path(td, "make_receiver_push_summary.html"),
+    to = file.path(
+      out_dir,
+      paste(Sys.Date(),
+        project_code,
+        "receiver_push_summary.html",
+        sep = "_"
+      )
+    )
+  )
 
-  cli::cli_alert_success('   Done.')
+  cli::cli_alert_success("   Done.")
 
   unlink(td, recursive = T)
 }
@@ -211,4 +233,3 @@ make_receiver_push_summary <- function(
 #                  unqualified,
 # deployment = c('NAVYKENN_metadata_deployment_202205.xlsx',
 #                'NAVYKENN_metadata_deployment_202210.xlsx'))
-

@@ -38,8 +38,8 @@ library(reactable)
 matched <- fread(params$matched)
 matched[, day := as.Date(datecollected)]
 
-release <- matched[receiver == 'release']
-matched <- matched[receiver != 'release']
+release <- matched[receiver == "release"]
+matched <- matched[receiver != "release"]
 
 push_log <- fread(params$push_log)
 ```
@@ -49,39 +49,56 @@ push_log <- fread(params$push_log)
 #| label: n-pis
 #| warning: false
 
-pis <-  unique(matched, by = c('detectedby', 'contact_poc', 'contact_pi'))
-pis[, ':='(PI = strsplit(contact_pi, ' \\(|\\)(, )?'),
-           POC = strsplit(contact_poc, ' \\(|\\)(, )?'))]
-pis[, ':='(PI = lapply(X = PI, function(.) .[!grepl('@', .)]),
-           POC = lapply(X = POC, function(.) .[!grepl('@', .)]),
-           PI_emails = lapply(X = PI, function(.) .[grepl('@', .)]),
-           POC_emails = lapply(X = POC, function(.) .[grepl('@', .)]))]
-pis[, ':='(PI = unlist(lapply(X = PI,
-                               function(.) paste(., collapse = ', '))),
-            POC = unlist(lapply(X = POC,
-                                function(.) paste(., collapse = ', '))),
-            emails = t(mapply(c, PI_emails, POC_emails,
-                              # Need simplify=F arg to mapply in case no rows have
-                              # multiple emails in a column: simplify=T
-                              # will "simplify" to a matrix rather than keep as a list
-                              SIMPLIFY = FALSE)))] 
-pis[, ':='(emails = unlist(
+pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
+pis[, ":="(PI = strsplit(contact_pi, " \\(|\\)(, )?"),
+  POC = strsplit(contact_poc, " \\(|\\)(, )?"))]
+pis[, ":="(PI = lapply(X = PI, function(.) .[!grepl("@", .)]),
+  POC = lapply(X = POC, function(.) .[!grepl("@", .)]),
+  PI_emails = lapply(X = PI, function(.) .[grepl("@", .)]),
+  POC_emails = lapply(X = POC, function(.) .[grepl("@", .)]))]
+pis[, ":="(PI = unlist(lapply(
+  X = PI,
+  function(.) paste(., collapse = ", ")
+)),
+POC = unlist(lapply(
+  X = POC,
+  function(.) paste(., collapse = ", ")
+)),
+emails = t(mapply(c, PI_emails, POC_emails,
+  # Need simplify=F arg to mapply in case no rows have
+  # multiple emails in a column: simplify=T
+  # will "simplify" to a matrix rather than keep as a list
+  SIMPLIFY = FALSE
+)))]
+pis[, ":="(emails = unlist(
   lapply(
-    lapply(emails,
-           unique),
-    paste, collapse = '\n')
+    lapply(
+      emails,
+      unique
+    ),
+    paste,
+    collapse = "\n"
+  )
 ),
 PI_emails = unlist(
   lapply(
-    lapply(PI_emails,
-           unique),
-    paste, collapse = ',')
+    lapply(
+      PI_emails,
+      unique
+    ),
+    paste,
+    collapse = ","
+  )
 ),
 POC_emails = unlist(
   lapply(
-    lapply(POC_emails,
-           unique),
-    paste, collapse = ',')
+    lapply(
+      POC_emails,
+      unique
+    ),
+    paste,
+    collapse = ","
+  )
 ))]
 ```
 
@@ -90,20 +107,24 @@ POC_emails = unlist(
 
 projects <- unique(matched$detectedby)
 
-table_name <- c('otn_resources_metadata_points',
-                'project_metadata')
+table_name <- c(
+  "otn_resources_metadata_points",
+  "project_metadata"
+)
 
 otn_metadata_query <- paste0(
   "https://members.oceantrack.org/geoserver/otn/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=otn:",
   table_name,
   "&outputFormat=csv&CQL_FILTER=strMatches(collectioncode,'",
   paste(
-    paste0('.*',
-           gsub('.*\\.', '', projects)
+    paste0(
+      ".*",
+      gsub(".*\\.", "", projects)
     ),
-    collapse = '|'),
+    collapse = "|"
+  ),
   "')=true"
-) |> 
+) |>
   URLencode()
 
 otn_tables <- lapply(otn_metadata_query, fread)
@@ -114,7 +135,7 @@ otn_tables <- lapply(otn_metadata_query, fread)
 #                          collectioncode := paste0('OTN.', collectioncode)]
 #                      }
 # )
-otn_tables <- lapply(otn_tables, function(.) .[, collectioncode := gsub('.*\\.', '', collectioncode)])
+otn_tables <- lapply(otn_tables, function(.) .[, collectioncode := gsub(".*\\.", "", collectioncode)])
 ```
 
 ```{r}
@@ -128,8 +149,8 @@ otn_tables <- lapply(otn_tables, function(.) .[, collectioncode := gsub('.*\\.',
 #   otn <- paste0('https://members.oceantrack.org/OTN/project?ccode=ACT.PROJ',
 #                 params$project_number)
 # }else{
-  act <- 'https://matos.asascience.com/project'
-  otn <- 'https://members.oceantrack.org/OTN/projects'
+act <- "https://matos.asascience.com/project"
+otn <- "https://members.oceantrack.org/OTN/projects"
 # }
 ```
 
@@ -148,50 +169,64 @@ A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(ma
 #| fig-cap-location: top
 
 mt <- merge(
-  matched[, .(detections = .N), by = 'detectedby'],
-  unique(matched, by = c('tagname', 'detectedby'))[, .(individuals = .N),
-                                                      by = 'detectedby']
+  matched[, .(detections = .N), by = "detectedby"],
+  unique(matched, by = c("tagname", "detectedby"))[, .(individuals = .N),
+    by = "detectedby"
+  ]
 )
 
 mt <- merge(mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
 # mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
 #                           paste0('OTN.', detectedby), detectedby)]
-mt[, detectedby := gsub('.*\\.', '', detectedby)]
+mt[, detectedby := gsub(".*\\.", "", detectedby)]
 
 mt <- merge(mt, otn_tables[[1]][, .(resource_full_name,
-                                    detectedby = collectioncode)])
+  detectedby = collectioncode
+)])
 
-mt[, ':='(network = gsub('\\..*', '', detectedby),
-          code = gsub('.*\\.', '', detectedby),
-          detectedby = NULL,
-          PI = fifelse(PI == 'NA', '', PI),
-          POC = fifelse(POC == 'NA', '', POC))]
+mt[, ":="(network = gsub("\\..*", "", detectedby),
+  code = gsub(".*\\.", "", detectedby),
+  detectedby = NULL,
+  PI = fifelse(PI == "NA", "", PI),
+  POC = fifelse(POC == "NA", "", POC))]
 
-mt <- mt[, .(PI, POC, resource_full_name, network, code,
-             detections, individuals,PI_emails, POC_emails)]
-setnames(mt, c('PI', 'POC', 'Project name', 'Network', 'Project code',
-               'Detections', 'Individuals', 'PI_emails', 'POC_emails'))
+mt <- mt[, .(
+  PI, POC, resource_full_name, network, code,
+  detections, individuals, PI_emails, POC_emails
+)]
+setnames(mt, c(
+  "PI", "POC", "Project name", "Network", "Project code",
+  "Detections", "Individuals", "PI_emails", "POC_emails"
+))
 
-setorder(mt, -'Detections', -'Individuals')
+setorder(mt, -"Detections", -"Individuals")
 
 reactable(mt,
-          columns = list(
-            PI = colDef(html = T,
-                         cell = function(value, index){
-                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   mt$PI_emails[index], value)
-                         },
-                        minWidth = 150),
-            POC = colDef(html = T,
-                         cell = function(value, index){
-                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   mt$POC_emails[index], value)
-                         },
-                         minWidth = 150),
-            PI_emails = colDef(show = F),
-            POC_emails = colDef(show = F),
-            `Project name` = colDef(minWidth = 200)
-          )
+  columns = list(
+    PI = colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          mt$PI_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    POC = colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          mt$POC_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    PI_emails = colDef(show = F),
+    POC_emails = colDef(show = F),
+    `Project name` = colDef(minWidth = 200)
+  )
 )
 ```
 
@@ -201,18 +236,21 @@ reactable(mt,
 
 otn_sf <- otn_tables[[1]] |>
   data.frame() |>
-  st_as_sf(wkt = 'the_geom', crs = 4326)
+  st_as_sf(wkt = "the_geom", crs = 4326)
 otn_limits <- st_bbox(otn_sf)
 
-natural_earth <- st_read(system.file("ne_110m_coastline.gpkg", 
-                                     package = "otndo"), quiet = T)
+natural_earth <- st_read(system.file("ne_110m_coastline.gpkg",
+  package = "otndo"
+), quiet = T)
 
 ggplot() +
   geom_sf(data = natural_earth) +
-  geom_sf(data = otn_sf, fill = NA, color = 'blue') +
-  coord_sf(xlim = c(otn_limits['xmin'] - 5, otn_limits['xmax'] + 5),
-           ylim = c(otn_limits['ymin'] - 5, otn_limits['ymax'] + 5)) +
-  labs(title = 'Geographic extent of detected projects') +
+  geom_sf(data = otn_sf, fill = NA, color = "blue") +
+  coord_sf(
+    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
+    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+  ) +
+  labs(title = "Geographic extent of detected projects") +
   theme_minimal()
 ```
 
@@ -220,40 +258,50 @@ ggplot() +
 #| label: temporal-distribution
 #| fig-cap: Figure 2. Temporal distribution of detections by external project, i.e., the dates when other projects heard this project's fish.
 
-proj_order_ns <- matched[, .(lat = median(latitude)), by = 'detectedby']
+proj_order_ns <- matched[, .(lat = median(latitude)), by = "detectedby"]
 setorder(proj_order_ns, lat)
 
-matched[, detectedby_plot := factor(gsub('.*\\.', '', detectedby), 
-                                    ordered = T,
-                                    levels = gsub('.*\\.', '',proj_order_ns$detectedby))]
+matched[, detectedby_plot := factor(gsub(".*\\.", "", detectedby),
+  ordered = T,
+  levels = gsub(".*\\.", "", proj_order_ns$detectedby)
+)]
 
-matched_time <- unique(matched, by = c('detectedby', 'day'))
+matched_time <- unique(matched, by = c("detectedby", "day"))
 ggplot(matched_time) +
   geom_tile(aes(x = day, y = detectedby_plot)) +
-  labs(x = '', y = '',
-       subtitle = 'Temporal distribution of detections by project') +
+  labs(
+    x = "", y = "",
+    subtitle = "Temporal distribution of detections by project"
+  ) +
   theme_minimal()
 ```
 
 ```{r}
 #| label: abacus-plot
 #| fig-cap: Figure 3. Abacus plot of detected transmitters, colored by OTN node projects.
-matched_abacus <- unique(matched, by = c('detectedby', 'day', 'tagname'))
+matched_abacus <- unique(matched, by = c("detectedby", "day", "tagname"))
 
 ggplot() +
   geom_hline(yintercept = sort(unique(release$tagname))[
-    seq(2, uniqueN(release$tagname), by = 2)], color = 'gray90') +
-  
-  geom_tile(data = matched_abacus,
-            aes(x = day, y = tagname, fill = detectedby_plot)) +
-  geom_tile(data = release, aes(x = day, y = tagname), width = 0.5)+
-  scale_y_discrete(limits = sort(unique(release$tagname)),
-                   breaks = sort(unique(release$tagname))[
-                     seq(1, uniqueN(release$tagname), by = 2)])+
-  scale_fill_viridis_d(option = 'H') +
-  labs(x = NULL, y = NULL, fill = NULL, 
-      title = 'Transmitter presence in Arrays',
-      subtitle = 'Note that the Y axis is alternating') +
+    seq(2, uniqueN(release$tagname), by = 2)
+  ], color = "gray90") +
+  geom_tile(
+    data = matched_abacus,
+    aes(x = day, y = tagname, fill = detectedby_plot)
+  ) +
+  geom_tile(data = release, aes(x = day, y = tagname), width = 0.5) +
+  scale_y_discrete(
+    limits = sort(unique(release$tagname)),
+    breaks = sort(unique(release$tagname))[
+      seq(1, uniqueN(release$tagname), by = 2)
+    ]
+  ) +
+  scale_fill_viridis_d(option = "H") +
+  labs(
+    x = NULL, y = NULL, fill = NULL,
+    title = "Transmitter presence in Arrays",
+    subtitle = "Note that the Y axis is alternating"
+  ) +
   theme_minimal()
 ```
 
@@ -268,23 +316,26 @@ ggplot() +
 # }
 
 station_summary <- merge(
-  matched[, .(detections = .N), by = c('station', 'detectedby')],
-  unique(matched, by = c('tagname', 'station'))[, .(individuals = .N,
-                                                    long = mean(longitude),
-                                                    lat = mean(latitude)),
-                                                      by = 'station'] 
+  matched[, .(detections = .N), by = c("station", "detectedby")],
+  unique(matched, by = c("tagname", "station"))[, .(
+    individuals = .N,
+    long = mean(longitude),
+    lat = mean(latitude)
+  ),
+  by = "station"
+  ]
 )
 station_summary <- merge(
   station_summary,
   pis[, .(detectedby, PI)],
-  by = 'detectedby'
+  by = "detectedby"
 )
 # DT(, station := sapply(station, .simpleCap))
 
 setorder(station_summary, -lat, long)
 
 station_summary <- station_summary[, .(PI, detectedby, station, detections, individuals)]
-setnames(station_summary, c('PI', 'Project', 'Station', 'Detections', 'Individuals'))
+setnames(station_summary, c("PI", "Project", "Station", "Detections", "Individuals"))
 
 # station_summary |>
 #   gt() |>
@@ -302,20 +353,21 @@ setnames(station_summary, c('PI', 'Project', 'Station', 'Detections', 'Individua
 #                        Individuals = colDef(aggregate = 'sum')
 #                      )
 # )
-      
-
 ```
 
 ```{r}
 #| label: station-spatial
 
 station_spatial <- matched |>
-  unique(by = c('station', 'detectedby'))
-station_spatial <- station_spatial[,station := toupper(station)][station_summary[, Station := toupper(Station)],,
-                                   on = c('station'= 'Station')]
-station_spatial <- station_spatial[, .(station, Detections, Individuals,
-                                       longitude, latitude, PI, detectedby)] |> 
-  st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) 
+  unique(by = c("station", "detectedby"))
+station_spatial <- station_spatial[, station := toupper(station)][station_summary[, Station := toupper(Station)], ,
+  on = c("station" = "Station")
+]
+station_spatial <- station_spatial[, .(
+  station, Detections, Individuals,
+  longitude, latitude, PI, detectedby
+)] |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
 # For use if switching to leaflet
 # station_center <- st_centroid(st_union(station_spatial))
@@ -328,9 +380,10 @@ station_spatial <- station_spatial[, .(station, Detections, Individuals,
 #| label: detection-map-leaflet
 #| fig-cap: Figure 4. Number of detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
 mapview::mapview(station_spatial,
-                 zcol = 'Detections',
-                 cex = 'Individuals',
-                 layer.name = "Matched detections") 
+  zcol = "Detections",
+  cex = "Individuals",
+  layer.name = "Matched detections"
+)
 ```
 
 
@@ -338,54 +391,57 @@ mapview::mapview(station_spatial,
 #| label: tags-remaining
 #| fig-cap: Figure 5. Transmitters estimated to be at liberty.
 
-last_record <- matched[, .(last_record = max(datecollected)), by = 'tagname']
-transmitter_life <- last_record[release[, .(tagname, datecollected)], ,on = 'tagname']
-setnames(transmitter_life, 'datecollected', 'first_record')
+last_record <- matched[, .(last_record = max(datecollected)), by = "tagname"]
+transmitter_life <- last_record[release[, .(tagname, datecollected)], , on = "tagname"]
+setnames(transmitter_life, "datecollected", "first_record")
 transmitter_life[, last_record := fifelse(is.na(last_record), first_record, last_record)]
 
-transmitter_life[, ':='(first_record = as.Date(first_record),
-                        last_record = as.Date(last_record))]
+transmitter_life[, ":="(first_record = as.Date(first_record),
+  last_record = as.Date(last_record))]
 
 date_seq <- data.table(
   date = seq(
-    min(transmitter_life$first_record, na.rm =T),
+    min(transmitter_life$first_record, na.rm = T),
     push_log$date[nrow(push_log)],
-    by = 'day'
+    by = "day"
   )
 )
 
-date_seq[, remaining := sapply(date,
-                               function(.){
-                                 sum(
-                                   data.table::between(
-                                     .,
-                                     transmitter_life$first_record,
-                                     transmitter_life$last_record) == T
-                                 )
-                               })]
+date_seq[, remaining := sapply(
+  date,
+  function(.) {
+    sum(
+      data.table::between(
+        .,
+        transmitter_life$first_record,
+        transmitter_life$last_record
+      ) == T
+    )
+  }
+)]
 
 ggplot(data = date_seq) +
   geom_step(aes(x = date, y = remaining)) +
-  labs(x = NULL, y = 'Project transmitters remaining') +
+  labs(x = NULL, y = "Project transmitters remaining") +
   theme_minimal()
 ```
 
 
 ```{r results='asis', echo=FALSE}
-if(is.null(params$since)){
+if (is.null(params$since)) {
   # further lines are not shown (the HTML is commented out)...
   cat("<!---")
-  
+
   # ...BUT they are still evaluated, so putting this in here to make the code run.
   # It will be nonsense.
   since_date <- min(matched$datelastmodified)
-  }
+}
 ```
 ## What's new?
 
 ```{r}
-#\ label: new-matches
-if(!is.null(params$since)){
+# \ label: new-matches
+if (!is.null(params$since)) {
   since_date <- as.IDate(params$since)
 }
 new_matches <- matched[datelastmodified > since_date]
@@ -400,45 +456,53 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(matched[datelastmodified >
 #| fig-cap-location: top
 
 new_mt <- merge(
-  new_matches[, .(detections = .N), by = 'detectedby'],
-  unique(new_matches, by  = c('tagname', 'detectedby'))[, .(individuals = .N), by = 'detectedby']
+  new_matches[, .(detections = .N), by = "detectedby"],
+  unique(new_matches, by = c("tagname", "detectedby"))[, .(individuals = .N), by = "detectedby"]
 )
 
 new_mt <- merge(new_mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
 
 # new_mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
 #                           paste0('ACT.', detectedby), detectedby)]
-new_mt[, detectedby := gsub('.*\\.', '', detectedby)]
+new_mt[, detectedby := gsub(".*\\.", "", detectedby)]
 
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, detectedby = collectioncode)])
 
-new_mt[, ':='(network = gsub('\\..*', '', detectedby),
-          code = gsub('.*\\.', '', detectedby),
-          detectedby = NULL)]
+new_mt[, ":="(network = gsub("\\..*", "", detectedby),
+  code = gsub(".*\\.", "", detectedby),
+  detectedby = NULL)]
 
 new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
-setnames(new_mt, c('PI', 'POC', 'Project name', 'Network', 'Project code', 'Detections', 'Individuals', 'PI_emails', 'POC_emails'))
+setnames(new_mt, c("PI", "POC", "Project name", "Network", "Project code", "Detections", "Individuals", "PI_emails", "POC_emails"))
 
-setorder(new_mt, -'Detections', -'Individuals')
+setorder(new_mt, -"Detections", -"Individuals")
 
 reactable(new_mt,
-          columns = list(
-            PI = colDef(html = T,
-                         cell = function(value, index){
-                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   new_mt$PI_emails[index], value)
-                         },
-                        minWidth = 150),
-            POC = colDef(html = T,
-                         cell = function(value, index){
-                           sprintf('<a href=mailto:%s target="_blank">%s</a>',
-                                   new_mt$POC_emails[index], value)
-                         },
-                         minWidth = 150),
-            PI_emails = colDef(show = F),
-            POC_emails = colDef(show = F),
-            `Project name` = colDef(minWidth = 200)
-          )
+  columns = list(
+    PI = colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          new_mt$PI_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    POC = colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          new_mt$POC_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    PI_emails = colDef(show = F),
+    POC_emails = colDef(show = F),
+    `Project name` = colDef(minWidth = 200)
+  )
 )
 ```
 
@@ -449,17 +513,19 @@ reactable(new_mt,
 #| fig-cap: Figure 6. Bounding box of external projects providing detections added since the last data push. This does not necessarily reflect the distribution of fish heard by the project's receivers.
 
 new_otn_sf <- otn_sf[grepl(
-    paste(unique(new_matches$detectedby), collapse = '|'),
-    otn_sf$collectioncode
-  ),]
+  paste(unique(new_matches$detectedby), collapse = "|"),
+  otn_sf$collectioncode
+), ]
 otn_limits <- st_bbox(new_otn_sf)
 
 ggplot() +
   geom_sf(data = natural_earth) +
-  geom_sf(data = new_otn_sf, fill = NA, color = 'blue') +
-    coord_sf(xlim = c(otn_limits['xmin'] - 5, otn_limits['xmax'] + 5),
-             ylim = c(otn_limits['ymin'] - 5, otn_limits['ymax'] + 5)) +
-  labs(title = 'Geographic extent of newly-detected projects') +
+  geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
+  coord_sf(
+    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
+    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+  ) +
+  labs(title = "Geographic extent of newly-detected projects") +
   theme_minimal()
 ```
 
@@ -468,23 +534,26 @@ ggplot() +
 #| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
 #| fig-cap-location: top
 station_summary <- merge(
-  new_matches[, .(detections = .N), by = c('station', 'detectedby')],
-  unique(new_matches, by = c('tagname', 'station'))[, .(individuals = .N,
-                                                    long = mean(longitude),
-                                                    lat = mean(latitude)),
-                                                      by = 'station'] 
+  new_matches[, .(detections = .N), by = c("station", "detectedby")],
+  unique(new_matches, by = c("tagname", "station"))[, .(
+    individuals = .N,
+    long = mean(longitude),
+    lat = mean(latitude)
+  ),
+  by = "station"
+  ]
 )
 station_summary <- merge(
   station_summary,
   pis[, .(detectedby, PI)],
-  by = 'detectedby'
+  by = "detectedby"
 )
 # DT(, station := sapply(station, .simpleCap))
 
 setorder(station_summary, -lat, long)
 
 station_summary <- station_summary[, .(PI, detectedby, station, detections, individuals)]
-setnames(station_summary, c('PI', 'Project', 'Station', 'Detections', 'Individuals'))
+setnames(station_summary, c("PI", "Project", "Station", "Detections", "Individuals"))
 
 reactable(station_summary)
 ```
@@ -495,11 +564,12 @@ reactable(station_summary)
 #| label: new-station-spatial
 
 station_spatial <- new_matches |>
-  unique(by = c('station', 'detectedby'))
-station_spatial <- station_spatial[,station := toupper(station)][station_summary[, Station := toupper(Station)],,
-                                   on = c('station'= 'Station')]
-station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Project, longitude, latitude)] |> 
-  st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) 
+  unique(by = c("station", "detectedby"))
+station_spatial <- station_spatial[, station := toupper(station)][station_summary[, Station := toupper(Station)], ,
+  on = c("station" = "Station")
+]
+station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Project, longitude, latitude)] |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
 # For use if switching to leaflet
 # station_center <- st_centroid(st_union(station_spatial))
@@ -510,11 +580,14 @@ station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Pro
 #| label: new-detection-map-leaflet
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
 mapview::mapview(station_spatial,
-                 zcol = 'Detections',
-                 cex = 'Individuals',
-                 layer.name = "Matched detections")
+  zcol = "Detections",
+  cex = "Individuals",
+  layer.name = "Matched detections"
+)
 ```
 
 ```{r results='asis', echo=FALSE}
-if(is.null(params$since)) {cat("-->")}
+if (is.null(params$since)) {
+  cat("-->")
+}
 ```
