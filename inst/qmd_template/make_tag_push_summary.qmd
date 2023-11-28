@@ -357,9 +357,10 @@ date_seq <- data.table(
 date_seq[, remaining := sapply(date,
                                function(.){
                                  sum(
-                                   between(.,
-                                           transmitter_life$first_record,
-                                           transmitter_life$last_record) == T
+                                   data.table::between(
+                                     .,
+                                     transmitter_life$first_record,
+                                     transmitter_life$last_record) == T
                                  )
                                })]
 
