@@ -49,35 +49,45 @@ This function creates an HTML report that can be viewed in your web browser.
 
 \examples{
 \dontrun{
-td <- file.path(tempdir(), 'matos_test_files')
+td <- file.path(tempdir(), "matos_test_files")
 dir.create(td)
 
 download.file(
-  paste0('https://members.oceantrack.org/data/repository/pbsm/',
-         'data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls'),
-  destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),
-  mode = 'wb'
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"
+  ),
+  destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
+  mode = "wb"
 )
 
 
 download.file(
-  paste0('https://members.oceantrack.org/data/repository/pbsm/',
-         'detection-extracts/pbsm_qualified_detections_2018.zip'),
-  destfile = file.path(td, 'pbsm_qualified_detections_2018.zip')
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_qualified_detections_2018.zip"
+  ),
+  destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
 )
-unzip(file.path(td, 'pbsm_qualified_detections_2018.zip'),
-      exdir = td)
+unzip(
+  file.path(td, "pbsm_qualified_detections_2018.zip"),
+    exdir = td
+)
+
 download.file(
    paste0('https://members.oceantrack.org/data/repository/pbsm/',
            'detection-extracts/pbsm_unqualified_detections_2018.zip'),
    destfile = file.path(td, 'pbsm_unqualified_detections_2018.zip')
 )
-unzip(file.path(td, 'pbsm_unqualified_detections_2018.zip'),
-      exdir = td)
+unzip(
+   file.path(td, 'pbsm_unqualified_detections_2018.zip'),
+      exdir = td
+)
 
 qualified_files <- file.path(td, 'pbsm_qualified_detections_2018.csv')
 unqualified_files <- file.path(td, 'pbsm_unqualified_detections_2018.csv')
 deployment_files <- file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls')
+
 
 make_receiver_push_summary(
      qualified = qualified_files,
