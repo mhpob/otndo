@@ -127,7 +127,7 @@ You can also provide a date to the "since" argument to see a summary of all of t
 
 ```{r, eval=FALSE}
 make_tag_push_summary(matched = matched_otn,
-                      since '2018-05-01')
+                      since = '2018-05-01')
 ```
 
 
