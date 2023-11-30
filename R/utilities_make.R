@@ -34,6 +34,7 @@ clean_otn_deployment <- function(deployment) {
 
   names(deployment) <- tolower(gsub(" .*", "", names(deployment)))
   deployment <- deployment[!is.na(deployment$deploy_date_time), ]
+  deployment <- deployment[!deployment$recovered %in% c('l', 'failed'),]
 
   deployment$deploy_date_time <- as.POSIXct(deployment$deploy_date_time,
     tz = "UTC",
