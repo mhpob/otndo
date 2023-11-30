@@ -30,58 +30,58 @@ We'll use data from [Trudel 2018](#references) (<https://members.oceantrack.org/
 
 ```{r}
 # Create a folder in your temporary directory to hold the sample files
-td <- file.path(tempdir(), 'otndo_test_files')
+td <- file.path(tempdir(), "otndo_test_files")
 dir.create(td)
 
 # Download deployment metadata
 download.file(
   paste0(
-    'https://members.oceantrack.org/data/repository/pbsm/',
-    'data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls'
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"
   ),
-  destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),
+  destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
   # Note "mode = 'wb' is needed to download Excel files
-  mode = 'wb'
+  mode = "wb"
 )
 
 # Download qualified detections
 download.file(
   paste0(
-    'https://members.oceantrack.org/data/repository/pbsm/',
-    'detection-extracts/pbsm_qualified_detections_2018.zip'
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_qualified_detections_2018.zip"
   ),
-  destfile = file.path(td, 'pbsm_qualified_detections_2018.zip')
+  destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
 )
 
 # Download unqualified detections
 download.file(
   paste0(
-    'https://members.oceantrack.org/data/repository/pbsm/',
-    'detection-extracts/pbsm_unqualified_detections_2018.zip'
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_unqualified_detections_2018.zip"
   ),
-  destfile = file.path(td, 'pbsm_unqualified_detections_2018.zip')
+  destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
 )
 ```
 
 Now, just note where the files are saved. This will make it easier to pass into the smmary functions later.
 
 ```{r}
-qualified_otn <- file.path(td, 'pbsm_qualified_detections_2018.zip')
-unqualified_otn <- file.path(td, 'pbsm_unqualified_detections_2018.zip')
-deployment_otn <- file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls')
+qualified_otn <- file.path(td, "pbsm_qualified_detections_2018.zip")
+unqualified_otn <- file.path(td, "pbsm_unqualified_detections_2018.zip")
+deployment_otn <- file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
 ```
 
 We can do the same for matched detections
 ```{r}
 download.file(
   paste0(
-    'https://members.oceantrack.org/data/repository/pbsm/',
-    'detection-extracts/pbsm_matched_detections_2018.zip'
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_matched_detections_2018.zip"
   ),
-  destfile = file.path(td, 'pbsm_matched_detections_2018.zip')
+  destfile = file.path(td, "pbsm_matched_detections_2018.zip")
 )
 
-matched_otn <- file.path(td, 'pbsm_matched_detections_2018.zip')
+matched_otn <- file.path(td, "pbsm_matched_detections_2018.zip")
 ```
 
 
@@ -102,16 +102,20 @@ The summary functions conduct a bit of data cleaning on the front end and then r
 
 ```{r, eval=FALSE}
 # Compiles with Quarto (default)
-make_receiver_push_summary(qualified = qualified_otn,
-                           unqualified = unqualified_otn,
-                           deployment = deployment_otn,
-                           rmd = F)
+make_receiver_push_summary(
+  qualified = qualified_otn,
+  unqualified = unqualified_otn,
+  deployment = deployment_otn,
+  rmd = F
+)
 
 # Compiles with RMarkdown
-make_receiver_push_summary(qualified = qualified_otn,
-                           unqualified = unqualified_otn,
-                           deployment = deployment_otn,
-                           rmd = T)
+make_receiver_push_summary(
+  qualified = qualified_otn,
+  unqualified = unqualified_otn,
+  deployment = deployment_otn,
+  rmd = T
+)
 ```
 
 Functionality is identical for `make_tag_push_summary`:
@@ -126,8 +130,10 @@ Usually we want to know what has changed since the OTN nodes crossed over and ta
 You can also provide a date to the "since" argument to see a summary of all of the data that have been updated since that date.
 
 ```{r, eval=FALSE}
-make_tag_push_summary(matched = matched_otn,
-                      since = '2018-05-01')
+make_tag_push_summary(
+  matched = matched_otn,
+  since = "2018-05-01"
+)
 ```
 
 
