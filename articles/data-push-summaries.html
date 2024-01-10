@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">otndo</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.07</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.08</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,54 +101,54 @@ extract</a> files.</p>
 show how this might work. First, we’ll download the files.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a folder in your temporary directory to hold the sample files</span></span>
-<span><span class="va">td</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">'otndo_test_files'</span><span class="op">)</span></span>
+<span><span class="va">td</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"otndo_test_files"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download deployment metadata</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>    <span class="st">'https://members.oceantrack.org/data/repository/pbsm/'</span>,</span>
-<span>    <span class="st">'data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls'</span></span>
+<span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
+<span>    <span class="st">"data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm-instrument-deployment-short-form-2018.xls'</span><span class="op">)</span>,</span>
+<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm-instrument-deployment-short-form-2018.xls"</span><span class="op">)</span>,</span>
 <span>  <span class="co"># Note "mode = 'wb' is needed to download Excel files</span></span>
-<span>  mode <span class="op">=</span> <span class="st">'wb'</span></span>
+<span>  mode <span class="op">=</span> <span class="st">"wb"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download qualified detections</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>    <span class="st">'https://members.oceantrack.org/data/repository/pbsm/'</span>,</span>
-<span>    <span class="st">'detection-extracts/pbsm_qualified_detections_2018.zip'</span></span>
+<span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
+<span>    <span class="st">"detection-extracts/pbsm_qualified_detections_2018.zip"</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_qualified_detections_2018.zip'</span><span class="op">)</span></span>
+<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_qualified_detections_2018.zip"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download unqualified detections</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>    <span class="st">'https://members.oceantrack.org/data/repository/pbsm/'</span>,</span>
-<span>    <span class="st">'detection-extracts/pbsm_unqualified_detections_2018.zip'</span></span>
+<span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
+<span>    <span class="st">"detection-extracts/pbsm_unqualified_detections_2018.zip"</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_unqualified_detections_2018.zip'</span><span class="op">)</span></span>
+<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_unqualified_detections_2018.zip"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now, just note where the files are saved. This will make it easier to
 pass into the smmary functions later.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">qualified_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_qualified_detections_2018.zip'</span><span class="op">)</span></span>
-<span><span class="va">unqualified_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_unqualified_detections_2018.zip'</span><span class="op">)</span></span>
-<span><span class="va">deployment_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm-instrument-deployment-short-form-2018.xls'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qualified_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_qualified_detections_2018.zip"</span><span class="op">)</span></span>
+<span><span class="va">unqualified_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_unqualified_detections_2018.zip"</span><span class="op">)</span></span>
+<span><span class="va">deployment_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm-instrument-deployment-short-form-2018.xls"</span><span class="op">)</span></span></code></pre></div>
 <p>We can do the same for matched detections</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>    <span class="st">'https://members.oceantrack.org/data/repository/pbsm/'</span>,</span>
-<span>    <span class="st">'detection-extracts/pbsm_matched_detections_2018.zip'</span></span>
+<span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
+<span>    <span class="st">"detection-extracts/pbsm_matched_detections_2018.zip"</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_matched_detections_2018.zip'</span><span class="op">)</span></span>
+<span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_matched_detections_2018.zip"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">matched_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">'pbsm_matched_detections_2018.zip'</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">matched_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_matched_detections_2018.zip"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="actmatos-projects">ACT/MATOS projects<a class="anchor" aria-label="anchor" href="#actmatos-projects"></a>
@@ -182,16 +182,20 @@ functions use Quarto by default, but RMarkdown will be selected if:</p>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compiles with Quarto (default)</span></span>
-<span><span class="fu"><a href="../reference/make_receiver_push_summary.html">make_receiver_push_summary</a></span><span class="op">(</span>qualified <span class="op">=</span> <span class="va">qualified_otn</span>,</span>
-<span>                           unqualified <span class="op">=</span> <span class="va">unqualified_otn</span>,</span>
-<span>                           deployment <span class="op">=</span> <span class="va">deployment_otn</span>,</span>
-<span>                           rmd <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/make_receiver_push_summary.html">make_receiver_push_summary</a></span><span class="op">(</span></span>
+<span>  qualified <span class="op">=</span> <span class="va">qualified_otn</span>,</span>
+<span>  unqualified <span class="op">=</span> <span class="va">unqualified_otn</span>,</span>
+<span>  deployment <span class="op">=</span> <span class="va">deployment_otn</span>,</span>
+<span>  rmd <span class="op">=</span> <span class="cn">F</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compiles with RMarkdown</span></span>
-<span><span class="fu"><a href="../reference/make_receiver_push_summary.html">make_receiver_push_summary</a></span><span class="op">(</span>qualified <span class="op">=</span> <span class="va">qualified_otn</span>,</span>
-<span>                           unqualified <span class="op">=</span> <span class="va">unqualified_otn</span>,</span>
-<span>                           deployment <span class="op">=</span> <span class="va">deployment_otn</span>,</span>
-<span>                           rmd <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/make_receiver_push_summary.html">make_receiver_push_summary</a></span><span class="op">(</span></span>
+<span>  qualified <span class="op">=</span> <span class="va">qualified_otn</span>,</span>
+<span>  unqualified <span class="op">=</span> <span class="va">unqualified_otn</span>,</span>
+<span>  deployment <span class="op">=</span> <span class="va">deployment_otn</span>,</span>
+<span>  rmd <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Functionality is identical for
 <code>make_tag_push_summary</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -208,8 +212,11 @@ February, July, and October. Crossover dates are stored within
 push occurs.</p>
 <p>You can also provide a date to the “since” argument to see a summary
 of all of the data that have been updated since that date.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make_tag_push_summary</span>(<span class="at">matched =</span> matched_otn,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                      since <span class="st">'2018-05-01'</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_tag_push_summary.html">make_tag_push_summary</a></span><span class="op">(</span></span>
+<span>  matched <span class="op">=</span> <span class="va">matched_otn</span>,</span>
+<span>  since <span class="op">=</span> <span class="st">"2018-05-01"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="suggestions-to-improve-the-push-summaries">Suggestions to improve the push summaries<a class="anchor" aria-label="anchor" href="#suggestions-to-improve-the-push-summaries"></a>
