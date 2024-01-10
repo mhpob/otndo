@@ -71,28 +71,31 @@ download.file(
 )
 unzip(
   file.path(td, "pbsm_qualified_detections_2018.zip"),
-    exdir = td
+  exdir = td
 )
 
 download.file(
-   paste0('https://members.oceantrack.org/data/repository/pbsm/',
-           'detection-extracts/pbsm_unqualified_detections_2018.zip'),
-   destfile = file.path(td, 'pbsm_unqualified_detections_2018.zip')
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_unqualified_detections_2018.zip"
+  ),
+  destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
 )
 unzip(
-   file.path(td, 'pbsm_unqualified_detections_2018.zip'),
-      exdir = td
+  file.path(td, "pbsm_unqualified_detections_2018.zip"),
+  exdir = td
 )
 
-qualified_files <- file.path(td, 'pbsm_qualified_detections_2018.csv')
-unqualified_files <- file.path(td, 'pbsm_unqualified_detections_2018.csv')
-deployment_files <- file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls')
+qualified_files <- file.path(td, "pbsm_qualified_detections_2018.csv")
+unqualified_files <- file.path(td, "pbsm_unqualified_detections_2018.csv")
+deployment_files <- file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
 
 
 make_receiver_push_summary(
-     qualified = qualified_files,
-     unqualified = unqualified_files,
-     deployment = deployment_files,
-     since = '2018-11-01')
+  qualified = qualified_files,
+  unqualified = unqualified_files,
+  deployment = deployment_files,
+  since = "2018-11-01"
+)
 }
 }
