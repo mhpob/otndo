@@ -98,7 +98,7 @@ make_receiver_push_summary <- function(
 
   if (is.null(since)) {
     since <- read.csv(push_log)
-    since <- since[nrow(since), ]
+    since <- since[nrow(since) - 1, ]
   }
 
   # Create a temporary directory to store intermediate files ----
