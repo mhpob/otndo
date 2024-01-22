@@ -396,7 +396,7 @@ if (!is.null(params$since)) {
 new_matches <- qualified[datelastmodified > since_date]
 ```
 
-Since `r format(since_date, '%B %Y')`, `r format(nrow(qualified[datelastmodified > since_date]), big.mark = ',')` detections of `r uniqueN(qualified[datelastmodified > since_date], by  = 'fieldnumber')` individuals have been updated or newly-matched.
+Since `r format(since_date, '%B %Y')`, `r format(nrow(new_matches), big.mark = ',')` detections of `r uniqueN(new_matches, by  = 'fieldnumber')` individuals have been updated or newly-matched.
 
 ```{r}
 #| label: new-otn-match-table
