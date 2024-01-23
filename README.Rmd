@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 ![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/otndo)
 [![R-CMD-check](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml)
 [![otndo status badge](https://mhpob.r-universe.dev/badges/otndo)](https://mhpob.r-universe.dev/otndo)
+[![codecov](https://codecov.io/gh/mhpob/otndo/graph/badge.svg?token=A4JRJT7CFA)](https://codecov.io/gh/mhpob/otndo)
 <!-- badges: end -->
 
 *entiendo* /ˌenˈtjendo/ [ˌẽn̪ˈt̪jẽn̪.̪o]\   

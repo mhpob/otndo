@@ -14,6 +14,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![R-CMD-check](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml)
 [![otndo status
 badge](https://mhpob.r-universe.dev/badges/otndo)](https://mhpob.r-universe.dev/otndo)
+[![codecov](https://codecov.io/gh/mhpob/otndo/graph/badge.svg?token=A4JRJT7CFA)](https://codecov.io/gh/mhpob/otndo)
 <!-- badges: end -->
 
 *entiendo* /ˌenˈtjendo/ \[ˌẽn̪ˈt̪jẽn̪.̪o\]   
@@ -78,7 +79,7 @@ unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
 library(otndo)
 
 make_tag_push_summary(
-  matched = file.path(td, 'pbsm_matched_detections_2018.csv')
+  matched = file.path(td, "pbsm_matched_detections_2018.csv")
 )
 ```
 
@@ -112,28 +113,33 @@ receiver data:
 # Download some example data
 
 ## Deployment metadata
-download.file('https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls',
-              destfile = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls'),
-              mode = 'wb')
+download.file("https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls",
+  destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
+  mode = "wb"
+)
 
 ## Qualified detections
-download.file('https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip',
-              destfile = file.path(td, 'pbsm_qualified_detections_2018.zip'))
-unzip(file.path(td, 'pbsm_qualified_detections_2018.zip'),
-      exdir = td)
+download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip",
+  destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
+)
+unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
+  exdir = td
+)
 
 ## Unqualified detections
-download.file('https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_unqualified_detections_2018.zip',
-              destfile = file.path(td, 'pbsm_unqualified_detections_2018.zip'))
-unzip(file.path(td, 'pbsm_unqualified_detections_2018.zip'),
-      exdir = td)
+download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_unqualified_detections_2018.zip",
+  destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
+)
+unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"),
+  exdir = td
+)
 
 
 # Make a receiver push summary
 make_receiver_push_summary(
-  qualified = file.path(td, 'pbsm_qualified_detections_2018.csv'),
-  unqualified = file.path(td, 'pbsm_unqualified_detections_2018.csv'),
-  deployment = file.path(td, 'pbsm-instrument-deployment-short-form-2018.xls')
+  qualified = file.path(td, "pbsm_qualified_detections_2018.csv"),
+  unqualified = file.path(td, "pbsm_unqualified_detections_2018.csv"),
+  deployment = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
 )
 ```
 
