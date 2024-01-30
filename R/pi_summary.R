@@ -1,5 +1,5 @@
-pi_summary <- function(matched, type = c('receiver', 'tag')){
-  if(type == 'tag'){
+pi_summary <- function(matched, type = c("receiver", "tag")) {
+  if (type == "tag") {
     pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(
       PI = strsplit(contact_pi, " \\(|\\)(, )?"),
@@ -76,12 +76,12 @@ pi_summary <- function(matched, type = c('receiver', 'tag')){
     )
   ))]
 
-  if(type == 'tag'){
+  if (type == "tag") {
     pis <- pis[, .(detectedby, PI, POC, PI_emails, POC_emails)]
-    setnames(pis, 'detectedby', 'project_name')
+    setnames(pis, "detectedby", "project_name")
   } else {
     pis <- pis[, .(trackercode, PI, POC, PI_emails, POC_emails)]
-    setnames(pis, 'trackercode', 'project_name')
+    setnames(pis, "trackercode", "project_name")
   }
 
 
