@@ -90,38 +90,7 @@ A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(ma
 #| fig-cap: Table 1. Total detections and number of individual fish heard by other OTN node projects.
 #| fig-cap-location: top
 
-mt <- merge(
-  matched[, .(detections = .N), by = "detectedby"],
-  unique(matched, by = c("tagname", "detectedby"))[, .(individuals = .N),
-    by = "detectedby"
-  ]
-)
-
-mt <- merge(mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
-# mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
-#                           paste0('OTN.', detectedby), detectedby)]
-mt[, detectedby := gsub(".*\\.", "", detectedby)]
-
-mt <- merge(mt, otn_tables[[1]][, .(resource_full_name,
-  detectedby = collectioncode
-)])
-
-mt[, ":="(network = gsub("\\..*", "", detectedby),
-  code = gsub(".*\\.", "", detectedby),
-  detectedby = NULL,
-  PI = fifelse(PI == "NA", "", PI),
-  POC = fifelse(POC == "NA", "", POC))]
-
-mt <- mt[, .(
-  PI, POC, resource_full_name, network, code,
-  detections, individuals, PI_emails, POC_emails
-)]
-setnames(mt, c(
-  "PI", "POC", "Project name", "Network", "Project code",
-  "Detections", "Individuals", "PI_emails", "POC_emails"
-))
-
-setorder(mt, -"Detections", -"Individuals")
+mt <- prep_match_table(matched, pis, type = 'tag')
 
 reactable(mt,
   columns = list(
