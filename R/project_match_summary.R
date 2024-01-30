@@ -1,4 +1,5 @@
-pi_summary <- function(matched, type = c('receiver', 'tag')){
+#'
+project_match_summary <- function(matched, type = c('receiver', 'tag')){
   if(type == 'tag'){
     pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(

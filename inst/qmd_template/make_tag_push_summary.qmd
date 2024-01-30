@@ -49,7 +49,7 @@ push_log <- fread(params$push_log)
 #| label: n-pis
 #| warning: false
 
-pis <- pi_summary(matched, type = 'tag')
+pis <- project_match_summary(matched, type = 'tag')
 ```
 
 ```{r}
