@@ -1,5 +1,5 @@
-#'
-project_match_summary <- function(matched, type = c('receiver', 'tag')){
+#' Create
+project_contacts <- function(matched, type = c('receiver', 'tag')){
   if(type == 'tag'){
     pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(

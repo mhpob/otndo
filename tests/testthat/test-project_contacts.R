@@ -30,7 +30,7 @@ matched[, day := as.Date(datecollected)]
 
 test_that("returns correct class", {
   expect_s3_class(
-    pi_table <- project_match_summary(matched, type = 'tag'),
+    pi_table <- project_contacts(matched, type = 'tag'),
     c('data.table', 'data.frame'),
     exact = TRUE
   )
@@ -58,7 +58,7 @@ test_that("returns correct class", {
 })
 
 test_that("right things are returned", {
-  pi_table <- project_match_summary(matched, type = 'tag')
+  pi_table <- project_contacts(matched, type = 'tag')
 
   expect_equal(
     ncol(pi_table),

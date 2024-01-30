@@ -46,7 +46,7 @@ push_log <- data.table::fread(params$push_log)
 #| label: n-pis
 #| warning: false
 
-pis <- project_match_summary(matched, type = 'receiver')
+pis <- project_contacts(matched, type = 'receiver')
 ```
 
 ```{r}
