@@ -1,5 +1,41 @@
-#' Create
+#' Extract and combine the contacts for matched projects
+#'
+#' @param matched data.frame of transmitter/receiver detections matched by OTN:
+#'  matched detections for tags and qualified detections for receivers
+#'
+#' @examples
+#' # Set up example data
+#' td <- file.path(tempdir(), "otndo_example")
+#' dir.create(td)
+#'
+#' download.file(
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/",
+#'     "pbsm/detection-extracts/pbsm_matched_detections_2018.zip"
+#'   ),
+#'   destfile = file.path(td, "pbsm_matched_detections_2018.zip")
+#' )
+#' unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+#'   exdir = td
+#' )
+#'
+#' matched <- read.csv(file.path(
+#'     td,
+#'     "pbsm_matched_detections_2018.csv"
+#'   )
+#' )
+#'
+#' # Actually run the function
+#' project_contacts(matched, type = 'tag')
+#'
+#' # Clean up
+#' unlink(td, recursive = TRUE)
+#'
+#' @returns a data.table containing project names, principal investigators (PI),
+#'   points of contact (POC), and their respective emails. Multiple emails are
+#'   separated by commas.
 project_contacts <- function(matched, type = c('receiver', 'tag')){
+  matched <- data.table(matched)
   if(type == 'tag'){
     pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(
