@@ -1,4 +1,3 @@
-
 td <- file.path(tempdir(), "matos_test_files")
 dir.create(td)
 
@@ -10,7 +9,7 @@ download.file(
   destfile = file.path(td, "pbsm_matched_detections_2018.zip")
 )
 unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
-      exdir = td
+  exdir = td
 )
 
 matched <- file.path(
@@ -37,23 +36,23 @@ test_that("returns correct class", {
 
   expect_type(
     pi_table$project_name,
-    'character'
+    "character"
   )
   expect_type(
     pi_table$PI,
-    'character'
+    "character"
   )
   expect_type(
     pi_table$POC,
-    'character'
+    "character"
   )
   expect_type(
     pi_table$PI_emails,
-    'character'
+    "character"
   )
   expect_type(
     pi_table$POC_emails,
-    'character'
+    "character"
   )
 })
 
@@ -67,14 +66,14 @@ test_that("right things are returned", {
 
   expect_named(
     pi_table,
-    c("project_name", "PI", "POC", "PI_emails", "POC_emails" )
+    c("project_name", "PI", "POC", "PI_emails", "POC_emails")
   )
 
   # contains emails
   expect_true(
-    all(grepl('@', pi_table$PI_emails))
+    all(grepl("@", pi_table$PI_emails))
   )
   expect_true(
-    all(grepl('@', pi_table$POC_emails))
+    all(grepl("@", pi_table$POC_emails))
   )
 })
