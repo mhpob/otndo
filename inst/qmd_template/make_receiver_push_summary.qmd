@@ -205,24 +205,10 @@ reactable(station_summary)
 
 
 ```{r}
-#| label: station-spatial
-
-station_spatial <- qualified |>
-  unique(by = "station")
-station_spatial <- station_spatial[station_summary[, Station := toupper(Station)], ,
-                                   on = c("station" = "Station")
-]
-station_spatial <- station_spatial[, .(station, Detections, Individuals, longitude, latitude)] |>
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
-
-station_center <- st_centroid(st_union(station_spatial))
-station_center <- st_coordinates(station_center)
-```
-
-
-```{r}
 #| label: detection-map-leaflet
 #| fig-cap: Figure 4. Number of detections per project receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
+
+station_spatial <- prep_station_spatial(qualified, type = 'receiver')
 
 mapview::mapview(station_spatial,
                  zcol = "Detections",
@@ -238,8 +224,8 @@ mapview::mapview(station_spatial,
 
 # This gives a static map. Currently not run bc we have the js map. Will need
 #   better basemap (more refined than 110m Natural Earth) if this is used in the future
-station_spatial <- qualified |>
-  unique(by = "station")
+# station_spatial <- qualified |>
+#   unique(by = "station")
 station_spatial <- station_spatial[station_summary[, Station := toupper(Station)], , on = c("station" = "Station")] |>
   data.frame() |>
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
