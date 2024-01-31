@@ -89,31 +89,31 @@ A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(
 mt <- prep_match_table(qualified, pis, type = "receiver")
 
 reactable(mt,
-  columns = list(
-    PI = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          mt$PI_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    POC = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          mt$POC_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    PI_emails = colDef(show = F),
-    POC_emails = colDef(show = F),
-    `Project name` = colDef(minWidth = 200)
-  )
+          columns = list(
+            PI = colDef(
+              html = T,
+              cell = function(value, index) {
+                sprintf(
+                  '<a href=mailto:%s target="_blank">%s</a>',
+                  mt$PI_emails[index], value
+                )
+              },
+              minWidth = 150
+            ),
+            POC = colDef(
+              html = T,
+              cell = function(value, index) {
+                sprintf(
+                  '<a href=mailto:%s target="_blank">%s</a>',
+                  mt$POC_emails[index], value
+                )
+              },
+              minWidth = 150
+            ),
+            PI_emails = colDef(show = F),
+            POC_emails = colDef(show = F),
+            `Project name` = colDef(minWidth = 200)
+          )
 )
 ```
 
@@ -121,14 +121,16 @@ reactable(mt,
 #| label: otn-match-map
 #| fig-cap: Figure 1. Bounding box of detected external projects. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
-otn_sf <- otn_tables[[1]] |>
+otn_sf <- otn_tables$otn_resources_metadata_points |>
   data.frame() |>
   st_as_sf(wkt = "the_geom", crs = 4326)
 otn_limits <- st_bbox(otn_sf)
 
-natural_earth <- st_read(system.file("ne_110m_coastline.gpkg",
-  package = "otndo"
-), quiet = T)
+natural_earth <- st_read(
+  system.file("ne_110m_coastline.gpkg",
+              package = "otndo"
+  ), quiet = T
+)
 
 ggplot() +
   geom_sf(data = natural_earth) +
@@ -150,12 +152,12 @@ qualified[, day := as.Date(datecollected)]
 qualified_time <- unique(qualified, by = c("trackercode", "day"))
 
 ggplot(qualified_time) +
-  geom_tile(aes(x = day, y = gsub(".*\\.", "", trackercode))) +
-  labs(
-    x = "", y = "",
-    subtitle = "Temporal distribution of detections by project"
-  ) +
-  theme_minimal()
+geom_tile(aes(x = day, y = gsub(".*\\.", "", trackercode))) +
+labs(
+x = "", y = "",
+subtitle = "Temporal distribution of detections by project"
+) +
+theme_minimal()
 ```
 
 
@@ -165,7 +167,7 @@ ggplot(qualified_time) +
 
 if (!is.null(params$deployment)) {
   deployment <- fread(params$deployment)
-
+  
   ggplot(data = deployment) +
     geom_linerange(
       aes(
@@ -230,7 +232,7 @@ reactable(station_summary)
 station_spatial <- qualified |>
   unique(by = "station")
 station_spatial <- station_spatial[station_summary[, Station := toupper(Station)], ,
-  on = c("station" = "Station")
+                                   on = c("station" = "Station")
 ]
 station_spatial <- station_spatial[, .(station, Detections, Individuals, longitude, latitude)] |>
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
@@ -245,9 +247,9 @@ station_center <- st_coordinates(station_center)
 #| fig-cap: Figure 4. Number of detections per project receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
 
 mapview::mapview(station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
+                 zcol = "Detections",
+                 cex = "Individuals",
+                 layer.name = "Matched detections"
 )
 ```
 
@@ -321,8 +323,8 @@ new_mt[, trackercode := gsub(".*\\.", "", trackercode)]
 new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
 
 new_mt[, ":="(network = gsub("\\..*", "", trackercode),
-  code = gsub(".*\\.", "", trackercode),
-  trackercode = NULL)]
+              code = gsub(".*\\.", "", trackercode),
+              trackercode = NULL)]
 
 new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
 setnames(new_mt, c("PI", "POC", "Project name", "Network", "Project code", "Detections", "Individuals", "PI_emails", "POC_emails"))
@@ -330,31 +332,31 @@ setnames(new_mt, c("PI", "POC", "Project name", "Network", "Project code", "Dete
 setorder(new_mt, -"Detections", -"Individuals")
 
 reactable(new_mt,
-  columns = list(
-    PI = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          new_mt$PI_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    POC = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          new_mt$POC_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    PI_emails = colDef(show = F),
-    POC_emails = colDef(show = F),
-    `Project name` = colDef(minWidth = 200)
-  )
+          columns = list(
+            PI = colDef(
+              html = T,
+              cell = function(value, index) {
+                sprintf(
+                  '<a href=mailto:%s target="_blank">%s</a>',
+                  new_mt$PI_emails[index], value
+                )
+              },
+              minWidth = 150
+            ),
+            POC = colDef(
+              html = T,
+              cell = function(value, index) {
+                sprintf(
+                  '<a href=mailto:%s target="_blank">%s</a>',
+                  new_mt$POC_emails[index], value
+                )
+              },
+              minWidth = 150
+            ),
+            PI_emails = colDef(show = F),
+            POC_emails = colDef(show = F),
+            `Project name` = colDef(minWidth = 200)
+          )
 )
 ```
 
@@ -363,20 +365,20 @@ reactable(new_mt,
 #| fig-cap: Figure 5. Bounding box of external projects detected since the last data push. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
 new_otn_sf <- otn_sf[grepl(
-  paste(unique(new_matches$trackercode), collapse = "|"),
-  otn_sf$collectioncode
+paste(unique(new_matches$trackercode), collapse = "|"),
+otn_sf$collectioncode
 ), ]
 otn_limits <- st_bbox(new_otn_sf)
 
 ggplot() +
-  geom_sf(data = natural_earth) +
-  geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
-  coord_sf(
-    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-  ) +
-  labs(title = "Geographic extent of newly-detected projects") +
-  theme_minimal()
+geom_sf(data = natural_earth) +
+geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
+coord_sf(
+xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
+ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+) +
+labs(title = "Geographic extent of newly-detected projects") +
+theme_minimal()
 ```
 
 
