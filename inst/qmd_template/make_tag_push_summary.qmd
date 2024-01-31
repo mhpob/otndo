@@ -173,6 +173,7 @@ ggplot(matched_time) +
 ```{r}
 #| label: abacus-plot
 #| fig-cap: Figure 3. Abacus plot of detected transmitters, colored by OTN node projects.
+
 matched_abacus <- unique(matched, by = c("detectedby", "day", "tagname"))
 
 ggplot() +
@@ -202,34 +203,7 @@ ggplot() +
 ```{r}
 #| label: station-summary-table
 
-# .simpleCap <- function(x) {
-#   x <- tolower(x)
-#   s <- strsplit(x, " ")[[1]]
-#   paste(toupper(substring(s, 1, 1)), substring(s, 2),
-#         sep = "", collapse = " ")
-# }
-
-station_summary <- merge(
-  matched[, .(detections = .N), by = c("station", "detectedby")],
-  unique(matched, by = c("tagname", "station"))[, .(
-    individuals = .N,
-    long = mean(longitude),
-    lat = mean(latitude)
-  ),
-  by = "station"
-  ]
-)
-station_summary <- merge(
-  station_summary,
-  pis[, .(detectedby, PI)],
-  by = "detectedby"
-)
-# DT(, station := sapply(station, .simpleCap))
-
-setorder(station_summary, -lat, long)
-
-station_summary <- station_summary[, .(PI, detectedby, station, detections, individuals)]
-setnames(station_summary, c("PI", "Project", "Station", "Detections", "Individuals"))
+station_summary <- prep_station_table(matched, type = "tag", pis)
 
 # station_summary |>
 #   gt() |>

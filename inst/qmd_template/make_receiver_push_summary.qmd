@@ -198,29 +198,7 @@ if (!is.null(params$deployment)) {
 #| fig-cap: Table 2. Total number of detections and number of individual fish heard per project receiver.
 #| fig-cap-location: top
 
-# .simpleCap <- function(x) {
-#   x <- tolower(x)
-#   s <- strsplit(x, " ")[[1]]
-#   paste(toupper(substring(s, 1, 1)), substring(s, 2),
-#         sep = "", collapse = " ")
-# }
-
-station_summary <- merge(
-  qualified[, .(detections = .N), by = "station"],
-  unique(qualified, by = c("fieldnumber", "station"))[, .(
-    individuals = .N,
-    long = mean(longitude),
-    lat = mean(latitude)
-  ),
-  by = "station"
-  ]
-)
-# DT(, station := sapply(station, .simpleCap))
-
-setorder(station_summary, -lat, long)
-
-station_summary <- station_summary[, .(station, detections, individuals)]
-setnames(station_summary, c("Station", "Detections", "Individuals"))
+station_summary <- prep_station_table(qualified, type = 'receiver')
 
 reactable(station_summary)
 ```
