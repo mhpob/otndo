@@ -35,13 +35,12 @@ unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
 )
 
 matched <- read.csv(file.path(
-    td,
-    "pbsm_matched_detections_2018.csv"
-  )
-)
+  td,
+  "pbsm_matched_detections_2018.csv"
+))
 
 # Actually run the function
-project_contacts(matched, type = 'tag')
+project_contacts(matched, type = "tag")
 
 # Clean up
 unlink(td, recursive = TRUE)
