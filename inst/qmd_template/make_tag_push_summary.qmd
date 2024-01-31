@@ -49,7 +49,7 @@ push_log <- fread(params$push_log)
 #| label: n-pis
 #| warning: false
 
-pis <- project_contacts(matched, type = 'tag')
+pis <- project_contacts(matched, type = "tag")
 ```
 
 ```{r}
@@ -90,7 +90,7 @@ A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(ma
 #| fig-cap: Table 1. Total detections and number of individual fish heard by other OTN node projects.
 #| fig-cap-location: top
 
-mt <- prep_match_table(matched, pis, type = 'tag')
+mt <- prep_match_table(matched, pis, type = "tag")
 
 reactable(mt,
   columns = list(

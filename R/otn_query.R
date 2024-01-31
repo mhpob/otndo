@@ -3,12 +3,12 @@
 #' @param projects Character vector of OTN project codes for which you'd
 #'  like project metadata
 #'
-#'  @examples
-#'   otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB"))
+#' @examples
+#' otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB"))
 #'
 #'  @returns list of the "otn_resources_metadata_points" and "project_metadata"
 #'   for the given projects
-otn_query <- function(projects){
+otn_query <- function(projects) {
   table_name <- c(
     "otn_resources_metadata_points",
     "project_metadata"
@@ -48,7 +48,7 @@ otn_query <- function(projects){
 
   otn_tables <- lapply(
     otn_tables,
-    function(.){
+    function(.) {
       .[, collectioncode := gsub(".*\\.", "", collectioncode)]
     }
   )

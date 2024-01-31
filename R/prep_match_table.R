@@ -1,26 +1,26 @@
 #'
 #'
-prep_match_table <- function(matched, pis, type = c('tag', 'receiver')){
+prep_match_table <- function(matched, pis, type = c("tag", "receiver")) {
   matched <- data.table::data.table(matched)
 
-  if(type == 'tag'){
+  if (type == "tag") {
     mt <- merge(
       matched[, .(detections = .N), by = "detectedby"],
       unique(matched, by = c("tagname", "detectedby"))[, .(individuals = .N),
-                                                       by = "detectedby"]
+        by = "detectedby"
+      ]
     )
 
-    setnames(mt, 'detectedby', 'project_name')
-
+    setnames(mt, "detectedby", "project_name")
   } else {
     mt <- merge(
       matched[, .(detections = .N), by = "trackercode"],
       unique(matched, by = "fieldnumber")[, .(individuals = .N),
-                                          by = "trackercode"]
+        by = "trackercode"
+      ]
     )
 
-    setnames(mt, 'detectedby', 'project_name')
-
+    setnames(mt, "detectedby", "project_name")
   }
 
   mt <- merge(mt, pis)
@@ -29,19 +29,20 @@ prep_match_table <- function(matched, pis, type = c('tag', 'receiver')){
 
   mt <- merge(
     mt,
-    otn_tables[[1]][,
-                    .(resource_full_name,
-                      project_name = collectioncode
-                    )
+    otn_tables[[1]][
+      ,
+      .(resource_full_name,
+        project_name = collectioncode
+      )
     ]
   )
 
 
   mt[, ":="(network = gsub("\\..*", "", project_name),
-            code = gsub(".*\\.", "", project_name),
-            project_name = NULL,
-            PI = fifelse(PI == "NA", "", PI),
-            POC = fifelse(POC == "NA", "", POC))]
+    code = gsub(".*\\.", "", project_name),
+    project_name = NULL,
+    PI = fifelse(PI == "NA", "", PI),
+    POC = fifelse(POC == "NA", "", POC))]
 
   mt <- mt[, .(
     PI, POC, resource_full_name, network, code,

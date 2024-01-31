@@ -20,13 +20,12 @@
 #' )
 #'
 #' matched <- read.csv(file.path(
-#'     td,
-#'     "pbsm_matched_detections_2018.csv"
-#'   )
-#' )
+#'   td,
+#'   "pbsm_matched_detections_2018.csv"
+#' ))
 #'
 #' # Actually run the function
-#' project_contacts(matched, type = 'tag')
+#' project_contacts(matched, type = "tag")
 #'
 #' # Clean up
 #' unlink(td, recursive = TRUE)
@@ -34,9 +33,9 @@
 #' @returns a data.table containing project names, principal investigators (PI),
 #'   points of contact (POC), and their respective emails. Multiple emails are
 #'   separated by commas.
-project_contacts <- function(matched, type = c('receiver', 'tag')){
+project_contacts <- function(matched, type = c("receiver", "tag")) {
   matched <- data.table(matched)
-  if(type == 'tag'){
+  if (type == "tag") {
     pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(
       PI = strsplit(contact_pi, " \\(|\\)(, )?"),
