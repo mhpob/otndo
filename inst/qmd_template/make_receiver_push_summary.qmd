@@ -152,12 +152,12 @@ qualified[, day := as.Date(datecollected)]
 qualified_time <- unique(qualified, by = c("trackercode", "day"))
 
 ggplot(qualified_time) +
-geom_tile(aes(x = day, y = gsub(".*\\.", "", trackercode))) +
-labs(
-x = "", y = "",
-subtitle = "Temporal distribution of detections by project"
-) +
-theme_minimal()
+  geom_tile(aes(x = day, y = gsub(".*\\.", "", trackercode))) +
+  labs(
+    x = "", y = "",
+    subtitle = "Temporal distribution of detections by project"
+  ) +
+  theme_minimal()
 ```
 
 
