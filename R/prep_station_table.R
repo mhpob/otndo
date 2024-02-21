@@ -70,7 +70,7 @@ prep_station_table <- function(matched, type = c('tag', 'receiver'),
       ]
     )
 
-    setnames(station_summary, 'detectedby', 'project_name')
+    data.table::setnames(station_summary, 'detectedby', 'project_name')
 
     station_summary <- merge(
       station_summary,
@@ -91,16 +91,16 @@ prep_station_table <- function(matched, type = c('tag', 'receiver'),
     )
   }
 
-  setorder(station_summary, -lat, long)
+  data.table::setorder(station_summary, -lat, long)
 
   if(type == 'tag'){
     station_summary <- station_summary[, .(PI, project_name, station,
                                            detections, individuals)]
-    setnames(station_summary, c("PI", "Project", "Station",
+    data.table::setnames(station_summary, c("PI", "Project", "Station",
                                 "Detections", "Individuals"))
   } else {
     station_summary <- station_summary[, .(station, detections, individuals)]
-    setnames(station_summary, c("Station", "Detections", "Individuals"))
+    data.table::setnames(station_summary, c("Station", "Detections", "Individuals"))
   }
 
   station_summary[]

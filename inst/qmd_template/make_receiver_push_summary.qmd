@@ -36,8 +36,8 @@ library(reactable)
 ```{r}
 #| label: extraction-files-read
 
-qualified <- fread(params$qualified)
-unqualified <- fread(params$unqualified)
+qualified <- data.table::fread(params$qualified)
+unqualified <- data.table::fread(params$unqualified)
 
 push_log <- data.table::fread(params$push_log)
 ```
@@ -88,32 +88,32 @@ A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(
 
 mt <- prep_match_table(qualified, pis, type = "receiver")
 
-reactable(mt,
-          columns = list(
-            PI = colDef(
-              html = T,
-              cell = function(value, index) {
-                sprintf(
-                  '<a href=mailto:%s target="_blank">%s</a>',
-                  mt$PI_emails[index], value
-                )
-              },
-              minWidth = 150
-            ),
-            POC = colDef(
-              html = T,
-              cell = function(value, index) {
-                sprintf(
-                  '<a href=mailto:%s target="_blank">%s</a>',
-                  mt$POC_emails[index], value
-                )
-              },
-              minWidth = 150
-            ),
-            PI_emails = colDef(show = F),
-            POC_emails = colDef(show = F),
-            `Project name` = colDef(minWidth = 200)
-          )
+reactable::reactable(mt,
+                     columns = list(
+                       PI = reactable::colDef(
+                         html = T,
+                         cell = function(value, index) {
+                           sprintf(
+                             '<a href=mailto:%s target="_blank">%s</a>',
+                             mt$PI_emails[index], value
+                           )
+                         },
+                         minWidth = 150
+                       ),
+                       POC = reactable::colDef(
+                         html = T,
+                         cell = function(value, index) {
+                           sprintf(
+                             '<a href=mailto:%s target="_blank">%s</a>',
+                             mt$POC_emails[index], value
+                           )
+                         },
+                         minWidth = 150
+                       ),
+                       PI_emails = reactable::colDef(show = F),
+                       POC_emails = reactable::colDef(show = F),
+                       `Project name` = reactable::colDef(minWidth = 200)
+                     )
 )
 ```
 
@@ -122,25 +122,24 @@ reactable(mt,
 #| fig-cap: Figure 1. Bounding box of detected external projects. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
 otn_sf <- otn_tables$otn_resources_metadata_points |>
-  data.frame() |>
-  st_as_sf(wkt = "the_geom", crs = 4326)
-otn_limits <- st_bbox(otn_sf)
+data.frame() |>
+sf::st_as_sf(wkt = "the_geom", crs = 4326)
+otn_limits <- sf::st_bbox(otn_sf)
 
-natural_earth <- st_read(
-  system.file("ne_110m_coastline.gpkg",
-              package = "otndo"
-  ), quiet = T
-)
+natural_earth <- sf::st_read(
+system.file("ne_110m_coastline.gpkg",
+package = "otndo"
+), quiet = T)
 
-ggplot() +
-  geom_sf(data = natural_earth) +
-  geom_sf(data = otn_sf, fill = NA, color = "blue") +
-  coord_sf(
-    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-  ) +
-  labs(title = "Geographic extent of detected projects") +
-  theme_minimal()
+ggplot2::ggplot() +
+ggplot2::geom_sf(data = natural_earth) +
+ggplot2::geom_sf(data = otn_sf, fill = NA, color = "blue") +
+ggplot2::coord_sf(
+xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
+ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+) +
+ggplot2::labs(title = "Geographic extent of detected projects") +
+ggplot2::theme_minimal()
 ```
 
 
@@ -148,16 +147,15 @@ ggplot() +
 #| label: temporal-distribution
 #| fig-cap: Figure 2. Temporal distribution of detections by external project, i.e., the dates when this project heard other project's fish.
 
-qualified[, day := as.Date(datecollected)]
-qualified_time <- unique(qualified, by = c("trackercode", "day"))
+qualified_time <- prep_temporal_distribution(qualified, "receiver")
 
-ggplot(qualified_time) +
-  geom_tile(aes(x = day, y = gsub(".*\\.", "", trackercode))) +
-  labs(
-    x = "", y = "",
-    subtitle = "Temporal distribution of detections by project"
-  ) +
-  theme_minimal()
+ggplot2::ggplot(qualified_time) +
+ggplot2::geom_tile(ggplot2::aes(x = day, y = gsub(".*\\.", "", trackercode))) +
+ggplot2::labs(
+x = "", y = "",
+subtitle = "Temporal distribution of detections by project"
+) +
+ggplot2::theme_minimal()
 ```
 
 
@@ -166,29 +164,29 @@ ggplot(qualified_time) +
 #| fig-cap: Figure 3. Deployment record of receivers across time. Black bars indicate periods of deployments, while red bars denote download dates.
 
 if (!is.null(params$deployment)) {
-  deployment <- fread(params$deployment)
+  deployment <- data.table::fread(params$deployment)
   
-  ggplot(data = deployment) +
-    geom_linerange(
-      aes(
+  ggplot2::ggplot(data = deployment) +
+    ggplot2::geom_linerange(
+      ggplot2::aes(
         y = stationname,
         xmin = deploy_date_time,
         xmax = recover_date_time
       ),
       linewidth = 5
     ) +
-    geom_linerange(
-      aes(
+    ggplot2::geom_linerange(
+      ggplot2::aes(
         ymin = as.numeric(factor(stationname)) - 0.4,
         ymax = as.numeric(factor(stationname)) + 0.4,
         x = recover_date_time
       ),
       color = "red", linewidth = 2
     ) +
-    scale_x_datetime(date_breaks = "month", date_labels = "%b %y") +
-    labs(x = NULL, y = NULL, title = "Temporal receiver coverage") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    ggplot2::scale_x_datetime(date_breaks = "month", date_labels = "%b %y") +
+    ggplot2::labs(x = NULL, y = NULL, title = "Temporal receiver coverage") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
 ```
 
@@ -200,7 +198,7 @@ if (!is.null(params$deployment)) {
 
 station_summary <- prep_station_table(qualified, type = 'receiver')
 
-reactable(station_summary)
+reactable::reactable(station_summary)
 ```
 
 
@@ -210,10 +208,11 @@ reactable(station_summary)
 
 station_spatial <- prep_station_spatial(qualified, type = 'receiver')
 
-mapview::mapview(station_spatial,
-                 zcol = "Detections",
-                 cex = "Individuals",
-                 layer.name = "Matched detections"
+mapview::mapview(
+  station_spatial,
+  zcol = "Detections",
+  cex = "Individuals",
+  layer.name = "Matched detections"
 )
 ```
 
@@ -260,9 +259,9 @@ if (is.null(params$since)) {
 ```{r}
 #| label: new-matches
 if (!is.null(params$since)) {
-  since_date <- as.IDate(params$since)
+  since_date <- data.table::as.IDate(params$since)
 } else {
-  since_date <- as.IDate("1970-01-01")
+  since_date <- data.table::as.IDate("1970-01-01")
 }
 new_matches <- qualified[datelastmodified > since_date]
 ```
@@ -274,30 +273,12 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(new_matches), big.mark = '
 #| column: page
 #| fig-cap: Table 3. Total number of new detections and individual fish heard per project receiver.
 #| fig-cap-location: top
-new_mt <- merge(
-  new_matches[, .(detections = .N), by = "trackercode"],
-  unique(new_matches, by = "fieldnumber")[, .(individuals = .N), by = "trackercode"]
-)
 
-new_mt <- merge(new_mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
-# new_mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
-#                           paste0('ACT.', trackercode), trackercode)]
-new_mt[, trackercode := gsub(".*\\.", "", trackercode)]
+new_mt <- prep_match_table(new_matches, pis, type = "receiver")
 
-new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
-
-new_mt[, ":="(network = gsub("\\..*", "", trackercode),
-              code = gsub(".*\\.", "", trackercode),
-              trackercode = NULL)]
-
-new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
-setnames(new_mt, c("PI", "POC", "Project name", "Network", "Project code", "Detections", "Individuals", "PI_emails", "POC_emails"))
-
-setorder(new_mt, -"Detections", -"Individuals")
-
-reactable(new_mt,
+reactable::reactable(new_mt,
           columns = list(
-            PI = colDef(
+            PI = reactable::colDef(
               html = T,
               cell = function(value, index) {
                 sprintf(
@@ -307,7 +288,7 @@ reactable(new_mt,
               },
               minWidth = 150
             ),
-            POC = colDef(
+            POC = reactable::colDef(
               html = T,
               cell = function(value, index) {
                 sprintf(
@@ -317,9 +298,9 @@ reactable(new_mt,
               },
               minWidth = 150
             ),
-            PI_emails = colDef(show = F),
-            POC_emails = colDef(show = F),
-            `Project name` = colDef(minWidth = 200)
+            PI_emails = reactable::colDef(show = F),
+            POC_emails = reactable::colDef(show = F),
+            `Project name` = reactable::colDef(minWidth = 200)
           )
 )
 ```
@@ -332,17 +313,17 @@ new_otn_sf <- otn_sf[grepl(
 paste(unique(new_matches$trackercode), collapse = "|"),
 otn_sf$collectioncode
 ), ]
-otn_limits <- st_bbox(new_otn_sf)
+otn_limits <- sf::st_bbox(new_otn_sf)
 
-ggplot() +
-geom_sf(data = natural_earth) +
-geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
-coord_sf(
-xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-) +
-labs(title = "Geographic extent of newly-detected projects") +
-theme_minimal()
+ggplot2::ggplot() +
+    ggplot2::geom_sf(data = natural_earth) +
+    ggplot2::geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
+    ggplot2::coord_sf(
+        xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
+        ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+    ) +
+    ggplot2::labs(title = "Geographic extent of newly-detected projects") +
+    ggplot2::theme_minimal()
 ```
 
 
@@ -351,24 +332,9 @@ theme_minimal()
 #| fig-cap: Table 4. Total number of detections and number of individual fish heard per project receiver since the last data push.
 #| fig-cap-location: top
 
-station_summary <- merge(
-  new_matches[, .(detections = .N), by = "station"],
-  unique(new_matches, by = c("fieldnumber", "station"))[, .(
-    individuals = .N,
-    long = mean(longitude),
-    lat = mean(latitude)
-  ), by = "station"]
-) #|>
-# DT(, station := sapply(station, .simpleCap)]
+new_station_summary <- prep_station_table(qualified, "receiver")
 
-setorder(station_summary, -lat, long)
-
-station_summary <- station_summary[, .(station, detections, individuals)]
-setnames(station_summary, c("Station", "Detections", "Individuals"))
-
-setnames(station_summary, c("Station", "Detections", "Individuals"))
-
-reactable(station_summary)
+reactable::reactable(station_summary)
 ```
 </figure>
 
@@ -405,13 +371,13 @@ if (is.null(params$since)) {
 #| label: unqualified
 
 unqual_f <- unqualified[, .N, by = "fieldnumber"][N <= 1]
-setnames(unqual_f, c("Transmitter", "N"))
+data.table::setnames(unqual_f, c("Transmitter", "N"))
 
 unqual_real <- unqualified[, .N, by = "fieldnumber"][N > 1]
-setnames(unqual_real, c("Transmitter", "N"))
+data.table::setnames(unqual_real, c("Transmitter", "N"))
 ```
 
-Some detections were not matched to other investigators via OTN nodes. There are `r format(nrow(unqualified), big.mark = ',')` of these ["unqualified" detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2) across `r uniqueN(unqualified, by  = 'fieldnumber')` transmitters.
+Some detections were not matched to other investigators via OTN nodes. There are `r format(nrow(unqualified), big.mark = ',')` of these ["unqualified" detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2) across `r data.table::uniqueN(unqualified, by  = 'fieldnumber')` transmitters.
 
 `r nrow(unqual_f)` of these are very likely false, as they only have one detection; this leaves detections of `r nrow(unqual_real)` transmitters that could find a home elsewhere.
 
@@ -420,6 +386,8 @@ Some detections were not matched to other investigators via OTN nodes. There are
 ```{r}
 #| label: unqualified-false
 
+
+## NOTE TO SELF START HERE
 reactable(unqual_f)
 ```
 

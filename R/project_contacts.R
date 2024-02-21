@@ -34,7 +34,7 @@
 #'   points of contact (POC), and their respective emails. Multiple emails are
 #'   separated by commas.
 project_contacts <- function(matched, type = c("receiver", "tag")) {
-  matched <- data.table(matched)
+  matched <- data.table::data.table(matched)
   if (type == "tag") {
     pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(
@@ -114,10 +114,10 @@ project_contacts <- function(matched, type = c("receiver", "tag")) {
 
   if (type == "tag") {
     pis <- pis[, .(detectedby, PI, POC, PI_emails, POC_emails)]
-    setnames(pis, "detectedby", "project_name")
+    data.table::setnames(pis, "detectedby", "project_name")
   } else {
     pis <- pis[, .(trackercode, PI, POC, PI_emails, POC_emails)]
-    setnames(pis, "trackercode", "project_name")
+    data.table::setnames(pis, "trackercode", "project_name")
   }
 
 
