@@ -1,13 +1,12 @@
 #'
 #'
-prep_station_spatial <- function(matched, type = c('tag', 'receiver')){
+prep_station_spatial <- function(matched, type = c("tag", "receiver")) {
   matched <- data.table::data.table(matched)
 
-  if(type == 'tag'){
+  if (type == "tag") {
     station_spatial <- unique(matched, by = c("station", "detectedby"))
 
     station_spatial <- station_spatial[, station := toupper(station)]
-
   } else {
     station_spatial <- unique(matched, by = "station")
   }
@@ -19,7 +18,7 @@ prep_station_spatial <- function(matched, type = c('tag', 'receiver')){
   ]
 
 
-  if(type == 'tag'){
+  if (type == "tag") {
     station_spatial <- station_spatial[, .(
       station, Detections, Individuals,
       longitude, latitude, PI, detectedby

@@ -37,28 +37,28 @@
 #'
 #' # For receiver data
 #' download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip",
-#' destfile = file.path(td, "pbsm_qualified_detections_2018.zip"))
+#'   destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
+#' )
 #'
 #' unzip(file.path(td, "pbsm_qualified_detections_2018.zip"), exdir = td)
 #'
 #' qualified <- read.csv(file.path(td, "pbsm_qualified_detections_2018.csv"))
 #'
 #' # Actually run the function
-#' prep_station_table(qualified, type = 'receiver')
+#' prep_station_table(qualified, type = "receiver")
 #'
 #' # Clean up
 #' unlink(td, recursive = TRUE)
-#'
 #'
 #' @returns For tag data, a data.table with the PI, project, station, number of
 #'  detections, and number of individuals heard. For receiver data, a data.table
 #'  with the station, number of detections, and number of individuals heard
 #'  (assuming that the PI and POC is you).
-prep_station_table <- function(matched, type = c('tag', 'receiver'),
-                               pis = NULL){
+prep_station_table <- function(matched, type = c("tag", "receiver"),
+                               pis = NULL) {
   matched <- data.table::data.table(matched)
 
-  if(type == 'tag'){
+  if (type == "tag") {
     station_summary <- merge(
       matched[, .(detections = .N), by = c("station", "detectedby")],
       unique(matched, by = c("tagname", "station"))[, .(
@@ -70,15 +70,14 @@ prep_station_table <- function(matched, type = c('tag', 'receiver'),
       ]
     )
 
-    data.table::setnames(station_summary, 'detectedby', 'project_name')
+    data.table::setnames(station_summary, "detectedby", "project_name")
 
     station_summary <- merge(
       station_summary,
       pis[, .(project_name, PI)],
       by = "project_name"
     )
-
-  }else {
+  } else {
     station_summary <- merge(
       matched[, .(detections = .N), by = "station"],
       unique(matched, by = c("fieldnumber", "station"))[, .(
@@ -93,11 +92,15 @@ prep_station_table <- function(matched, type = c('tag', 'receiver'),
 
   data.table::setorder(station_summary, -lat, long)
 
-  if(type == 'tag'){
-    station_summary <- station_summary[, .(PI, project_name, station,
-                                           detections, individuals)]
-    data.table::setnames(station_summary, c("PI", "Project", "Station",
-                                "Detections", "Individuals"))
+  if (type == "tag") {
+    station_summary <- station_summary[, .(
+      PI, project_name, station,
+      detections, individuals
+    )]
+    data.table::setnames(station_summary, c(
+      "PI", "Project", "Station",
+      "Detections", "Individuals"
+    ))
   } else {
     station_summary <- station_summary[, .(station, detections, individuals)]
     data.table::setnames(station_summary, c("Station", "Detections", "Individuals"))

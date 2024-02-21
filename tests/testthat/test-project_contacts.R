@@ -2,7 +2,7 @@ td <- file.path(tempdir(), "matos_test_files")
 dir.create(td)
 library(data.table)
 
-set_up_test_project_contacts <- function(type, td){
+set_up_test_project_contacts <- function(type, td) {
   file_base <- paste0("pbsm_", type, "_detections_2018")
   file_loc <- file.path(td, paste0(file_base, ".zip"))
   download.file(
@@ -14,7 +14,8 @@ set_up_test_project_contacts <- function(type, td){
     destfile = file_loc
   )
   unzip(file_loc,
-        exdir = td)
+    exdir = td
+  )
 
   contacts <- file.path(td, paste0(file_base, ".csv"))
 

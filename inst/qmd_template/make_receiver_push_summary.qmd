@@ -89,31 +89,31 @@ A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(
 mt <- prep_match_table(qualified, pis, type = "receiver")
 
 reactable::reactable(mt,
-                     columns = list(
-                       PI = reactable::colDef(
-                         html = T,
-                         cell = function(value, index) {
-                           sprintf(
-                             '<a href=mailto:%s target="_blank">%s</a>',
-                             mt$PI_emails[index], value
-                           )
-                         },
-                         minWidth = 150
-                       ),
-                       POC = reactable::colDef(
-                         html = T,
-                         cell = function(value, index) {
-                           sprintf(
-                             '<a href=mailto:%s target="_blank">%s</a>',
-                             mt$POC_emails[index], value
-                           )
-                         },
-                         minWidth = 150
-                       ),
-                       PI_emails = reactable::colDef(show = F),
-                       POC_emails = reactable::colDef(show = F),
-                       `Project name` = reactable::colDef(minWidth = 200)
-                     )
+  columns = list(
+    PI = reactable::colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          mt$PI_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    POC = reactable::colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          mt$POC_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    PI_emails = reactable::colDef(show = F),
+    POC_emails = reactable::colDef(show = F),
+    `Project name` = reactable::colDef(minWidth = 200)
+  )
 )
 ```
 
@@ -122,24 +122,26 @@ reactable::reactable(mt,
 #| fig-cap: Figure 1. Bounding box of detected external projects. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
 otn_sf <- otn_tables$otn_resources_metadata_points |>
-data.frame() |>
-sf::st_as_sf(wkt = "the_geom", crs = 4326)
+  data.frame() |>
+  sf::st_as_sf(wkt = "the_geom", crs = 4326)
 otn_limits <- sf::st_bbox(otn_sf)
 
 natural_earth <- sf::st_read(
-system.file("ne_110m_coastline.gpkg",
-package = "otndo"
-), quiet = T)
+  system.file("ne_110m_coastline.gpkg",
+    package = "otndo"
+  ),
+  quiet = T
+)
 
 ggplot2::ggplot() +
-ggplot2::geom_sf(data = natural_earth) +
-ggplot2::geom_sf(data = otn_sf, fill = NA, color = "blue") +
-ggplot2::coord_sf(
-xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-) +
-ggplot2::labs(title = "Geographic extent of detected projects") +
-ggplot2::theme_minimal()
+  ggplot2::geom_sf(data = natural_earth) +
+  ggplot2::geom_sf(data = otn_sf, fill = NA, color = "blue") +
+  ggplot2::coord_sf(
+    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
+    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+  ) +
+  ggplot2::labs(title = "Geographic extent of detected projects") +
+  ggplot2::theme_minimal()
 ```
 
 
@@ -150,12 +152,12 @@ ggplot2::theme_minimal()
 qualified_time <- prep_temporal_distribution(qualified, "receiver")
 
 ggplot2::ggplot(qualified_time) +
-ggplot2::geom_tile(ggplot2::aes(x = day, y = gsub(".*\\.", "", trackercode))) +
-ggplot2::labs(
-x = "", y = "",
-subtitle = "Temporal distribution of detections by project"
-) +
-ggplot2::theme_minimal()
+  ggplot2::geom_tile(ggplot2::aes(x = day, y = gsub(".*\\.", "", trackercode))) +
+  ggplot2::labs(
+    x = "", y = "",
+    subtitle = "Temporal distribution of detections by project"
+  ) +
+  ggplot2::theme_minimal()
 ```
 
 
@@ -165,7 +167,7 @@ ggplot2::theme_minimal()
 
 if (!is.null(params$deployment)) {
   deployment <- data.table::fread(params$deployment)
-  
+
   ggplot2::ggplot(data = deployment) +
     ggplot2::geom_linerange(
       ggplot2::aes(
@@ -196,7 +198,7 @@ if (!is.null(params$deployment)) {
 #| fig-cap: Table 2. Total number of detections and number of individual fish heard per project receiver.
 #| fig-cap-location: top
 
-station_summary <- prep_station_table(qualified, type = 'receiver')
+station_summary <- prep_station_table(qualified, type = "receiver")
 
 reactable::reactable(station_summary)
 ```
@@ -206,7 +208,7 @@ reactable::reactable(station_summary)
 #| label: detection-map-leaflet
 #| fig-cap: Figure 4. Number of detections per project receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
 
-station_spatial <- prep_station_spatial(qualified, type = 'receiver')
+station_spatial <- prep_station_spatial(qualified, type = "receiver")
 
 mapview::mapview(
   station_spatial,
@@ -277,31 +279,31 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(new_matches), big.mark = '
 new_mt <- prep_match_table(new_matches, pis, type = "receiver")
 
 reactable::reactable(new_mt,
-          columns = list(
-            PI = reactable::colDef(
-              html = T,
-              cell = function(value, index) {
-                sprintf(
-                  '<a href=mailto:%s target="_blank">%s</a>',
-                  new_mt$PI_emails[index], value
-                )
-              },
-              minWidth = 150
-            ),
-            POC = reactable::colDef(
-              html = T,
-              cell = function(value, index) {
-                sprintf(
-                  '<a href=mailto:%s target="_blank">%s</a>',
-                  new_mt$POC_emails[index], value
-                )
-              },
-              minWidth = 150
-            ),
-            PI_emails = reactable::colDef(show = F),
-            POC_emails = reactable::colDef(show = F),
-            `Project name` = reactable::colDef(minWidth = 200)
-          )
+  columns = list(
+    PI = reactable::colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          new_mt$PI_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    POC = reactable::colDef(
+      html = T,
+      cell = function(value, index) {
+        sprintf(
+          '<a href=mailto:%s target="_blank">%s</a>',
+          new_mt$POC_emails[index], value
+        )
+      },
+      minWidth = 150
+    ),
+    PI_emails = reactable::colDef(show = F),
+    POC_emails = reactable::colDef(show = F),
+    `Project name` = reactable::colDef(minWidth = 200)
+  )
 )
 ```
 
@@ -310,20 +312,20 @@ reactable::reactable(new_mt,
 #| fig-cap: Figure 5. Bounding box of external projects detected since the last data push. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
 new_otn_sf <- otn_sf[grepl(
-paste(unique(new_matches$trackercode), collapse = "|"),
-otn_sf$collectioncode
+  paste(unique(new_matches$trackercode), collapse = "|"),
+  otn_sf$collectioncode
 ), ]
 otn_limits <- sf::st_bbox(new_otn_sf)
 
 ggplot2::ggplot() +
-    ggplot2::geom_sf(data = natural_earth) +
-    ggplot2::geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
-    ggplot2::coord_sf(
-        xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-        ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-    ) +
-    ggplot2::labs(title = "Geographic extent of newly-detected projects") +
-    ggplot2::theme_minimal()
+  ggplot2::geom_sf(data = natural_earth) +
+  ggplot2::geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
+  ggplot2::coord_sf(
+    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
+    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+  ) +
+  ggplot2::labs(title = "Geographic extent of newly-detected projects") +
+  ggplot2::theme_minimal()
 ```
 
 

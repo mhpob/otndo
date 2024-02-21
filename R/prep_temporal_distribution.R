@@ -1,5 +1,5 @@
 #'
-prep_temporal_distribution <- function(matched, type = c('tag', 'receiver')){
+prep_temporal_distribution <- function(matched, type = c("tag", "receiver")) {
   matched <- data.table::data.table(matched)
 
   if (type == "receiver") {
@@ -15,8 +15,10 @@ prep_temporal_distribution <- function(matched, type = c('tag', 'receiver')){
     matched[, detectedby_plot := factor(
       gsub(".*\\.", "", detectedby),
       ordered = T,
-      levels = gsub(".*\\.", "",
-                    proj_order_ns$detectedby)
+      levels = gsub(
+        ".*\\.", "",
+        proj_order_ns$detectedby
+      )
     )]
 
     matched <- unique(matched, by = c("detectedby", "day"))
