@@ -150,17 +150,8 @@ ggplot() +
 #| label: temporal-distribution
 #| fig-cap: Figure 2. Temporal distribution of detections by external project, i.e., the dates when other projects heard this project's fish.
 
-proj_order_ns <- matched[, .(lat = median(latitude)), by = "detectedby"]
-setorder(proj_order_ns, lat)
+matched_time <- prep_temporal_distribution(matched, "tag")
 
-matched[, detectedby_plot := factor(
-  gsub(".*\\.", "", detectedby),
-  ordered = T,
-  levels = gsub(".*\\.", "",
-                proj_order_ns$detectedby)
-)]
-
-matched_time <- unique(matched, by = c("detectedby", "day"))
 ggplot(matched_time) +
   geom_tile(aes(x = day, y = detectedby_plot)) +
   labs(
