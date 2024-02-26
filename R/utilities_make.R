@@ -10,39 +10,64 @@
 #' @name utilities-make
 #' @keywords internal
 clean_otn_deployment <- function(deployment) {
-  # Find which sheet has deployment data. If none are explicitly labeled, assume
-  #   it's sheet 1
-  sheet_id <- grep("dep", readxl::excel_sheets(deployment),
-    ignore.case = T, value = T
-  )
-  if (length(sheet_id) == 0) {
-    sheet_id <- 1
-  }
-
-  # Check for header: If the first row has no columns, it likely contains it.
-  if (ncol(readxl::read_excel(deployment,
-    sheet = sheet_id,
-    range = "A1"
-  )) == 0) {
-    deployment <- readxl::read_excel(deployment,
-      sheet = sheet_id,
-      skip = 3
+  file_ext <- gsub(".*\\.", "", deployment)
+  if (grepl("^xls", file_ext)) {
+    # Find which sheet has deployment data. If none are explicitly labeled, assume
+    #   it's sheet 1
+    sheet_id <- grep("dep", readxl::excel_sheets(deployment),
+      ignore.case = T, value = T
     )
+    if (length(sheet_id) == 0) {
+      sheet_id <- 1
+    }
+
+    # Check for header: If the first row has no columns, it likely contains it.
+    if (ncol(readxl::read_excel(deployment,
+      sheet = sheet_id,
+      range = "A1"
+    )) == 0) {
+      deployment <- readxl::read_excel(deployment,
+        sheet = sheet_id,
+        skip = 3
+      )
+    } else {
+      deployment <- readxl::read_excel(deployment, sheet = sheet_id)
+    }
+  } else if (grepl("^csv$", file_ext)) {
+    # Check for OTN header
+    if (ncol(read.csv(deployment, nrows = 1)) == 0) {
+      deployment <- read.csv(deployment, skip = 3)
+    } else {
+      deployment <- read.csv(deployment)
+    }
   } else {
-    deployment <- readxl::read_excel(deployment, sheet = sheet_id)
+    cli::cli_abort("File type is not xls, xlsx, or csv.")
   }
 
-  names(deployment) <- tolower(gsub(" .*", "", names(deployment)))
+  # Drop everything after a space in an Excel sheet; read.csv converts spaces
+  #   to periods, so also drop everything after a period
+  names(deployment) <- tolower(
+    gsub("[ \\.].*", "", names(deployment))
+  )
+
   deployment <- deployment[!is.na(deployment$deploy_date_time), ]
   deployment <- deployment[!deployment$recovered %in% c("l", "failed"), ]
 
-  deployment$deploy_date_time <- as.POSIXct(deployment$deploy_date_time,
+  deployment$deploy_date_time <- as.POSIXct(
+    deployment$deploy_date_time,
     tz = "UTC",
-    format = "%Y-%m-%dT%H:%M:%S"
+    tryFormats = c(
+      "%Y-%m-%dT%H:%M:%S",
+      "%Y-%m-%d %H:%M:%S"
+    )
   )
-  deployment$recover_date_time <- as.POSIXct(deployment$recover_date_time,
+  deployment$recover_date_time <- as.POSIXct(
+    deployment$recover_date_time,
     tz = "UTC",
-    format = "%Y-%m-%dT%H:%M:%S"
+    tryFormats = c(
+      "%Y-%m-%dT%H:%M:%S",
+      "%Y-%m-%d %H:%M:%S"
+    )
   )
 
   deployment <- deployment[!is.na(deployment$deploy_date_time) &

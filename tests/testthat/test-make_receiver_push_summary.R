@@ -1,3 +1,5 @@
+skip_if_offline()
+
 ## Simulate OTN project
 td <- file.path(tempdir(), "otndo_test_files")
 dir.create(td)
