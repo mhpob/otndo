@@ -9,7 +9,7 @@ Description: This package provides functions to summarize the various type of
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 URL: https://mhpob.github.io/otndo/,
     https://otndo.obrien.page/
 BugReports: https://github.com/mhpob/otndo/issues
@@ -26,6 +26,7 @@ Imports:
     utils
 Suggests: 
     knitr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    writexl
 Config/testthat/edition: 3
 VignetteBuilder: knitr
