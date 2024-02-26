@@ -1,3 +1,5 @@
+skip_if_offline()
+
 td <- file.path(tempdir(), "test-clean_otn_deployment")
 dir.create(td)
 
