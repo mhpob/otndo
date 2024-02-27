@@ -36,9 +36,11 @@ clean_otn_deployment <- function(deployment) {
   } else if (grepl("^csv$", file_ext)) {
     # Check for OTN header
     if (ncol(read.csv(deployment, nrows = 1)) == 0) {
-      deployment <- read.csv(deployment, skip = 3)
+      deployment <- read.csv(deployment, skip = 3,
+                             na.strings = c("NA", ""))
     } else {
-      deployment <- read.csv(deployment)
+      deployment <- read.csv(deployment,
+                             na.strings = c("NA", ""))
     }
   } else {
     cli::cli_abort("File type is not xls, xlsx, or csv.")
@@ -58,8 +60,7 @@ clean_otn_deployment <- function(deployment) {
     tz = "UTC",
     tryFormats = c(
       "%Y-%m-%dT%H:%M:%S",
-      "%Y-%m-%d %H:%M:%S",
-      "%Y-%m-%d %H:%M:%OS"
+      "%Y-%m-%d %H:%M:%S"
     )
   )
   deployment$recover_date_time <- as.POSIXct(
@@ -67,8 +68,7 @@ clean_otn_deployment <- function(deployment) {
     tz = "UTC",
     tryFormats = c(
       "%Y-%m-%dT%H:%M:%S",
-      "%Y-%m-%d %H:%M:%S",
-      "%Y-%m-%d %H:%M:%OS"
+      "%Y-%m-%d %H:%M:%S"
     )
   )
 
