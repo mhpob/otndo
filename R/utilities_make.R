@@ -36,11 +36,14 @@ clean_otn_deployment <- function(deployment) {
   } else if (grepl("^csv$", file_ext)) {
     # Check for OTN header
     if (ncol(read.csv(deployment, nrows = 1)) == 0) {
-      deployment <- read.csv(deployment, skip = 3,
-                             na.strings = c("NA", ""))
+      deployment <- read.csv(deployment,
+        skip = 3,
+        na.strings = c("NA", "")
+      )
     } else {
       deployment <- read.csv(deployment,
-                             na.strings = c("NA", ""))
+        na.strings = c("NA", "")
+      )
     }
   } else {
     cli::cli_abort("File type is not xls, xlsx, or csv.")
