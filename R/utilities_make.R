@@ -58,7 +58,8 @@ clean_otn_deployment <- function(deployment) {
     tz = "UTC",
     tryFormats = c(
       "%Y-%m-%dT%H:%M:%S",
-      "%Y-%m-%d %H:%M:%S"
+      "%Y-%m-%d %H:%M:%S",
+      "%Y-%m-%d %H:%M:%OS"
     )
   )
   deployment$recover_date_time <- as.POSIXct(
@@ -66,7 +67,8 @@ clean_otn_deployment <- function(deployment) {
     tz = "UTC",
     tryFormats = c(
       "%Y-%m-%dT%H:%M:%S",
-      "%Y-%m-%d %H:%M:%S"
+      "%Y-%m-%d %H:%M:%S",
+      "%Y-%m-%d %H:%M:%OS"
     )
   )
 
