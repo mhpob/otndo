@@ -36,9 +36,14 @@ clean_otn_deployment <- function(deployment) {
   } else if (grepl("^csv$", file_ext)) {
     # Check for OTN header
     if (ncol(read.csv(deployment, nrows = 1)) == 0) {
-      deployment <- read.csv(deployment, skip = 3)
+      deployment <- read.csv(deployment,
+        skip = 3,
+        na.strings = c("NA", "")
+      )
     } else {
-      deployment <- read.csv(deployment)
+      deployment <- read.csv(deployment,
+        na.strings = c("NA", "")
+      )
     }
   } else {
     cli::cli_abort("File type is not xls, xlsx, or csv.")
@@ -51,7 +56,7 @@ clean_otn_deployment <- function(deployment) {
   )
 
   deployment <- deployment[!is.na(deployment$deploy_date_time), ]
-  deployment <- deployment[!deployment$recovered %in% c("l", "failed"), ]
+  deployment <- deployment[!deployment$recovered %in% c("l", "failed", NA), ]
 
   deployment$deploy_date_time <- as.POSIXct(
     deployment$deploy_date_time,
