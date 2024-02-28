@@ -53,7 +53,7 @@ clean_otn_deployment <- function(deployment) {
   )
 
   deployment <- deployment[!is.na(deployment$deploy_date_time), ]
-  deployment <- deployment[!deployment$recovered %in% c("l", "failed"), ]
+  deployment <- deployment[!deployment$recovered %in% c("l", "failed", NA), ]
 
   deployment$deploy_date_time <- as.POSIXct(
     deployment$deploy_date_time,
