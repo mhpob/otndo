@@ -25,6 +25,7 @@ Imports:
     rmarkdown,
     utils
 Suggests: 
+    curl,
     knitr,
     testthat (>= 3.0.0),
     writexl
