@@ -168,15 +168,17 @@ mt <- merge(
 mt <- merge(mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
 # mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
 #                           paste0('OTN.', trackercode), trackercode)]
-mt[, trackercode := gsub(".*\\.", "", trackercode)]
+mt[, collectioncode := gsub(".*\\.", "", trackercode)]
 
-mt <- merge(mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
+mt <- merge(mt, otn_tables[[1]][, .(resource_full_name, collectioncode)],
+            by = 'collectioncode')
 
 mt[, ":="(network = gsub("\\..*", "", trackercode),
   code = gsub(".*\\.", "", trackercode),
   trackercode = NULL,
   PI = fifelse(PI == "NA", "", PI),
   POC = fifelse(POC == "NA", "", POC))]
+mt[, network := fifelse(network == code, '', network)]
 
 mt <- mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
 setnames(mt, c("PI", "POC", "Project name", "Network", "Project code", "Detections", "Individuals", "PI_emails", "POC_emails"))
@@ -411,13 +413,15 @@ new_mt <- merge(
 new_mt <- merge(new_mt, pis[, .(trackercode, PI, POC, PI_emails, POC_emails)])
 # new_mt[, trackercode := ifelse(!grepl('^ACT|^FACT|^OTN', trackercode),
 #                           paste0('ACT.', trackercode), trackercode)]
-new_mt[, trackercode := gsub(".*\\.", "", trackercode)]
+new_mt[, collectioncode := gsub(".*\\.", "", trackercode)]
 
-new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, trackercode = collectioncode)])
+new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, collectioncode)],
+                by = 'collectioncode')
 
 new_mt[, ":="(network = gsub("\\..*", "", trackercode),
   code = gsub(".*\\.", "", trackercode),
   trackercode = NULL)]
+new_mt[, network := fifelse(network == code, '', network)]
 
 new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
 setnames(new_mt, c("PI", "POC", "Project name", "Network", "Project code", "Detections", "Individuals", "PI_emails", "POC_emails"))
