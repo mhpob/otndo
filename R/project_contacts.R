@@ -1,6 +1,6 @@
 #' Extract and combine the contacts for matched projects
 #'
-#' @param matched data.frame of transmitter/receiver detections matched by OTN:
+#' @param extract data.frame of transmitter/receiver detections matched by OTN:
 #'  matched detections for tags and qualified detections for receivers
 #' @param type Type of extract data: "tag" or "receiver"
 #'
@@ -40,21 +40,21 @@
 #'   separated by commas.
 #'
 #' @export
-project_contacts <- function(matched, type = c("receiver", "tag")) {
+project_contacts <- function(extract, type = c("receiver", "tag")) {
   contact_pi <- contact_poc <- qualified <- tag_contact_pi <- tag_contact_poc <-
     PI <- POC <- . <- PI_emails <- POC_emails <- emails <- detectedby <-
     trackercode <- NULL
 
-  matched <- data.table::data.table(matched)
+  extract <- data.table::data.table(extract)
 
   if (type == "tag") {
-    pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
+    pis <- unique(extract, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(
       PI = strsplit(contact_pi, " \\(|\\)(, )?"),
       POC = strsplit(contact_poc, " \\(|\\)(, )?")
     )]
   } else {
-    pis <- unique(qualified, by = c("trackercode"))
+    pis <- unique(extract, by = c("trackercode"))
     pis[, ":="(
       PI = strsplit(tag_contact_pi, " \\(|\\)(, )?"),
       POC = strsplit(tag_contact_poc, " \\(|\\)(, )?")

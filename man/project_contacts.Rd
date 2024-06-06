@@ -4,10 +4,10 @@
 \alias{project_contacts}
 \title{Extract and combine the contacts for matched projects}
 \usage{
-project_contacts(matched, type = c("receiver", "tag"))
+project_contacts(extract, type = c("receiver", "tag"))
 }
 \arguments{
-\item{matched}{data.frame of transmitter/receiver detections matched by OTN:
+\item{extract}{data.frame of transmitter/receiver detections matched by OTN:
 matched detections for tags and qualified detections for receivers}
 
 \item{type}{Type of extract data: "tag" or "receiver"}
