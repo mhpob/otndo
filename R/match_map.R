@@ -1,3 +1,12 @@
+#' Plot the geographic extent of OTN projects
+#'
+#' @param otn_tables A list containing OTN's `otn_resources_metadata_points`
+#'    GeoServer layer. Usually created using `otn_query`.
+#'
+#' @examples
+#' match_map(
+#'   otn_query('MDWEA')
+#' )
 #'
 #' @export
 

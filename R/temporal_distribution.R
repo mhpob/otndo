@@ -1,3 +1,34 @@
+#' Create an abacus plot of detections by project
+#'
+#' @param extract OTN data extract file
+#' @param type Transmitter (tag) or receiver detections?
+#'
+#' @examples
+#' \dontrun{
+#' # Set up example data
+#' td <- file.path(tempdir(), "otndo_example")
+#' dir.create(td)
+#'
+#' # For tag data
+#' download.file(
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/",
+#'     "pbsm/detection-extracts/pbsm_matched_detections_2018.zip"
+#'   ),
+#'   destfile = file.path(td, "pbsm_matched_detections_2018.zip")
+#' )
+#' unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+#'   exdir = td
+#' )
+#'
+#' matched <- read.csv(file.path(
+#'   td,
+#'   "pbsm_matched_detections_2018.csv"
+#' ))
+#'
+#' temporal_distribution(matched, "tag")
+#' }
+#'
 #' @export
 temporal_distribution <- function(extract, type = c("tag", "receiver")) {
   extract <- data.table::data.table(extract)
@@ -29,6 +60,7 @@ temporal_distribution <- function(extract, type = c("tag", "receiver")) {
           proj_order_ns$detectedby
         )
       )]
+      extract[, day := as.Date(datecollected)]
 
       extract <- unique(extract, by = c("detectedby", "day"))
     }

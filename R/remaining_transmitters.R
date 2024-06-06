@@ -6,10 +6,42 @@
 #' very inaccurate with sparse data or short time scales.
 #'
 #' @param matched matched OTN transmitter detections
+#' @param push_log data.frame containing the date of the most-recent data push.
+#'    This requirement is very likely to change in the future.
+#'
+#' @examples
+#' \dontrun{
+#' #' # Set up example data
+#' td <- file.path(tempdir(), "otndo_example")
+#' dir.create(td)
+#'
+#' # For tag data
+#' download.file(
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/",
+#'     "pbsm/detection-extracts/pbsm_matched_detections_2018.zip"
+#'   ),
+#'   destfile = file.path(td, "pbsm_matched_detections_2018.zip")
+#' )
+#' unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+#'   exdir = td
+#' )
+#'
+#' matched <- read.csv(file.path(
+#'   td,
+#'   "pbsm_matched_detections_2018.csv"
+#' ))
+#'
+#' # Run remaining_transmitters()
+#' remaining_transmitters(matched_dets, data.frame(date = as.Date('2020-01-01')))
+#' }
+#'
+#'
 #' @export
 remaining_transmitters <- function(matched, push_log) {
   last_record <- matched[, list(last_record = max(datecollected)), by = "tagname"]
-  transmitter_life <- last_record[release[, list(tagname, datecollected)],
+  transmitter_life <- last_record[
+    matched[receiver == 'release', list(tagname, datecollected)],
     ,
     on = "tagname"
   ]

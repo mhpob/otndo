@@ -9,6 +9,8 @@ project_contacts(matched, type = c("receiver", "tag"))
 \arguments{
 \item{matched}{data.frame of transmitter/receiver detections matched by OTN:
 matched detections for tags and qualified detections for receivers}
+
+\item{type}{Type of extract data: "tag" or "receiver"}
 }
 \value{
 a data.table containing project names, principal investigators (PI),
@@ -19,6 +21,7 @@ separated by commas.
 Extract and combine the contacts for matched projects
 }
 \examples{
+\dontrun{
 # Set up example data
 td <- file.path(tempdir(), "otndo_example")
 dir.create(td)
@@ -46,5 +49,6 @@ project_contacts(matched, type = "tag")
 
 # Clean up
 unlink(td, recursive = TRUE)
+}
 
 }

@@ -7,6 +7,7 @@
 #' @param type type of data to be summarized.
 #'
 #' @examples
+#' \dontrun{
 #' # Set up example data
 #' td <- file.path(tempdir(), "otndo_example")
 #' dir.create(td)
@@ -49,6 +50,7 @@
 #'
 #' # Clean up
 #' unlink(td, recursive = TRUE)
+#' }
 #'
 #' @returns For tag data, a data.table with the PI, project, station, number of
 #'  detections, and number of individuals heard. For receiver data, a data.table

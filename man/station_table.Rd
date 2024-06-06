@@ -25,6 +25,7 @@ with the station, number of detections, and number of individuals heard
 Create the station summary table
 }
 \examples{
+\dontrun{
 # Set up example data
 td <- file.path(tempdir(), "otndo_example")
 dir.create(td)
@@ -67,5 +68,6 @@ station_table(qualified, type = "receiver")
 
 # Clean up
 unlink(td, recursive = TRUE)
+}
 
 }

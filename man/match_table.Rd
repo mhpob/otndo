@@ -14,8 +14,61 @@ match_table(matched, pis, type = c("tag", "receiver"), otn_tables)
 \item{type}{Tag or receiver data? Takes values of "tag" and "receiver";
 defaults to "tag".}
 
-\item{otn_tables}{A OTN GeoServer query created by \code{otn_query}.}
+\item{otn_tables}{A OTN GeoServer query created by \code{\link[=otn_query]{otn_query()}}}
 }
 \description{
 Create a reactable table of matched detections
+}
+\examples{
+\dontrun{
+# Receiver
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_qualified_detections_2018.zip/",
+    "@download/file"
+  ),
+  destfile = file.path(td, "pbsm_qualified_detections_2018.zip"),
+  mode = "wb"
+)
+unzip(
+  file.path(td, "pbsm_qualified_detections_2018.zip"),
+  exdir = td
+)
+
+qualified_dets <- data.table::fread(
+   file.path(td, "pbsm_qualified_detections_2018.csv")
+)
+contacts <- project_contacts(qualified_dets, 'receiver')
+otn <- otn_query(unique(qualified_dets$trackercode))
+
+match_table(matched = qualified_dets,
+            pis = contacts,
+            type = 'receiver',
+            otn_tables = otn)
+
+# Transmitters
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/",
+    "pbsm/detection-extracts/pbsm_matched_detections_2018.zip/",
+    "@download/file"
+  ),
+  destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
+  mode = "wb"
+)
+unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+  exdir = td
+)
+
+matched_dets <- data.table::fread(
+  file.path(td, "pbsm_matched_detections_2018.csv")
+)
+
+match_table(matched = matched_dets,
+            pis = project_contacts(matched_dets, 'tag'),
+            type = 'tag',
+            otn_tables = otn_query(unique(matched_dets$detectedby)))
+}
+
 }

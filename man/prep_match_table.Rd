@@ -14,7 +14,7 @@ prep_match_table(matched, pis, type = c("tag", "receiver"), otn_tables)
 \item{type}{Tag or receiver data? Takes values of "tag" and "receiver";
 defaults to "tag".}
 
-\item{otn_tables}{A OTN GeoServer query created by \code{otn_query}.}
+\item{otn_tables}{A OTN GeoServer query created by \code{\link[=otn_query]{otn_query()}}}
 }
 \description{
 Prepare the detection match summary data

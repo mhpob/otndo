@@ -1,12 +1,43 @@
 #' Create an abacus plot of matched detections
 #'
-#' @param temp_dist Output of `temporal_distribution`
-#' @param release Data frame of release times/locations.
+#' @param temp_dist Data from the output of [temporal_distribution()]
+#' @param release Data frame of release times/locations; a subset of the matched
+#'    detections data
+#'
+#' @examples
+#' \dontrun{
+#' # Get a detection file
+#' download.file(
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/",
+#'     "pbsm/detection-extracts/pbsm_matched_detections_2018.zip/",
+#'     "@@download/file"
+#'   ),
+#'   destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
+#'   mode = "wb"
+#' )
+#' unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+#'   exdir = td
+#' )
+#'
+#' matched_dets <- data.table::fread(
+#'   file.path(td, "pbsm_matched_detections_2018.csv")
+#' )
+#'
+#'
+#' # Run temporal_distribution
+#' temporal <- temporal_distribution(matched_dets, 'tag')
+#'
+#' # Run matched_abacus
+#' matched_abacus(temporal$data, matched_dets[receiver == 'release'])
+#' }
 #'
 #' @export
 
 matched_abacus <- function(temp_dist, release) {
   abacus_data <- unique(temp_dist, by = c("detectedby", "day", "tagname"))
+  release <- data.table::data.table(release)
+  release[, day := as.Date(datecollected)]
 
   ggplot2::ggplot() +
     ggplot2::geom_hline(yintercept = sort(unique(release$tagname))[
