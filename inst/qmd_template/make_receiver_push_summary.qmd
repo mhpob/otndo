@@ -26,10 +26,9 @@ knitr::opts_chunk$set(
 #| label: packages
 #| message: false
 
+library(otndo)
 library(data.table)
-library(sf)
 library(mapview)
-library(ggplot2)
 library(reactable)
 ```
 
@@ -40,6 +39,10 @@ qualified <- data.table::fread(params$qualified)
 unqualified <- data.table::fread(params$unqualified)
 
 push_log <- data.table::fread(params$push_log)
+
+if (!is.null(params$deployment)) {
+  deployment <- data.table::fread(params$deployment)
+}
 ```
 
 ```{r}
@@ -109,31 +112,7 @@ temporal_distribution(qualified, "receiver")
 #| label: deployment-gantt
 #| fig-cap: Figure 3. Deployment record of receivers across time. Black bars indicate periods of deployments, while red bars denote download dates.
 
-if (!is.null(params$deployment)) {
-  deployment <- data.table::fread(params$deployment)
-
-  ggplot2::ggplot(data = deployment) +
-    ggplot2::geom_linerange(
-      ggplot2::aes(
-        y = stationname,
-        xmin = deploy_date_time,
-        xmax = recover_date_time
-      ),
-      linewidth = 5
-    ) +
-    ggplot2::geom_linerange(
-      ggplot2::aes(
-        ymin = as.numeric(factor(stationname)) - 0.4,
-        ymax = as.numeric(factor(stationname)) + 0.4,
-        x = recover_date_time
-      ),
-      color = "red", linewidth = 2
-    ) +
-    ggplot2::scale_x_datetime(date_breaks = "month", date_labels = "%b %y") +
-    ggplot2::labs(x = NULL, y = NULL, title = "Temporal receiver coverage") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
-}
+deployment_gantt(deployment)
 ```
 
 
@@ -161,37 +140,6 @@ mapview::mapview(
   layer.name = "Matched detections"
 )
 ```
-
-
-```{r}
-#| label: detection-map
-#| eval: false
-
-# This gives a static map. Currently not run bc we have the js map. Will need
-#   better basemap (more refined than 110m Natural Earth) if this is used in the future
-# station_spatial <- qualified |>
-#   unique(by = "station")
-station_spatial <- station_spatial[station_summary[, Station := toupper(Station)], , on = c("station" = "Station")] |>
-  data.frame() |>
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
-
-station_limits <- st_bbox(station_spatial)
-x_nudge <- (station_limits[3] - station_limits[1]) * (1 / 10)
-y_nudge <- (station_limits[4] - station_limits[2]) * (1 / 10)
-
-# ggplot() +
-#   geom_sf(data = natural_earth, fill = 'lightgray') +
-#   geom_sf(data = station_spatial,
-#           aes(size = Detections, color = Individuals)) +
-#   labs(subtitle = 'Records by receivers') +
-#   scale_color_viridis_c() +
-#   coord_sf(xlim = c(station_limits['xmin'] - x_nudge, station_limits['xmax'] + x_nudge),
-#            ylim = c(station_limits['ymin'] - y_nudge, station_limits['ymax'] + y_nudge)) +
-#   theme_minimal() +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
-
 
 
 
@@ -227,21 +175,17 @@ match_table(new_matches, pis, type = "receiver", otn_tables)
 #| label: new-otn-match-map
 #| fig-cap: Figure 5. Bounding box of external projects detected since the last data push. This does not necessarily reflect the distribution of fish heard by this project's receivers.
 
-new_otn_sf <- otn_sf[grepl(
-  paste(unique(new_matches$trackercode), collapse = "|"),
-  otn_sf$collectioncode
-), ]
-otn_limits <- sf::st_bbox(new_otn_sf)
+new_otn_tables <- lapply(
+  otn_tables,
+  function(.) {
+    .[grepl(
+      paste(gsub(".*\\.", "", unique(new_matches$trackercode)), collapse = "|"),
+      collectioncode
+    )]
+  }
+)
 
-ggplot2::ggplot() +
-  ggplot2::geom_sf(data = natural_earth) +
-  ggplot2::geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
-  ggplot2::coord_sf(
-    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-  ) +
-  ggplot2::labs(title = "Geographic extent of newly-detected projects") +
-  ggplot2::theme_minimal()
+match_map(new_otn_tables)
 ```
 
 
@@ -250,33 +194,12 @@ ggplot2::ggplot() +
 #| fig-cap: Table 4. Total number of detections and number of individual fish heard per project receiver since the last data push.
 #| fig-cap-location: top
 
-new_station_summary <- station_table(qualified, "receiver")
+new_station_summary <- station_table(new_matches, "receiver")
 
 reactable::reactable(station_summary)
 ```
 </figure>
 
-```{r}
-#| label: new-detection-map
-
-# station_spatial <- qualified |>
-#   unique(by = 'stationname') |>
-#   DT(station_summary, , on = c('stationname'= 'Station')) |>
-#   data.frame() |>
-#   st_as_sf(coords = c('deploy_long', 'deploy_lat'), crs = 4326)
-#
-#
-# ggplot() +
-#   geom_sf(data = bathy, color = 'lightgray') +
-#   geom_sf(data = midatl) +
-#   geom_sf(data = station_spatial,
-#           aes(linewidth = Detections, color = Individuals)) +
-#   labs(subtitle = 'New records by Mid-Bay receivers') +
-#   scale_color_viridis_c() +
-#   coord_sf(xlim = c(-76.5, -76.15), ylim = c(38.25, 38.45)) +
-#   theme_minimal() +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
 ```{r results='asis', echo=FALSE}
 if (is.null(params$since)) {
   cat("-->")
@@ -322,14 +245,5 @@ reactable(unqual_real)
 #| label: temporal-distribution-unqual
 #| fig-cap: Figure 6. Temporal distribution of unmatched detections by receiver, i.e., the dates when a receiver in this project heard a transmitter that was not matched to an external project.
 
-unqualified[, day := as.Date(datecollected)]
-unqualified_time <- unique(unqualified, by = c("station", "day"))
-
-ggplot(unqualified_time) +
-  geom_tile(aes(x = day, y = station)) +
-  labs(
-    x = "", y = "",
-    subtitle = "Temporal distribution of unmatched detections by station"
-  ) +
-  theme_minimal()
+temporal_distribution(unqualified, "receiver")
 ```
