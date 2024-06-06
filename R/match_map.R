@@ -5,7 +5,7 @@
 #'
 #' @examples
 #' match_map(
-#'   otn_query('MDWEA')
+#'   otn_query("MDWEA")
 #' )
 #'
 #' @export

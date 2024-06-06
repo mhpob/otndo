@@ -27,7 +27,6 @@
 #' prep_station_spatial(matched_dets, "tag")
 #' }
 #'
-#'
 #' @export
 prep_station_spatial <- function(extract, type = c("tag", "receiver")) {
   extract <- data.table::data.table(extract)
