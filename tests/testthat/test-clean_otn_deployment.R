@@ -1,23 +1,9 @@
 skip_if_offline()
 
-td <- file.path(tempdir(), "test-clean_otn_deployment")
-dir.create(td)
-
-deployment <- file.path(
-  td,
-  "pbsm-instrument-deployment-short-form-2018.xls"
-)
-
-download.file("https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/archived-records/2018/pbsm-instrument-deployment-short-form-2018.xls/@@download/file",
-  destfile = deployment,
-  mode = "wb"
-)
-
-
 
 test_that("expected classes", {
   expect_s3_class(
-    deployment_xl <- clean_otn_deployment(deployment),
+    deployment_xl <- clean_otn_deployment(deployment_path),
     c("tbl_df", "tbl", "data.frame"),
     exact = TRUE
   )
@@ -41,7 +27,7 @@ test_that("expected classes", {
 })
 
 test_that("date times are parsed", {
-  deployment_xl <- clean_otn_deployment(deployment)
+  deployment_xl <- clean_otn_deployment(deployment_path)
 
   expect_equal(
     attributes(deployment_xl$deploy_date_time)$tzone,
@@ -59,11 +45,11 @@ test_that("guesses sheet", {
     "one_sheet.xlsx"
   )
 
-  readxl::read_excel(deployment, sheet = 2) |>
+  readxl::read_excel(deployment_path, sheet = 2) |>
     writexl::write_xlsx(deployment_sheet1)
 
   deployment_sheet1 <- clean_otn_deployment(deployment_sheet1)
-  deployment_sheet2 <- clean_otn_deployment(deployment)
+  deployment_sheet2 <- clean_otn_deployment(deployment_path)
 
   expect_equal(
     deployment_sheet1,
@@ -78,7 +64,7 @@ test_that("accepts csv", {
     td,
     "pbsm-instrument-deployment-short-form-2018.csv"
   )
-  readxl::read_excel(deployment, sheet = 2) |>
+  readxl::read_excel(deployment_path, sheet = 2) |>
     write.csv(deployment_csv, row.names = FALSE)
 
   expect_s3_class(
@@ -120,5 +106,3 @@ test_that("errors if not a CSV or XLS(X)", {
     "File type is not xls, xlsx, or csv\\."
   )
 })
-
-unlink(td, recursive = TRUE)
