@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom data.table :=
 #' @importFrom ggplot2 ggplot
 #' @importFrom mapview mapview
 #' @importFrom reactable reactable

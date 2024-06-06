@@ -132,15 +132,7 @@ match_map(otn_tables)
 #| label: temporal-distribution
 #| fig-cap: Figure 2. Temporal distribution of detections by external project, i.e., the dates when other projects heard this project's fish.
 
-matched_time <- prep_temporal_distribution(matched, "tag")
-
-ggplot(matched_time) +
-  geom_tile(aes(x = day, y = detectedby_plot)) +
-  labs(
-    x = "", y = "",
-    subtitle = "Temporal distribution of detections by project"
-  ) +
-  theme_minimal()
+temporal_distribution(matched, "tag")
 ```
 
 ```{r}

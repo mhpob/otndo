@@ -2,6 +2,7 @@
 
 export(make_receiver_push_summary)
 export(make_tag_push_summary)
+importFrom(data.table,":=")
 importFrom(ggplot2,ggplot)
 importFrom(mapview,mapview)
 importFrom(reactable,reactable)
