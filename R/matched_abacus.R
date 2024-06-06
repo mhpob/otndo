@@ -5,7 +5,7 @@
 #'
 #' @export
 
-matched_abacus <- function(temp_dist, release){
+matched_abacus <- function(temp_dist, release) {
   abacus_data <- unique(temp_dist, by = c("detectedby", "day", "tagname"))
 
   ggplot2::ggplot() +
@@ -16,8 +16,10 @@ matched_abacus <- function(temp_dist, release){
       data = abacus_data,
       ggplot2::aes(x = day, y = tagname, fill = detectedby_plot)
     ) +
-    ggplot2::geom_tile(data = release,
-                       ggplot2::aes(x = day, y = tagname), width = 0.5) +
+    ggplot2::geom_tile(
+      data = release,
+      ggplot2::aes(x = day, y = tagname), width = 0.5
+    ) +
     ggplot2::scale_y_discrete(
       limits = sort(unique(release$tagname)),
       breaks = sort(unique(release$tagname))[

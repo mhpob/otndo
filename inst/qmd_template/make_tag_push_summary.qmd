@@ -215,7 +215,8 @@ match_map(new_otn_tables)
 #| label: new-station-summary-table
 #| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
 #| fig-cap-location: top
-station_summary <- station_table(new_matches, 'tag', pis)
+
+station_summary <- station_table(new_matches, "tag", pis)
 
 reactable(station_summary)
 ```

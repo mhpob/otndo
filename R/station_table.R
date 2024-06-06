@@ -57,7 +57,7 @@
 #'
 #' @export
 station_table <- function(matched, type = c("tag", "receiver"),
-                               pis = NULL) {
+                          pis = NULL) {
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {
