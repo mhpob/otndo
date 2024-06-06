@@ -1,10 +1,8 @@
 #' Create a reactable table of matched detections
 #'
 #' @param matched matched (transmitter) or qualified (receiver) OTN detections
-#' @param pis A principal investigator table created by `project_contacts`
 #' @param type Tag or receiver data? Takes values of "tag" and "receiver";
 #'    defaults to "tag".
-#' @param otn_tables A OTN GeoServer query created by [otn_query()]
 #'
 #' @examples
 #' \dontrun{
@@ -26,14 +24,10 @@
 #' qualified_dets <- data.table::fread(
 #'   file.path(td, "pbsm_qualified_detections_2018.csv")
 #' )
-#' contacts <- project_contacts(qualified_dets, "receiver")
-#' otn <- otn_query(unique(qualified_dets$trackercode))
 #'
 #' match_table(
-#'   matched = qualified_dets,
-#'   pis = contacts,
-#'   type = "receiver",
-#'   otn_tables = otn
+#'   extract = qualified_dets,
+#'   type = "receiver"
 #' )
 #'
 #' # Transmitters
@@ -55,20 +49,16 @@
 #' )
 #'
 #' match_table(
-#'   matched = matched_dets,
-#'   pis = project_contacts(matched_dets, "tag"),
-#'   type = "tag",
-#'   otn_tables = otn_query(unique(matched_dets$detectedby))
+#'   extract = matched_dets,
+#'   type = "tag"
 #' )
 #' }
 #'
 #' @export
 match_table <- function(
-    matched,
-    pis,
-    type = c("tag", "receiver"),
-    otn_tables) {
-  mt_data <- prep_match_table(matched, pis, type, otn_tables)
+    extract,
+    type = c("tag", "receiver")) {
+  mt_data <- prep_match_table(extract, type)
 
   reactable::reactable(
     mt_data,
@@ -105,45 +95,48 @@ match_table <- function(
 #'
 #' @inheritParams match_table
 prep_match_table <- function(
-    matched,
-    pis,
-    type = c("tag", "receiver"),
-    otn_tables) {
+    extract,
+    type = c("tag", "receiver")) {
   . <- collectioncode <- project_name <- resource_full_name <- PI <- POC <-
     network <- code <- detections <- individuals <- PI_emails <- POC_emails <-
     station <- Station <- Detections <- Individuals <- longitude <- latitude <-
     detectedby <- NULL
 
-  matched <- data.table::data.table(matched)
+  extract <- data.table::data.table(extract)
 
   if (type == "tag") {
     mt <- merge(
-      matched[, .(detections = .N), by = "detectedby"],
-      unique(matched, by = c("tagname", "detectedby"))[
+      extract[, .(detections = .N), by = "detectedby"],
+      unique(extract, by = c("tagname", "detectedby"))[
         , .(individuals = .N),
         by = "detectedby"
       ]
     )
 
     data.table::setnames(mt, "detectedby", "project_name")
+
+    otn <- otn_query(unique(extract$detectedby))
   } else {
     mt <- merge(
-      matched[, .(detections = .N), by = "trackercode"],
-      unique(matched, by = "fieldnumber")[, .(individuals = .N),
+      extract[, .(detections = .N), by = "trackercode"],
+      unique(extract, by = "fieldnumber")[, .(individuals = .N),
         by = "trackercode"
       ]
     )
 
     data.table::setnames(mt, "trackercode", "project_name")
+
+    otn <- otn_query(unique(extract$trackercode))
   }
 
+  pis <- project_contacts(extract, type = type)
   mt <- merge(mt, pis)
 
   mt[, collectioncode := gsub(".*\\.", "", project_name)]
 
   mt <- merge(
     mt,
-    otn_tables[[1]][
+    otn[[1]][
       ,
       .(
         resource_full_name,

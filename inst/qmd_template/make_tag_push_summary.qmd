@@ -89,7 +89,7 @@ A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(ma
 #| fig-cap: Table 1. Total detections and number of individual fish heard by other OTN node projects.
 #| fig-cap-location: top
 
-match_table(matched, pis, type = "tag", otn_tables)
+match_table(matched, type = "tag")
 ```
 
 ```{r}
@@ -189,7 +189,7 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(matched[datelastmodified >
 #| fig-cap: Table 2. Total newly-added detections and number of individual fish heard by other OTN node projects.
 #| fig-cap-location: top
 
-match_table(new_matches, pis, type = "tag", otn_tables)
+match_table(new_matches, type = "tag")
 ```
 
 

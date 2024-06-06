@@ -4,17 +4,13 @@
 \alias{match_table}
 \title{Create a reactable table of matched detections}
 \usage{
-match_table(matched, pis, type = c("tag", "receiver"), otn_tables)
+match_table(extract, type = c("tag", "receiver"))
 }
 \arguments{
-\item{matched}{matched (transmitter) or qualified (receiver) OTN detections}
-
-\item{pis}{A principal investigator table created by \code{project_contacts}}
-
 \item{type}{Tag or receiver data? Takes values of "tag" and "receiver";
 defaults to "tag".}
 
-\item{otn_tables}{A OTN GeoServer query created by \code{\link[=otn_query]{otn_query()}}}
+\item{matched}{matched (transmitter) or qualified (receiver) OTN detections}
 }
 \description{
 Create a reactable table of matched detections
@@ -39,14 +35,10 @@ unzip(
 qualified_dets <- data.table::fread(
   file.path(td, "pbsm_qualified_detections_2018.csv")
 )
-contacts <- project_contacts(qualified_dets, "receiver")
-otn <- otn_query(unique(qualified_dets$trackercode))
 
 match_table(
-  matched = qualified_dets,
-  pis = contacts,
-  type = "receiver",
-  otn_tables = otn
+  extract = qualified_dets,
+  type = "receiver"
 )
 
 # Transmitters
@@ -68,10 +60,8 @@ matched_dets <- data.table::fread(
 )
 
 match_table(
-  matched = matched_dets,
-  pis = project_contacts(matched_dets, "tag"),
-  type = "tag",
-  otn_tables = otn_query(unique(matched_dets$detectedby))
+  extract = matched_dets,
+  type = "tag"
 )
 }
 

@@ -4,17 +4,11 @@
 \alias{prep_match_table}
 \title{Prepare the detection match summary data}
 \usage{
-prep_match_table(matched, pis, type = c("tag", "receiver"), otn_tables)
+prep_match_table(extract, type = c("tag", "receiver"))
 }
 \arguments{
-\item{matched}{matched (transmitter) or qualified (receiver) OTN detections}
-
-\item{pis}{A principal investigator table created by \code{project_contacts}}
-
 \item{type}{Tag or receiver data? Takes values of "tag" and "receiver";
 defaults to "tag".}
-
-\item{otn_tables}{A OTN GeoServer query created by \code{\link[=otn_query]{otn_query()}}}
 }
 \description{
 Prepare the detection match summary data
