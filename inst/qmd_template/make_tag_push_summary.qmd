@@ -146,9 +146,9 @@ station_summary <- station_table(matched, type = "tag", pis)
 station_spatial <- prep_station_spatial(matched, type = "tag")
 
 mapview::mapview(station_spatial,
-                 zcol = "Detections",
-                 cex = "Individuals",
-                 layer.name = "Matched detections"
+  zcol = "Detections",
+  cex = "Individuals",
+  layer.name = "Matched detections"
 )
 ```
 
@@ -165,7 +165,7 @@ remaining_transmitters(matched, push_log)
 if (is.null(params$since)) {
   # further lines are not shown (the HTML is commented out)...
   cat("<!---")
-  
+
   # ...BUT they are still evaluated, so putting this in here to make the code run.
   # It will be nonsense.
   since_date <- min(matched$datelastmodified)
@@ -228,9 +228,9 @@ reactable(station_summary)
 new_station_spatial <- prep_station_spatial(new_matches, type = "tag")
 
 mapview::mapview(new_station_spatial,
-                 zcol = "Detections",
-                 cex = "Individuals",
-                 layer.name = "Matched detections"
+  zcol = "Detections",
+  cex = "Individuals",
+  layer.name = "Matched detections"
 )
 ```
 

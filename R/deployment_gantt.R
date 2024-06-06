@@ -34,7 +34,7 @@
 #' }
 #'
 #' @export
-deployment_gantt <- function(deployment){
+deployment_gantt <- function(deployment) {
   ggplot2::ggplot(data = deployment) +
     ggplot2::geom_linerange(
       ggplot2::aes(
