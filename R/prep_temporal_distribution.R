@@ -10,7 +10,7 @@ prep_temporal_distribution <- function(matched, type = c("tag", "receiver")) {
   }
   if (type == "tag") {
     proj_order_ns <- matched[, .(lat = median(latitude)), by = "detectedby"]
-    setorder(proj_order_ns, lat)
+    data.table::setorder(proj_order_ns, lat)
 
     matched[, detectedby_plot := factor(
       gsub(".*\\.", "", detectedby),

@@ -1,6 +1,10 @@
 #'
 #'
-prep_match_table <- function(matched, pis, type = c("tag", "receiver")) {
+prep_match_table <- function(
+    matched,
+    pis,
+    type = c("tag", "receiver"),
+    otn_tables) {
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {
@@ -26,16 +30,16 @@ prep_match_table <- function(matched, pis, type = c("tag", "receiver")) {
 
   mt <- merge(mt, pis)
 
-  mt[, project_name := gsub(".*\\.", "", project_name)]
+  mt[, collectioncode := gsub(".*\\.", "", project_name)]
 
   mt <- merge(
     mt,
     otn_tables[[1]][
       ,
       .(resource_full_name,
-        project_name = collectioncode
-      )
-    ]
+        collectioncode
+      )],
+    by = 'collectioncode'
   )
 
 
@@ -44,6 +48,7 @@ prep_match_table <- function(matched, pis, type = c("tag", "receiver")) {
     project_name = NULL,
     PI = data.table::fifelse(PI == "NA", "", PI),
     POC = data.table::fifelse(POC == "NA", "", POC))]
+  mt[, network := data.table::fifelse(network == code, "", network)]
 
   mt <- mt[, .(
     PI, POC, resource_full_name, network, code,
