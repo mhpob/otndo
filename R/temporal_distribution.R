@@ -2,16 +2,14 @@
 temporal_distribution <- function(extract, type = c("tag", "receiver")) {
   extract <- data.table::data.table(extract)
 
-  if(length(grep("^tag", names(extract))) == 0) {
+  if (length(grep("^tag", names(extract))) == 0) {
     # run this if unqualified detections were supplied
     subtitle <- "Temporal distribution of unmatched detections by project"
 
     extract[, day := as.Date(datecollected)]
     extract <- unique(extract, by = c("station", "day"))
     extract[, detectedby_plot := station]
-
   } else {
-
     if (type == "receiver") {
       extract[, day := as.Date(datecollected)]
       extract <- unique(extract, by = c("trackercode", "day"))
@@ -34,7 +32,6 @@ temporal_distribution <- function(extract, type = c("tag", "receiver")) {
     }
 
     subtitle <- "Temporal distribution of detections by project"
-
   }
   ggplot2::ggplot(extract) +
     ggplot2::geom_tile(ggplot2::aes(x = day, y = detectedby_plot)) +
