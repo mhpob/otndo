@@ -158,39 +158,7 @@ mapview::mapview(station_spatial,
 #| label: tags-remaining
 #| fig-cap: Figure 5. Transmitters estimated to be at liberty.
 
-last_record <- matched[, .(last_record = max(datecollected)), by = "tagname"]
-transmitter_life <- last_record[release[, .(tagname, datecollected)], , on = "tagname"]
-setnames(transmitter_life, "datecollected", "first_record")
-transmitter_life[, last_record := fifelse(is.na(last_record), first_record, last_record)]
-
-transmitter_life[, ":="(first_record = as.Date(first_record),
-  last_record = as.Date(last_record))]
-
-date_seq <- data.table(
-  date = seq(
-    min(transmitter_life$first_record, na.rm = T),
-    push_log$date[nrow(push_log)],
-    by = "day"
-  )
-)
-
-date_seq[, remaining := sapply(
-  date,
-  function(.) {
-    sum(
-      data.table::between(
-        .,
-        transmitter_life$first_record,
-        transmitter_life$last_record
-      ) == T
-    )
-  }
-)]
-
-ggplot(data = date_seq) +
-  geom_step(aes(x = date, y = remaining)) +
-  labs(x = NULL, y = "Project transmitters remaining") +
-  theme_minimal()
+remaining_transmitters(matched, push_log)
 ```
 
 
