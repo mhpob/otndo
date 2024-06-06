@@ -7,7 +7,7 @@ dir.create(td)
 download.file(
   "https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_matched_detections_2018.zip/@@download/file",
   destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
-  mode = 'wb'
+  method = "wb"
 )
 unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
   exdir = td
@@ -30,5 +30,3 @@ test_that("Non-ACT projects are summarized", {
 
 
 unlink(td, recursive = T)
-
-
