@@ -6,8 +6,10 @@
 #' @examples
 #' otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB", "MDBSB"))
 #'
-#'  @returns list of the "otn_resources_metadata_points" and "project_metadata"
+#' @returns list of the "otn_resources_metadata_points" and "project_metadata"
 #'   for the given projects
+#'
+#' @export
 otn_query <- function(projects) {
   table_name <- c(
     "otn_resources_metadata_points",

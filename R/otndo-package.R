@@ -3,6 +3,7 @@
 
 ## usethis namespace: start
 #' @importFrom data.table :=
+#' @importFrom data.table .N
 #' @importFrom ggplot2 ggplot
 #' @importFrom mapview mapview
 #' @importFrom reactable reactable

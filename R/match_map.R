@@ -1,5 +1,5 @@
 #'
-#'
+#' @export
 
 match_map <- function(otn_tables){
   natural_earth <- sf::st_read(

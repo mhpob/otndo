@@ -1,5 +1,5 @@
 #'
-#'
+#' @export
 prep_station_spatial <- function(matched, type = c("tag", "receiver")) {
   matched <- data.table::data.table(matched)
 

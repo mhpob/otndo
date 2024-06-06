@@ -1,4 +1,4 @@
-#'
+#' @export
 temporal_distribution <- function(matched, type = c("tag", "receiver")) {
   matched <- data.table::data.table(matched)
 

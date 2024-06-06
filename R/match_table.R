@@ -77,6 +77,8 @@ prep_match_table <- function(
 
 #' Create a reactable table of matched detections
 #' @inheritParams prep_match_table
+#'
+#' @export
 match_table <- function(
     matched,
     pis,

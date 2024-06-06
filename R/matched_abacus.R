@@ -2,6 +2,8 @@
 #'
 #' @param temp_dist Output of `temporal_distribution`
 #' @param release Data frame of release times/locations.
+#'
+#' @export
 
 matched_abacus <- function(temp_dist, release){
   abacus_data <- unique(temp_dist, by = c("detectedby", "day", "tagname"))

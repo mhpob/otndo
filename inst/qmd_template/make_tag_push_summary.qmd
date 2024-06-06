@@ -97,7 +97,7 @@ match_table(matched, pis, type = "tag", otn_tables)
 #| label: otn-match-map
 #| fig-cap: Figure 1. Bounding box of external projects that recorded a transmitter from this project. This does not necessarily reflect the distribution of this project's fish.
 
-match_map(otn_tables)
+otn_sf <- match_map(otn_tables)
 ```
 
 ```{r}
@@ -147,9 +147,9 @@ station_summary <- station_table(matched, type = "tag", pis)
 station_spatial <- prep_station_spatial(matched, type = "tag")
 
 mapview::mapview(station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
+                 zcol = "Detections",
+                 cex = "Individuals",
+                 layer.name = "Matched detections"
 )
 ```
 
@@ -166,7 +166,7 @@ remaining_transmitters(matched, push_log)
 if (is.null(params$since)) {
   # further lines are not shown (the HTML is commented out)...
   cat("<!---")
-
+  
   # ...BUT they are still evaluated, so putting this in here to make the code run.
   # It will be nonsense.
   since_date <- min(matched$datelastmodified)
@@ -199,57 +199,38 @@ match_table(new_matches, pis, type = "tag", otn_tables)
 #| label: new-otn-match-map
 #| fig-cap: Figure 6. Bounding box of external projects providing detections added since the last data push. This does not necessarily reflect the distribution of fish heard by the project's receivers.
 
-new_otn_sf <- otn_sf[grepl(
-  paste(unique(new_matches$detectedby), collapse = "|"),
-  otn_sf$collectioncode
-), ]
-otn_limits <- st_bbox(new_otn_sf)
+new_otn_tables <- lapply(
+  otn_tables,
+  function(.) {
+    .[grepl(
+      paste(gsub(".*\\.", "", unique(new_matches$detectedby)), collapse = "|"),
+      collectioncode
+    )]
+  }
+)
 
-ggplot() +
-  geom_sf(data = natural_earth) +
-  geom_sf(data = new_otn_sf, fill = NA, color = "blue") +
-  coord_sf(
-    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-  ) +
-  labs(title = "Geographic extent of newly-detected projects") +
-  theme_minimal()
+match_map(new_otn_tables)
 ```
 
 ```{r}
 #| label: new-station-summary-table
 #| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
 #| fig-cap-location: top
-station_summary <- station_table(new_matches, 'tag')
+station_summary <- station_table(new_matches, 'tag', pis)
 
 reactable(station_summary)
-```
-
-
-
-```{r}
-#| label: new-station-spatial
-
-station_spatial <- new_matches |>
-  unique(by = c("station", "detectedby"))
-station_spatial <- station_spatial[, station := toupper(station)][station_summary[, Station := toupper(Station)], ,
-  on = c("station" = "Station")
-]
-station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Project, longitude, latitude)] |>
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
-
-# For use if switching to leaflet
-# station_center <- st_centroid(st_union(station_spatial))
-# station_center <- st_coordinates(station_center)
 ```
 
 ```{r}
 #| label: new-detection-map-leaflet
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
-mapview::mapview(station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
+
+new_station_spatial <- prep_station_spatial(new_matches, type = "tag")
+
+mapview::mapview(new_station_spatial,
+                 zcol = "Detections",
+                 cex = "Individuals",
+                 layer.name = "Matched detections"
 )
 ```
 

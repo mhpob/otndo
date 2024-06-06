@@ -6,6 +6,7 @@
 #' very inaccurate with sparse data or short time scales.
 #'
 #' @param matched matched OTN transmitter detections
+#' @export
 remaining_transmitters <- function(matched, push_log){
   last_record <- matched[, list(last_record = max(datecollected)), by = "tagname"]
   transmitter_life <- last_record[release[, list(tagname, datecollected)]

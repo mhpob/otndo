@@ -10,12 +10,14 @@ otn_query(projects)
 \item{projects}{Character vector of OTN project codes for which you'd
 like project metadata. Prepended networks can be provided, but are not necessary.}
 }
+\value{
+list of the "otn_resources_metadata_points" and "project_metadata"
+for the given projects
+}
 \description{
 Query the OTN Geoserver
 }
 \examples{
 otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB", "MDBSB"))
 
- @returns list of the "otn_resources_metadata_points" and "project_metadata"
-  for the given projects
 }

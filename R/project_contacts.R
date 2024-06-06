@@ -35,6 +35,8 @@
 #' @returns a data.table containing project names, principal investigators (PI),
 #'   points of contact (POC), and their respective emails. Multiple emails are
 #'   separated by commas.
+#'
+#' @export
 project_contacts <- function(matched, type = c("receiver", "tag")) {
   matched <- data.table::data.table(matched)
 

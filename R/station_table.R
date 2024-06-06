@@ -54,14 +54,16 @@
 #'  detections, and number of individuals heard. For receiver data, a data.table
 #'  with the station, number of detections, and number of individuals heard
 #'  (assuming that the PI and POC is you).
+#'
+#' @export
 station_table <- function(matched, type = c("tag", "receiver"),
                                pis = NULL) {
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {
     station_summary <- merge(
-      matched[, .(detections = .N), by = c("station", "detectedby")],
-      unique(matched, by = c("tagname", "station"))[, .(
+      matched[, list(detections = .N), by = c("station", "detectedby")],
+      unique(matched, by = c("tagname", "station"))[, list(
         individuals = .N,
         long = mean(longitude),
         lat = mean(latitude)
@@ -74,13 +76,13 @@ station_table <- function(matched, type = c("tag", "receiver"),
 
     station_summary <- merge(
       station_summary,
-      pis[, .(project_name, PI)],
+      pis[, list(project_name, PI)],
       by = "project_name"
     )
   } else {
     station_summary <- merge(
-      matched[, .(detections = .N), by = "station"],
-      unique(matched, by = c("fieldnumber", "station"))[, .(
+      matched[, list(detections = .N), by = "station"],
+      unique(matched, by = c("fieldnumber", "station"))[, list(
         individuals = .N,
         long = mean(longitude),
         lat = mean(latitude)
@@ -93,7 +95,7 @@ station_table <- function(matched, type = c("tag", "receiver"),
   data.table::setorder(station_summary, -lat, long)
 
   if (type == "tag") {
-    station_summary <- station_summary[, .(
+    station_summary <- station_summary[, list(
       PI, project_name, station,
       detections, individuals
     )]
@@ -102,7 +104,7 @@ station_table <- function(matched, type = c("tag", "receiver"),
       "Detections", "Individuals"
     ))
   } else {
-    station_summary <- station_summary[, .(station, detections, individuals)]
+    station_summary <- station_summary[, list(station, detections, individuals)]
     data.table::setnames(station_summary, c("Station", "Detections", "Individuals"))
   }
 
