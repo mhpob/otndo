@@ -125,27 +125,7 @@ reactable(mt,
 #| label: otn-match-map
 #| fig-cap: Figure 1. Bounding box of external projects that recorded a transmitter from this project. This does not necessarily reflect the distribution of this project's fish.
 
-otn_sf <- otn_tables$otn_resources_metadata_points |>
-  data.frame() |>
-  st_as_sf(wkt = "the_geom", crs = 4326)
-otn_limits <- st_bbox(otn_sf)
-
-natural_earth <- st_read(
-  system.file("ne_110m_coastline.gpkg",
-    package = "otndo"
-  ),
-  quiet = T
-)
-
-ggplot() +
-  geom_sf(data = natural_earth) +
-  geom_sf(data = otn_sf, fill = NA, color = "blue") +
-  coord_sf(
-    xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-    ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
-  ) +
-  labs(title = "Geographic extent of detected projects") +
-  theme_minimal()
+match_map(otn_tables)
 ```
 
 ```{r}
