@@ -36,10 +36,12 @@ prep_match_table <- function(
     mt,
     otn_tables[[1]][
       ,
-      .(resource_full_name,
+      .(
+        resource_full_name,
         collectioncode
-      )],
-    by = 'collectioncode'
+      )
+    ],
+    by = "collectioncode"
   )
 
 

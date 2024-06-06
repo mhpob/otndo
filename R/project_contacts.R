@@ -39,21 +39,17 @@ project_contacts <- function(matched, type = c("receiver", "tag")) {
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {
-
     pis <- unique(matched, by = c("detectedby", "contact_poc", "contact_pi"))
     pis[, ":="(
       PI = strsplit(contact_pi, " \\(|\\)(, )?"),
       POC = strsplit(contact_poc, " \\(|\\)(, )?")
     )]
-
   } else {
-
     pis <- unique(qualified, by = c("trackercode"))
     pis[, ":="(
       PI = strsplit(tag_contact_pi, " \\(|\\)(, )?"),
       POC = strsplit(tag_contact_poc, " \\(|\\)(, )?")
     )]
-
   }
 
 
@@ -77,8 +73,8 @@ project_contacts <- function(matched, type = c("receiver", "tag")) {
       by = "detectedby"
       ]
       pis <- merge(pis[, -c("PI", "POC", "PI_emails", "POC_emails")],
-                   pi_key,
-                   on = "detectedby"
+        pi_key,
+        on = "detectedby"
       )
       pis <- unique(pis, by = "detectedby")
       # maybe need to also merge their geom?
@@ -94,8 +90,8 @@ project_contacts <- function(matched, type = c("receiver", "tag")) {
       by = "trackercode"
       ]
       pis <- merge(pis[, -c("PI", "POC", "PI_emails", "POC_emails")],
-                   pi_key,
-                   on = "trackercode"
+        pi_key,
+        on = "trackercode"
       )
       pis <- unique(pis, by = "trackercode")
     }
