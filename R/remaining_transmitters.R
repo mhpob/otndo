@@ -33,16 +33,14 @@
 #' ))
 #'
 #' # Run remaining_transmitters()
-#' remaining_transmitters(matched_dets, data.frame(date = as.Date('2020-01-01')))
+#' remaining_transmitters(matched_dets, data.frame(date = as.Date("2020-01-01")))
 #' }
-#'
 #'
 #' @export
 remaining_transmitters <- function(matched, push_log) {
   last_record <- matched[, list(last_record = max(datecollected)), by = "tagname"]
   transmitter_life <- last_record[
-    matched[receiver == 'release', list(tagname, datecollected)],
-    ,
+    matched[receiver == "release", list(tagname, datecollected)], ,
     on = "tagname"
   ]
   data.table::setnames(transmitter_life, "datecollected", "first_record")
