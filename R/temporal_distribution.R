@@ -29,4 +29,6 @@ temporal_distribution <- function(matched, type = c("tag", "receiver")) {
       subtitle = "Temporal distribution of detections by project"
     ) +
     ggplot2::theme_minimal()
+
+
 }

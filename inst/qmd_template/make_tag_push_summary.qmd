@@ -104,14 +104,16 @@ match_map(otn_tables)
 #| label: temporal-distribution
 #| fig-cap: Figure 2. Temporal distribution of detections by external project, i.e., the dates when other projects heard this project's fish.
 
-temporal_distribution(matched, "tag")
+temp_dist <- temporal_distribution(matched, "tag")
+
+temp_dist
 ```
 
 ```{r}
 #| label: abacus-plot
 #| fig-cap: Figure 3. Abacus plot of detected transmitters, colored by OTN node projects.
 
-
+matched_abacus(temp_dist$data, release)
 ```
 
 ```{r}
