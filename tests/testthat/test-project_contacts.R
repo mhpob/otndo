@@ -1,40 +1,8 @@
-td <- file.path(tempdir(), "matos_test_files")
-dir.create(td)
-library(data.table)
-
-set_up_test_project_contacts <- function(type, td) {
-  file_base <- paste0("pbsm_", type, "_detections_2018")
-  file_loc <- file.path(td, paste0(file_base, ".zip"))
-  download.file(
-    paste0(
-      "https://members.oceantrack.org/data/repository/",
-      "pbsm/detection-extracts/",
-      paste0(file_base, ".zip")
-    ),
-    destfile = file_loc
-  )
-  unzip(file_loc,
-    exdir = td
-  )
-
-  contacts <- file.path(td, paste0(file_base, ".csv"))
-
-  contacts <- write_to_tempdir(
-    type = type,
-    files = contacts,
-    temp_dir = td
-  )
-
-  contacts <- fread(contacts)
-  contacts[, day := as.Date(datecollected)]
-
-  contacts
-}
-
-matched <- set_up_test_project_contacts("matched", td)
-qualified <- set_up_test_project_contacts("qualified", td)
+skip_if_offline()
 
 test_that("returns correct class for tags", {
+  matched <- read.csv(matched_path)
+
   expect_s3_class(
     pi_table <- project_contacts(matched, type = "tag"),
     c("data.table", "data.frame"),
@@ -64,6 +32,8 @@ test_that("returns correct class for tags", {
 })
 
 test_that("right things are returned for tags", {
+  matched <- read.csv(matched_path)
+
   pi_table <- project_contacts(matched, type = "tag")
 
   expect_equal(
@@ -87,8 +57,10 @@ test_that("right things are returned for tags", {
 
 
 test_that("returns correct class for receivers", {
+  qualified <- read.csv(qualified_path)
+
   expect_s3_class(
-    pi_table <- project_contacts(matched, type = "receivers"),
+    pi_table <- project_contacts(qualified, type = "receivers"),
     c("data.table", "data.frame"),
     exact = TRUE
   )
@@ -116,7 +88,9 @@ test_that("returns correct class for receivers", {
 })
 
 test_that("right things are returned for receivers", {
-  pi_table <- project_contacts(matched, type = "receivers")
+  qualified <- read.csv(qualified_path)
+
+  pi_table <- project_contacts(qualified, type = "receivers")
 
   expect_equal(
     ncol(pi_table),
@@ -136,6 +110,3 @@ test_that("right things are returned for receivers", {
     all(grepl("@|", pi_table$POC_emails))
   )
 })
-
-
-unlink(td, recursive = TRUE)
