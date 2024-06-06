@@ -8,6 +8,7 @@
 #' @importFrom mapview mapview
 #' @importFrom reactable reactable
 #' @importFrom sf read_sf
+#' @importFrom stats median
 #' @importFrom utils read.csv
 #' @importFrom utils unzip
 #' @importFrom utils URLencode
