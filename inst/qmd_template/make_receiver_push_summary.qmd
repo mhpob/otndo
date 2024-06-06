@@ -86,35 +86,7 @@ A total of `r format(nrow(qualified), big.mark = ',')` detections of `r uniqueN(
 #| fig-cap: Table 1. Total detections and number of individual fish heard from other OTN node projects.
 #| fig-cap-location: top
 
-mt <- prep_match_table(qualified, pis, type = "receiver")
-
-reactable::reactable(mt,
-  columns = list(
-    PI = reactable::colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          mt$PI_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    POC = reactable::colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          mt$POC_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    PI_emails = reactable::colDef(show = F),
-    POC_emails = reactable::colDef(show = F),
-    `Project name` = reactable::colDef(minWidth = 200)
-  )
-)
+match_table(qualified, pis, type = "receiver", otn_tables)
 ```
 
 ```{r}
@@ -248,35 +220,7 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(new_matches), big.mark = '
 #| fig-cap: Table 3. Total number of new detections and individual fish heard per project receiver.
 #| fig-cap-location: top
 
-new_mt <- prep_match_table(new_matches, pis, type = "receiver")
-
-reactable::reactable(new_mt,
-  columns = list(
-    PI = reactable::colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          new_mt$PI_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    POC = reactable::colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          new_mt$POC_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    PI_emails = reactable::colDef(show = F),
-    POC_emails = reactable::colDef(show = F),
-    `Project name` = reactable::colDef(minWidth = 200)
-  )
-)
+match_table(new_matches, pis, type = "receiver", otn_tables)
 ```
 
 ```{r}

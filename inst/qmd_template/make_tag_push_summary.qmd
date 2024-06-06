@@ -90,35 +90,7 @@ A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(ma
 #| fig-cap: Table 1. Total detections and number of individual fish heard by other OTN node projects.
 #| fig-cap-location: top
 
-mt <- prep_match_table(matched, pis, type = "tag", otn_tables)
-
-reactable(mt,
-  columns = list(
-    PI = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          mt$PI_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    POC = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          mt$POC_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    PI_emails = colDef(show = F),
-    POC_emails = colDef(show = F),
-    `Project name` = colDef(minWidth = 200)
-  )
-)
+match_table(matched, pis, type = "tag", otn_tables)
 ```
 
 ```{r}
@@ -139,30 +111,7 @@ temporal_distribution(matched, "tag")
 #| label: abacus-plot
 #| fig-cap: Figure 3. Abacus plot of detected transmitters, colored by OTN node projects.
 
-matched_abacus <- unique(matched, by = c("detectedby", "day", "tagname"))
 
-ggplot() +
-  geom_hline(yintercept = sort(unique(release$tagname))[
-    seq(2, uniqueN(release$tagname), by = 2)
-  ], color = "gray90") +
-  geom_tile(
-    data = matched_abacus,
-    aes(x = day, y = tagname, fill = detectedby_plot)
-  ) +
-  geom_tile(data = release, aes(x = day, y = tagname), width = 0.5) +
-  scale_y_discrete(
-    limits = sort(unique(release$tagname)),
-    breaks = sort(unique(release$tagname))[
-      seq(1, uniqueN(release$tagname), by = 2)
-    ]
-  ) +
-  scale_fill_viridis_d(option = "H") +
-  labs(
-    x = NULL, y = NULL, fill = NULL,
-    title = "Transmitter presence in Arrays",
-    subtitle = "Note that the Y axis is alternating"
-  ) +
-  theme_minimal()
 ```
 
 ```{r}
@@ -271,58 +220,7 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(matched[datelastmodified >
 #| fig-cap: Table 2. Total newly-added detections and number of individual fish heard by other OTN node projects.
 #| fig-cap-location: top
 
-new_mt <- merge(
-  new_matches[, .(detections = .N), by = "detectedby"],
-  unique(new_matches, by = c("tagname", "detectedby"))[, .(individuals = .N), by = "detectedby"]
-)
-
-new_mt <- merge(new_mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
-
-# new_mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
-#                           paste0('ACT.', detectedby), detectedby)]
-new_mt[, collectioncode := gsub(".*\\.", "", detectedby)]
-
-new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, collectioncode)],
-  by = "collectioncode"
-)
-
-new_mt[, ":="(network = gsub("\\..*", "", detectedby),
-  code = gsub(".*\\.", "", detectedby),
-  detectedby = NULL)]
-new_mt[, network := fifelse(network == code, "", network)]
-
-new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
-setnames(new_mt, c("PI", "POC", "Project name", "Network", "Project code", "Detections", "Individuals", "PI_emails", "POC_emails"))
-
-setorder(new_mt, -"Detections", -"Individuals")
-
-reactable(new_mt,
-  columns = list(
-    PI = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          new_mt$PI_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    POC = colDef(
-      html = T,
-      cell = function(value, index) {
-        sprintf(
-          '<a href=mailto:%s target="_blank">%s</a>',
-          new_mt$POC_emails[index], value
-        )
-      },
-      minWidth = 150
-    ),
-    PI_emails = colDef(show = F),
-    POC_emails = colDef(show = F),
-    `Project name` = colDef(minWidth = 200)
-  )
-)
+match_table(new_matches, pis, type = "tag", otn_tables)
 ```
 
 
