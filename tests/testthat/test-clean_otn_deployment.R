@@ -8,7 +8,7 @@ deployment <- file.path(
   "pbsm-instrument-deployment-short-form-2018.xls"
 )
 
-download.file("https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls",
+download.file("https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/archived-records/2018/pbsm-instrument-deployment-short-form-2018.xls/@@download/file",
   destfile = deployment,
   mode = "wb"
 )

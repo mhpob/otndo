@@ -308,13 +308,16 @@ new_mt <- merge(new_mt, pis[, .(detectedby, PI, POC, PI_emails, POC_emails)])
 
 # new_mt[, detectedby := ifelse(!grepl('^ACT|^FACT|^OTN', detectedby),
 #                           paste0('ACT.', detectedby), detectedby)]
-new_mt[, detectedby := gsub(".*\\.", "", detectedby)]
+new_mt[, collectioncode := gsub(".*\\.", "", detectedby)]
 
-new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, detectedby = collectioncode)])
+new_mt <- merge(new_mt, otn_tables[[1]][, .(resource_full_name, collectioncode)],
+  by = "collectioncode"
+)
 
 new_mt[, ":="(network = gsub("\\..*", "", detectedby),
   code = gsub(".*\\.", "", detectedby),
   detectedby = NULL)]
+new_mt[, network := fifelse(network == code, "", network)]
 
 new_mt <- new_mt[, .(PI, POC, resource_full_name, network, code, detections, individuals, PI_emails, POC_emails)]
 setnames(new_mt, c("PI", "POC", "Project name", "Network", "Project code", "Detections", "Individuals", "PI_emails", "POC_emails"))
