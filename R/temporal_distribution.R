@@ -3,6 +3,7 @@ temporal_distribution <- function(matched, type = c("tag", "receiver")) {
   matched <- data.table::data.table(matched)
 
   if (type == "receiver") {
+    matched[, day := as.Date(datecollected)]
     matched <- unique(matched, by = c("trackercode", "day"))
     matched[, detectedby_plot := gsub(".*\\.", "", trackercode)]
   }
