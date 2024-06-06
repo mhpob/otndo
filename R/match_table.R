@@ -27,7 +27,7 @@ prep_match_table <- function(
     mt <- merge(
       matched[, .(detections = .N), by = "trackercode"],
       unique(matched, by = "fieldnumber")[, .(individuals = .N),
-                                          by = "trackercode"
+        by = "trackercode"
       ]
     )
 
@@ -52,10 +52,10 @@ prep_match_table <- function(
 
 
   mt[, ":="(network = gsub("\\..*", "", project_name),
-            code = gsub(".*\\.", "", project_name),
-            project_name = NULL,
-            PI = data.table::fifelse(PI == "NA", "", PI),
-            POC = data.table::fifelse(POC == "NA", "", POC))]
+    code = gsub(".*\\.", "", project_name),
+    project_name = NULL,
+    PI = data.table::fifelse(PI == "NA", "", PI),
+    POC = data.table::fifelse(POC == "NA", "", POC))]
   mt[, network := data.table::fifelse(network == code, "", network)]
 
   mt <- mt[, .(
@@ -81,8 +81,7 @@ match_table <- function(
     matched,
     pis,
     type = c("tag", "receiver"),
-    otn_tables){
-
+    otn_tables) {
   mt_data <- prep_match_table(matched, pis, type, otn_tables)
 
   reactable::reactable(

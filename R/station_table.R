@@ -55,7 +55,7 @@
 #'  with the station, number of detections, and number of individuals heard
 #'  (assuming that the PI and POC is you).
 station_table <- function(matched, type = c("tag", "receiver"),
-                               pis = NULL) {
+                          pis = NULL) {
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {

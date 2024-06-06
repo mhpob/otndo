@@ -1,10 +1,10 @@
 #'
 #'
 
-match_map <- function(otn_tables){
+match_map <- function(otn_tables) {
   natural_earth <- sf::st_read(
     system.file("ne_110m_coastline.gpkg",
-                package = "otndo"
+      package = "otndo"
     ),
     quiet = T
   )

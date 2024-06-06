@@ -220,7 +220,7 @@ ggplot() +
 #| label: new-station-summary-table
 #| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
 #| fig-cap-location: top
-station_summary <- station_table(new_matches, 'tag')
+station_summary <- station_table(new_matches, "tag")
 
 reactable(station_summary)
 ```

@@ -6,17 +6,21 @@
 #' very inaccurate with sparse data or short time scales.
 #'
 #' @param matched matched OTN transmitter detections
-remaining_transmitters <- function(matched, push_log){
+remaining_transmitters <- function(matched, push_log) {
   last_record <- matched[, list(last_record = max(datecollected)), by = "tagname"]
-  transmitter_life <- last_record[release[, list(tagname, datecollected)]
-                                  , , on = "tagname"]
+  transmitter_life <- last_record[release[, list(tagname, datecollected)],
+    ,
+    on = "tagname"
+  ]
   data.table::setnames(transmitter_life, "datecollected", "first_record")
-  transmitter_life[, last_record := data.table::fifelse(is.na(last_record),
-                                                        first_record,
-                                                        last_record)]
+  transmitter_life[, last_record := data.table::fifelse(
+    is.na(last_record),
+    first_record,
+    last_record
+  )]
 
   transmitter_life[, ":="(first_record = as.Date(first_record),
-                          last_record = as.Date(last_record))]
+    last_record = as.Date(last_record))]
 
   date_seq <- data.table::data.table(
     date = seq(
