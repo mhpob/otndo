@@ -24,10 +24,9 @@ knitr::opts_chunk$set(
 #| label: packages
 #| message: false
 
+library(otndo)
 library(data.table)
-library(sf)
 library(mapview)
-library(ggplot2)
 library(reactable)
 ```
 
