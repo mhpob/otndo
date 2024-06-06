@@ -55,17 +55,17 @@ prep_station_table(matched, type = "tag", pis)
 
 # For receiver data
 download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip",
-destfile = file.path(td, "pbsm_qualified_detections_2018.zip"))
+  destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
+)
 
 unzip(file.path(td, "pbsm_qualified_detections_2018.zip"), exdir = td)
 
 qualified <- read.csv(file.path(td, "pbsm_qualified_detections_2018.csv"))
 
 # Actually run the function
-prep_station_table(qualified, type = 'receiver')
+prep_station_table(qualified, type = "receiver")
 
 # Clean up
 unlink(td, recursive = TRUE)
-
 
 }
