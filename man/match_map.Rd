@@ -15,7 +15,7 @@ Plot the geographic extent of OTN projects
 }
 \examples{
 match_map(
-  otn_query('MDWEA')
+  otn_query("MDWEA")
 )
 
 }

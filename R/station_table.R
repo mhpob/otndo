@@ -37,11 +37,19 @@
 #'
 #'
 #' # For receiver data
-#' download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip",
-#'   destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
+#' download.file(
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/pbsm/",
+#'     "detection-extracts/pbsm_qualified_detections_2018.zip/",
+#'     "@@download/file"
+#'   ),
+#'   destfile = file.path(td, "pbsm_qualified_detections_2018.zip"),
+#'   mode = "wb"
 #' )
-#'
-#' unzip(file.path(td, "pbsm_qualified_detections_2018.zip"), exdir = td)
+#' unzip(
+#'   file.path(td, "pbsm_qualified_detections_2018.zip"),
+#'   exdir = td
+#' )
 #'
 #' qualified <- read.csv(file.path(td, "pbsm_qualified_detections_2018.csv"))
 #'
@@ -60,6 +68,9 @@
 #' @export
 station_table <- function(matched, type = c("tag", "receiver"),
                           pis = NULL) {
+  longitude <- latitude <- project_name <- PI <- lat <- long <- station <-
+    detections <- individuals <- NULL
+
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {

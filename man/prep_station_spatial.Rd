@@ -38,5 +38,4 @@ matched_dets <- data.table::fread(
 prep_station_spatial(matched_dets, "tag")
 }
 
-
 }

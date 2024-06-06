@@ -37,10 +37,10 @@ matched_dets <- data.table::fread(
 
 
 # Run temporal_distribution
-temporal <- temporal_distribution(matched_dets, 'tag')
+temporal <- temporal_distribution(matched_dets, "tag")
 
 # Run matched_abacus
-matched_abacus(temporal$data, matched_dets[receiver == 'release'])
+matched_abacus(temporal$data, matched_dets[receiver == "release"])
 }
 
 }

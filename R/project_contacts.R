@@ -41,6 +41,10 @@
 #'
 #' @export
 project_contacts <- function(matched, type = c("receiver", "tag")) {
+  contact_pi <- contact_poc <- qualified <- tag_contact_pi <- tag_contact_poc <-
+    PI <- POC <- . <- PI_emails <- POC_emails <- emails <- detectedby <-
+    trackercode <- NULL
+
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {

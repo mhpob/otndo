@@ -37,15 +37,17 @@ unzip(
 )
 
 qualified_dets <- data.table::fread(
-   file.path(td, "pbsm_qualified_detections_2018.csv")
+  file.path(td, "pbsm_qualified_detections_2018.csv")
 )
-contacts <- project_contacts(qualified_dets, 'receiver')
+contacts <- project_contacts(qualified_dets, "receiver")
 otn <- otn_query(unique(qualified_dets$trackercode))
 
-match_table(matched = qualified_dets,
-            pis = contacts,
-            type = 'receiver',
-            otn_tables = otn)
+match_table(
+  matched = qualified_dets,
+  pis = contacts,
+  type = "receiver",
+  otn_tables = otn
+)
 
 # Transmitters
 download.file(
@@ -65,10 +67,12 @@ matched_dets <- data.table::fread(
   file.path(td, "pbsm_matched_detections_2018.csv")
 )
 
-match_table(matched = matched_dets,
-            pis = project_contacts(matched_dets, 'tag'),
-            type = 'tag',
-            otn_tables = otn_query(unique(matched_dets$detectedby)))
+match_table(
+  matched = matched_dets,
+  pis = project_contacts(matched_dets, "tag"),
+  type = "tag",
+  otn_tables = otn_query(unique(matched_dets$detectedby))
+)
 }
 
 }

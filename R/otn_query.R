@@ -11,6 +11,9 @@
 #'
 #' @export
 otn_query <- function(projects) {
+  collectioncode <- NULL
+
+
   table_name <- c(
     "otn_resources_metadata_points",
     "project_metadata"

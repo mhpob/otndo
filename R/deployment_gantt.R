@@ -35,6 +35,8 @@
 #'
 #' @export
 deployment_gantt <- function(deployment) {
+  stationname <- deploy_date_time <- recover_date_time <- NULL
+
   ggplot2::ggplot(data = deployment) +
     ggplot2::geom_linerange(
       ggplot2::aes(

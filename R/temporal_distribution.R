@@ -31,6 +31,9 @@
 #'
 #' @export
 temporal_distribution <- function(extract, type = c("tag", "receiver")) {
+  day <- datecollected <- detectedby_plot <- station <- trackercode <- median <-
+    latitude <- lat <- detectedby <- NULL
+
   extract <- data.table::data.table(extract)
 
   if (length(grep("^tag", names(extract))) == 0) {

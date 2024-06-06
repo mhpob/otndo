@@ -35,6 +35,9 @@
 #' @export
 
 matched_abacus <- function(temp_dist, release) {
+  day <- datecollected <- tagname <- detectedby_plot <- NULL
+
+
   abacus_data <- unique(temp_dist, by = c("detectedby", "day", "tagname"))
   release <- data.table::data.table(release)
   release[, day := as.Date(datecollected)]

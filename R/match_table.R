@@ -109,6 +109,11 @@ prep_match_table <- function(
     pis,
     type = c("tag", "receiver"),
     otn_tables) {
+  . <- collectioncode <- project_name <- resource_full_name <- PI <- POC <-
+    network <- code <- detections <- individuals <- PI_emails <- POC_emails <-
+    station <- Station <- Detections <- Individuals <- longitude <- latitude <-
+    detectedby <- NULL
+
   matched <- data.table::data.table(matched)
 
   if (type == "tag") {

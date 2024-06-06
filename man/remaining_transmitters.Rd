@@ -42,8 +42,7 @@ matched <- read.csv(file.path(
 ))
 
 # Run remaining_transmitters()
-remaining_transmitters(matched_dets, data.frame(date = as.Date('2020-01-01')))
+remaining_transmitters(matched_dets, data.frame(date = as.Date("2020-01-01")))
 }
-
 
 }
