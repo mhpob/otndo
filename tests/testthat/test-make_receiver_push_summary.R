@@ -12,7 +12,7 @@ download.file("https://members.oceantrack.org/data/repository/pbsm/data-and-meta
 
 download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip/@@download/file",
   destfile = file.path(td, "pbsm_qualified_detections_2018.zip"),
-  mode = 'wb'
+  mode = "wb"
 )
 unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
   exdir = td
@@ -21,7 +21,7 @@ unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
 
 download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_unqualified_detections_2018.zip",
   destfile = file.path(td, "pbsm_unqualified_detections_2018.zip"),
-  mode = 'wb'
+  mode = "wb"
 )
 unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"),
   exdir = td
