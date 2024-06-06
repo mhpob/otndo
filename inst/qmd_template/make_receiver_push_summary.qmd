@@ -142,7 +142,7 @@ if (!is.null(params$deployment)) {
 #| fig-cap: Table 2. Total number of detections and number of individual fish heard per project receiver.
 #| fig-cap-location: top
 
-station_summary <- prep_station_table(qualified, type = "receiver")
+station_summary <- station_table(qualified, type = "receiver")
 
 reactable::reactable(station_summary)
 ```
@@ -250,7 +250,7 @@ ggplot2::ggplot() +
 #| fig-cap: Table 4. Total number of detections and number of individual fish heard per project receiver since the last data push.
 #| fig-cap-location: top
 
-new_station_summary <- prep_station_table(qualified, "receiver")
+new_station_summary <- station_table(qualified, "receiver")
 
 reactable::reactable(station_summary)
 ```

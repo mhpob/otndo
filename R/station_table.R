@@ -1,4 +1,4 @@
-#' Prepare the station summary table
+#' Create the station summary table
 #'
 #' @param matched OTN detections. "Matched" detections for tag data and "qualified"
 #'  detections for receiver data
@@ -45,7 +45,7 @@
 #' qualified <- read.csv(file.path(td, "pbsm_qualified_detections_2018.csv"))
 #'
 #' # Actually run the function
-#' prep_station_table(qualified, type = "receiver")
+#' station_table(qualified, type = "receiver")
 #'
 #' # Clean up
 #' unlink(td, recursive = TRUE)
@@ -54,7 +54,7 @@
 #'  detections, and number of individuals heard. For receiver data, a data.table
 #'  with the station, number of detections, and number of individuals heard
 #'  (assuming that the PI and POC is you).
-prep_station_table <- function(matched, type = c("tag", "receiver"),
+station_table <- function(matched, type = c("tag", "receiver"),
                                pis = NULL) {
   matched <- data.table::data.table(matched)
 

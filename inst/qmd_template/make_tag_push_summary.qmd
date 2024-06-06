@@ -119,7 +119,7 @@ matched_abacus(temp_dist$data, release)
 ```{r}
 #| label: station-summary-table
 
-station_summary <- prep_station_table(matched, type = "tag", pis)
+station_summary <- station_table(matched, type = "tag", pis)
 
 # station_summary |>
 #   gt() |>
@@ -252,27 +252,7 @@ ggplot() +
 #| label: new-station-summary-table
 #| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
 #| fig-cap-location: top
-station_summary <- merge(
-  new_matches[, .(detections = .N), by = c("station", "detectedby")],
-  unique(new_matches, by = c("tagname", "station"))[, .(
-    individuals = .N,
-    long = mean(longitude),
-    lat = mean(latitude)
-  ),
-  by = "station"
-  ]
-)
-station_summary <- merge(
-  station_summary,
-  pis[, .(detectedby, PI)],
-  by = "detectedby"
-)
-# DT(, station := sapply(station, .simpleCap))
-
-setorder(station_summary, -lat, long)
-
-station_summary <- station_summary[, .(PI, detectedby, station, detections, individuals)]
-setnames(station_summary, c("PI", "Project", "Station", "Detections", "Individuals"))
+station_summary <- station_table(new_matches, 'tag')
 
 reactable(station_summary)
 ```
