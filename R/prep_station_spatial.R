@@ -29,6 +29,9 @@
 #'
 #' @export
 prep_station_spatial <- function(extract, type = c("tag", "receiver")) {
+  station <- Station <- . <- Detections <- Individuals <- longitude <-
+    latitude <- PI <- detectedby <- NULL
+
   extract <- data.table::data.table(extract)
   pis <- project_contacts(extract, type)
   station_summary <- station_table(extract, type, pis)
