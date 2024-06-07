@@ -34,7 +34,7 @@ prep_station_spatial <- function(extract, type = c("tag", "receiver")) {
 
   extract <- data.table::data.table(extract)
   pis <- project_contacts(extract, type)
-  station_summary <- station_table(extract, type, pis)
+  station_summary <- station_table(extract, type)
 
   if (type == "tag") {
     station_spatial <- unique(extract, by = c("station", "detectedby"))
