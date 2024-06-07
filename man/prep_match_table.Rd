@@ -7,6 +7,8 @@
 prep_match_table(extract, type = c("tag", "receiver"))
 }
 \arguments{
+\item{extract}{matched (transmitter) or qualified (receiver) OTN detections}
+
 \item{type}{Tag or receiver data? Takes values of "tag" and "receiver";
 defaults to "tag".}
 }

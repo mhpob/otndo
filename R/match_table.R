@@ -1,6 +1,6 @@
 #' Create a reactable table of matched detections
 #'
-#' @param matched matched (transmitter) or qualified (receiver) OTN detections
+#' @param extract matched (transmitter) or qualified (receiver) OTN detections
 #' @param type Tag or receiver data? Takes values of "tag" and "receiver";
 #'    defaults to "tag".
 #'
