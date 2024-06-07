@@ -5,7 +5,7 @@ test_that("returns a ggplot object", {
 
   expect_s3_class(
     gantt,
-    c('gg', 'ggplot'),
+    c("gg", "ggplot"),
     exact = TRUE
   )
 

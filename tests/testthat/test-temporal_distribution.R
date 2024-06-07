@@ -1,11 +1,11 @@
 test_that("returns a ggplot object for receivers", {
   rec <- read.csv(qualified_path)
 
-  temp_dist <- temporal_distribution(rec, type = 'receiver')
+  temp_dist <- temporal_distribution(rec, type = "receiver")
 
   expect_s3_class(
     temp_dist,
-    c('gg', 'ggplot'),
+    c("gg", "ggplot"),
     exact = TRUE
   )
 
@@ -19,11 +19,11 @@ test_that("returns a ggplot object for receivers", {
 test_that("returns a ggplot object for tags", {
   tag <- read.csv(matched_path)
 
-  temp_dist <- temporal_distribution(tag, type = 'tag')
+  temp_dist <- temporal_distribution(tag, type = "tag")
 
   expect_s3_class(
     temp_dist,
-    c('gg', 'ggplot'),
+    c("gg", "ggplot"),
     exact = TRUE
   )
 
