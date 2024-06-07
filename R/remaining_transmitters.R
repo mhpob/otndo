@@ -40,6 +40,8 @@
 remaining_transmitters <- function(matched, push_log) {
   datecollected <- receiver <- tagname <- first_record <- remaining <- NULL
 
+  matched <- data.table::data.table(matched)
+
   last_record <- matched[, list(last_record = max(datecollected)), by = "tagname"]
   transmitter_life <- last_record[
     matched[receiver == "release", list(tagname, datecollected)], ,
