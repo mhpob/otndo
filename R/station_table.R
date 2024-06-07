@@ -1,9 +1,7 @@
 #' Create the station summary table
 #'
-#' @param matched OTN detections. "Matched" detections for tag data and "qualified"
+#' @param extract OTN detections. "Matched" detections for tag data and "qualified"
 #'  detections for receiver data
-#' @param pis PI contact table from `project_contacts`. Optional if prepping a
-#'  receiver summary.
 #' @param type type of data to be summarized.
 #'
 #' @examples
@@ -29,10 +27,8 @@
 #'   "pbsm_matched_detections_2018.csv"
 #' ))
 #'
-#' pis <- project_contacts(matched, type = "tag")
-#'
 #' # Actually run the function
-#' prep_station_table(matched, type = "tag", pis)
+#' prep_station_table(matched, type = "tag")
 #'
 #'
 #'
@@ -66,17 +62,18 @@
 #'  (assuming that the PI and POC is you).
 #'
 #' @export
-station_table <- function(matched, type = c("tag", "receiver"),
-                          pis = NULL) {
+station_table <- function(extract, type = c("tag", "receiver")) {
   longitude <- latitude <- project_name <- PI <- lat <- long <- station <-
     detections <- individuals <- NULL
 
-  matched <- data.table::data.table(matched)
+  extract <- data.table::data.table(extract)
 
   if (type == "tag") {
+    pis <- project_contacts(extract, type = type)
+
     station_summary <- merge(
-      matched[, list(detections = .N), by = c("station", "detectedby")],
-      unique(matched, by = c("tagname", "station"))[, list(
+      extract[, list(detections = .N), by = c("station", "detectedby")],
+      unique(extract, by = c("tagname", "station"))[, list(
         individuals = .N,
         long = mean(longitude),
         lat = mean(latitude)
@@ -94,8 +91,8 @@ station_table <- function(matched, type = c("tag", "receiver"),
     )
   } else {
     station_summary <- merge(
-      matched[, list(detections = .N), by = "station"],
-      unique(matched, by = c("fieldnumber", "station"))[, list(
+      extract[, list(detections = .N), by = "station"],
+      unique(extract, by = c("fieldnumber", "station"))[, list(
         individuals = .N,
         long = mean(longitude),
         lat = mean(latitude)

@@ -118,7 +118,7 @@ matched_abacus(temp_dist$data, release)
 ```{r}
 #| label: station-summary-table
 
-station_summary <- station_table(matched, type = "tag", pis)
+station_summary <- station_table(matched, type = "tag")
 
 # station_summary |>
 #   gt() |>
@@ -216,7 +216,7 @@ match_map(new_otn_tables)
 #| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
 #| fig-cap-location: top
 
-station_summary <- station_table(new_matches, "tag", pis)
+station_summary <- station_table(new_matches, "tag")
 
 reactable(station_summary)
 ```

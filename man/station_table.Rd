@@ -4,16 +4,13 @@
 \alias{station_table}
 \title{Create the station summary table}
 \usage{
-station_table(matched, type = c("tag", "receiver"), pis = NULL)
+station_table(extract, type = c("tag", "receiver"))
 }
 \arguments{
-\item{matched}{OTN detections. "Matched" detections for tag data and "qualified"
+\item{extract}{OTN detections. "Matched" detections for tag data and "qualified"
 detections for receiver data}
 
 \item{type}{type of data to be summarized.}
-
-\item{pis}{PI contact table from \code{project_contacts}. Optional if prepping a
-receiver summary.}
 }
 \value{
 For tag data, a data.table with the PI, project, station, number of
@@ -47,10 +44,8 @@ matched <- read.csv(file.path(
   "pbsm_matched_detections_2018.csv"
 ))
 
-pis <- project_contacts(matched, type = "tag")
-
 # Actually run the function
-prep_station_table(matched, type = "tag", pis)
+prep_station_table(matched, type = "tag")
 
 
 
