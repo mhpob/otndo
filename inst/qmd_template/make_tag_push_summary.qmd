@@ -29,6 +29,7 @@ library(sf)
 library(mapview)
 library(ggplot2)
 library(reactable)
+library(leaflet)
 ```
 
 
@@ -603,13 +604,51 @@ station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Pro
 ```
 
 ```{r}
+# Make another label for individual
 #| label: new-detection-map-leaflet
-#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
+#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
+#| 
 mapview::mapview(station_spatial,
   zcol = "Detections",
   cex = "Individuals",
   layer.name = "Matched detections"
 )
+
+# I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
+
+numPal <- colorNumeric('viridis', station_spatial$Detections)
+leaflet(station_spatial) %>%
+  addTiles() %>%
+  addSymbolsSize(values = ~Individuals,
+                 lat = ~ latitude, 
+                 lng = ~longitude,
+                 shape = 'plus',
+                 color = 'black',
+                 fillColor = ~numPal(Detections),
+                 opacity = .5,
+                 baseSize = 10) %>%
+  addLegendSize(
+    values = station_spatial$Individuals,
+    color = 'black',
+    title = 'Individual',
+    shape = 'plus',
+    orientation = 'horizontal',
+    opacity = .5,
+    fillOpacity = 0,
+    breaks = 5,
+    position = 'bottomright') %>%
+  addLegendNumeric(
+    pal = numPal, 
+    title = 'Matched Detection',
+    shape = 'circle',
+    values = station_spatial$Detections, 
+    fillOpacity = .5,
+    decreasing = TRUE,
+    position = 'bottomright')
+
+
+
+
 ```
 
 ```{r results='asis', echo=FALSE}
