@@ -29,7 +29,8 @@
 #' download.file(
 #'   paste0(
 #'     "https://members.oceantrack.org/data/repository/pbsm/",
-#'     "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls/",
+#'     "data-and-metadata/archived-records/2018/",
+#'     "pbsm-instrument-deployment-short-form-2018.xls/",
 #'     "@@download/file"
 #'   ),
 #'   destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
