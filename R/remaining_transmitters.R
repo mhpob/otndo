@@ -8,6 +8,8 @@
 #' @param matched matched OTN transmitter detections
 #' @param push_log data.frame containing the date of the most-recent data push.
 #'    This requirement is very likely to change in the future.
+#' @param release Optional. Data frame of release times/locations; a subset of
+#'    the matched detections data
 #'
 #' @examples
 #' \dontrun{
@@ -37,14 +39,28 @@
 #' }
 #'
 #' @export
-remaining_transmitters <- function(matched, push_log) {
-  datecollected <- receiver <- tagname <- first_record <- remaining <- NULL
+remaining_transmitters <- function(matched, push_log, release = NULL) {
+  datecollected <- tagname <- first_record <- remaining <- NULL
 
   matched <- data.table::data.table(matched)
+  push_log <- data.table::data.table(push_log)
+
+  if(is.null(release)) {
+    release <- matched[receiver == "release"]
+
+    if(nrow(release) == 0) {
+      stop(
+        paste("Release date must be supplied by having a \"release\" receiver in",
+              "the matched data or through the \"release\" argument.")
+      )
+    }
+  } else {
+    release <- data.table::data.table(release)
+  }
 
   last_record <- matched[, list(last_record = max(datecollected)), by = "tagname"]
   transmitter_life <- last_record[
-    matched[receiver == "release", list(tagname, datecollected)], ,
+    release[, list(tagname, datecollected)], ,
     on = "tagname"
   ]
   data.table::setnames(transmitter_life, "datecollected", "first_record")
@@ -55,7 +71,7 @@ remaining_transmitters <- function(matched, push_log) {
   )]
 
   transmitter_life[, ":="(first_record = as.Date(first_record),
-    last_record = as.Date(last_record))]
+                          last_record = as.Date(last_record))]
 
   date_seq <- data.table::data.table(
     date = seq(

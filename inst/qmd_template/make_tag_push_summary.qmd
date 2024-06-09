@@ -157,7 +157,7 @@ mapview::mapview(station_spatial,
 #| label: tags-remaining
 #| fig-cap: Figure 5. Transmitters estimated to be at liberty.
 
-remaining_transmitters(matched, push_log)
+remaining_transmitters(matched, push_log, release)
 ```
 
 

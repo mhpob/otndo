@@ -18,7 +18,7 @@
 #'   paste0(
 #'     "https://members.oceantrack.org/data/repository/",
 #'     "pbsm/detection-extracts/pbsm_matched_detections_2018.zip/",
-#'     "@download/file"
+#'     "@@download/file"
 #'   ),
 #'   destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
 #'   mode = "wb"
@@ -40,7 +40,7 @@
 #' }
 make_tag_push_summary <- function(
     matched = NULL,
-    update_push_log = F,
+    update_push_log = FALSE,
     since = NULL,
     sensor_decoding = NULL,
     out_dir = getwd(),

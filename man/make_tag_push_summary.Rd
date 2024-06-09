@@ -6,7 +6,7 @@
 \usage{
 make_tag_push_summary(
   matched = NULL,
-  update_push_log = F,
+  update_push_log = FALSE,
   since = NULL,
   sensor_decoding = NULL,
   out_dir = getwd(),

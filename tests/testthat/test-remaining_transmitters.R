@@ -1,5 +1,5 @@
 test_that("returns ggplot object", {
-  matched_dets <- read.csv(matched_path)
+  matched_dets <- read.csv(pbsm$matched)
   remain <- remaining_transmitters(
     matched_dets,
     data.frame(date = as.Date("2020-01-01"))
@@ -19,4 +19,12 @@ test_that("returns ggplot object", {
     max(remain$data$date),
     as.Date("2020-01-01")
   )
+})
+
+test_that("Errors if no release data", {
+  remaining_transmitters(
+    matched_dets[matched_dets$receiver != "release",],
+    data.frame(date = as.Date("2020-01-01"))
+  ) |>
+    expect_error("Release date must be supplied")
 })

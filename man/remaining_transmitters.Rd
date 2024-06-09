@@ -4,13 +4,16 @@
 \alias{remaining_transmitters}
 \title{Estimate transmitters remaining in the system}
 \usage{
-remaining_transmitters(matched, push_log)
+remaining_transmitters(matched, push_log, release = NULL)
 }
 \arguments{
 \item{matched}{matched OTN transmitter detections}
 
 \item{push_log}{data.frame containing the date of the most-recent data push.
 This requirement is very likely to change in the future.}
+
+\item{release}{Optional. Data frame of release times/locations; a subset of
+the matched detections data}
 }
 \description{
 This function estimates the transmitters remaining in the system by finding
