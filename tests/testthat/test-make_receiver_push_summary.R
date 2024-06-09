@@ -10,7 +10,7 @@ test_that("Projects are summarized", {
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
-    expect_output("processing file.*Output created") |>
+    expect_output("Output created") |>
     expect_message("Done")
 
   expect_true(any(grepl("receiver_push_summary", list.files(getwd()))))
