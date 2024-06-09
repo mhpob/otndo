@@ -22,6 +22,9 @@
     <loc>https://otndo.obrien.page/news/index.html</loc>
   </url>
   <url>
+    <loc>https://otndo.obrien.page/reference/deployment_gantt.html</loc>
+  </url>
+  <url>
     <loc>https://otndo.obrien.page/reference/index.html</loc>
   </url>
   <url>
@@ -31,7 +34,37 @@
     <loc>https://otndo.obrien.page/reference/make_tag_push_summary.html</loc>
   </url>
   <url>
+    <loc>https://otndo.obrien.page/reference/match_map.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/match_table.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/matched_abacus.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/otn_query.html</loc>
+  </url>
+  <url>
     <loc>https://otndo.obrien.page/reference/otndo-package.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/prep_match_table.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/prep_station_spatial.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/project_contacts.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/remaining_transmitters.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/station_table.html</loc>
+  </url>
+  <url>
+    <loc>https://otndo.obrien.page/reference/temporal_distribution.html</loc>
   </url>
   <url>
     <loc>https://otndo.obrien.page/reference/utilities-make.html</loc>
