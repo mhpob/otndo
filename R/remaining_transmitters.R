@@ -40,7 +40,7 @@
 #'
 #' @export
 remaining_transmitters <- function(matched, push_log, release = NULL) {
-  datecollected <- tagname <- first_record <- remaining <- NULL
+  datecollected <- tagname <- first_record <- remaining <- receiver <- NULL
 
   matched <- data.table::data.table(matched)
   push_log <- data.table::data.table(push_log)

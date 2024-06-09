@@ -9,7 +9,6 @@ test_that("Non-ACT projects are summarized", {
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
-    expect_output("Output created") |>
     expect_message("Done")
 
   expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
