@@ -1,5 +1,5 @@
 test_that("returns a ggplot object for receivers", {
-  rec <- read.csv(qualified_path)
+  rec <- read.csv(pbsm$qualified)
 
   temp_dist <- temporal_distribution(rec, type = "receiver")
 
@@ -17,7 +17,7 @@ test_that("returns a ggplot object for receivers", {
 
 
 test_that("returns a ggplot object for tags", {
-  tag <- read.csv(matched_path)
+  tag <- read.csv(pbsm$matched)
 
   temp_dist <- temporal_distribution(tag, type = "tag")
 

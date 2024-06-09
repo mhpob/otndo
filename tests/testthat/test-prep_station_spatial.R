@@ -1,5 +1,5 @@
 test_that("receiver data gives correct classes", {
-  rec <- read.csv(qualified_path)
+  rec <- read.csv(pbsm$qualified)
   rec_spat <- prep_station_spatial(rec, "receiver")
 
   expect_s3_class(
@@ -16,7 +16,7 @@ test_that("receiver data gives correct classes", {
 
 
 test_that("tag data gives correct classes", {
-  tag <- read.csv(matched_path)
+  tag <- read.csv(pbsm$matched)
   tag_spat <- prep_station_spatial(tag, "tag")
 
   expect_s3_class(

@@ -1,7 +1,8 @@
+# Pings OTN GeoServer; skip if offline
 skip_if_offline()
 
 test_that("extracts qualified", {
-  qual <- extract_proj_name(qualified_path)
+  qual <- extract_proj_name(pbsm$qualified)
 
   expect_type(qual, "list")
   expect_named(qual, c("project_name", "project_code"))
@@ -16,7 +17,7 @@ test_that("extracts qualified", {
 })
 
 test_that("extracts unqualified", {
-  unqual <- extract_proj_name(unqualified_path)
+  unqual <- extract_proj_name(pbsm$unqualified)
 
   expect_type(unqual, "list")
   expect_named(unqual, c("project_name", "project_code"))
@@ -31,7 +32,7 @@ test_that("extracts unqualified", {
 })
 
 test_that("extracts matched", {
-  matched <- extract_proj_name(matched_path)
+  matched <- extract_proj_name(pbsm$matched)
 
   expect_type(matched, "list")
   expect_named(matched, c("project_name", "project_code"))

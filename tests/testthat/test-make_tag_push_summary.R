@@ -1,13 +1,21 @@
+# Pings OTN GeoServer; skip if offline
 skip_if_offline()
 
 
 test_that("Non-ACT projects are summarized", {
-  expect_no_error(
     make_tag_push_summary(
-      matched = matched_path,
+      matched = pbsm$matched,
       since = "2018-05-06"
-    )
-  )
+    ) |>
+    expect_message("Asking OTN GeoServer") |>
+    expect_message("Writing report") |>
+    expect_output("processing file.*Output created") |>
+    expect_message("Done")
 
   expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
 })
+
+test_that("summarizes with no new detections", {
+  skip("Bug still exists")
+})
+

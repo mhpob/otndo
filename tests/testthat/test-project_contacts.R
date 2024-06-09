@@ -1,7 +1,8 @@
 skip_if_offline()
 
+matched <- read.csv(pbsm$matched)
+
 test_that("returns correct class for tags", {
-  matched <- read.csv(matched_path)
 
   expect_s3_class(
     pi_table <- project_contacts(matched, type = "tag"),
@@ -32,8 +33,6 @@ test_that("returns correct class for tags", {
 })
 
 test_that("right things are returned for tags", {
-  matched <- read.csv(matched_path)
-
   pi_table <- project_contacts(matched, type = "tag")
 
   expect_equal(
@@ -56,9 +55,10 @@ test_that("right things are returned for tags", {
 })
 
 
-test_that("returns correct class for receivers", {
-  qualified <- read.csv(qualified_path)
 
+qualified <- read.csv(pbsm$qualified)
+
+test_that("returns correct class for receivers", {
   expect_s3_class(
     pi_table <- project_contacts(qualified, type = "receivers"),
     c("data.table", "data.frame"),
@@ -88,8 +88,6 @@ test_that("returns correct class for receivers", {
 })
 
 test_that("right things are returned for receivers", {
-  qualified <- read.csv(qualified_path)
-
   pi_table <- project_contacts(qualified, type = "receivers")
 
   expect_equal(

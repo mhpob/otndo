@@ -1,5 +1,5 @@
 test_that("returns a ggplot object", {
-  dep <- clean_otn_deployment(deployment_path)
+  dep <- clean_otn_deployment(pbsm$deployment)
 
   gantt <- deployment_gantt(dep)
 

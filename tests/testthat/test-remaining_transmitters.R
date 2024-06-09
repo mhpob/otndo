@@ -22,6 +22,8 @@ test_that("returns ggplot object", {
 })
 
 test_that("Errors if no release data", {
+  matched_dets <- read.csv(pbsm$matched)
+
   remaining_transmitters(
     matched_dets[matched_dets$receiver != "release",],
     data.frame(date = as.Date("2020-01-01"))

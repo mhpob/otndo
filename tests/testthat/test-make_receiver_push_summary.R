@@ -1,23 +1,17 @@
+# Pings OTN GeoServer; skip if offline
 skip_if_offline()
 
-
-test_that("Deployment metadata can be cleaned", {
-  expect_no_error(clean_otn_deployment(deployment_path))
-})
-
-
 test_that("Projects are summarized", {
-  expect_no_error(
-    make_receiver_push_summary(
-      qualified = qualified_path,
-      unqualified = unqualified_path,
-      deployment = deployment_path,
-      since = "2018-05-06"
-    )
-  )
+  make_receiver_push_summary(
+    qualified = pbsm$qualified,
+    unqualified = pbsm$unqualified,
+    deployment = pbsm$deployment,
+    since = "2018-05-06"
+  ) |>
+    expect_message("Asking OTN GeoServer for project information") |>
+    expect_message("Writing report") |>
+    expect_output("processing file.*Output created") |>
+    expect_message("Done")
 
   expect_true(any(grepl("receiver_push_summary", list.files(getwd()))))
 })
-
-
-unlink(td, recursive = T)
