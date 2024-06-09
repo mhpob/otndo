@@ -1,50 +1,35 @@
-td <- file.path(tempdir(), "otndo_test_files")
+td <- file.path(tempdir(), 'tests')
 dir.create(td)
 
-## Qualified detections
-download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_qualified_detections_2018.zip/@@download/file",
-  destfile = file.path(td, "pbsm_qualified_detections_2018.zip"),
-  mode = "wb",
-  quiet = TRUE
-)
-unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
-  exdir = td
-)
-
-qualified_path <- file.path(td, "pbsm_qualified_detections_2018.csv")
+pbsm_files <- list.files(
+  test_path('fixtures'),
+  pattern = '\\.rds$',
+  full.names = T
+) |>
+  sapply(readRDS, USE.NAMES = TRUE)
 
 
-## Unqualified detections
-download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_unqualified_detections_2018.zip/@@download/file",
-  destfile = file.path(td, "pbsm_unqualified_detections_2018.zip"),
-  mode = "wb",
-  quiet = TRUE
-)
-unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"),
-  exdir = td
-)
-
-unqualified_path <- file.path(td, "pbsm_unqualified_detections_2018.csv")
-
-
-## Deployment records
-download.file("https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/archived-records/2018/pbsm-instrument-deployment-short-form-2018.xls/@@download/file",
-  destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
-  mode = "wb",
-  quiet = TRUE
-)
-deployment_path <- file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
+for(i in seq_along(pbsm_files)){
+  write.csv(
+    pbsm_files[[i]],
+    file.path(
+      td,
+      gsub(
+        "rds", "csv",
+        basename(names(pbsm_files)[i])
+      )
+    ),
+    row.names = FALSE
+  )
+}
 
 
-## Matched detections
-download.file(
-  "https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_matched_detections_2018.zip/@@download/file",
-  destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
-  mode = "wb",
-  quiet = TRUE
-)
-unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
-  exdir = td
+pbsm <- list(
+  matched = file.path(td, 'pbsm_matched.csv'),
+  qualified = file.path(td, 'pbsm_qualified.csv'),
+  unqualified = file.path(td, 'pbsm_unqualified.csv'),
+  deployment = test_path("fixtures", "pbsm-instrument-deployment-short-form-2018.xls")
 )
 
-matched_path <- file.path(td, "pbsm_matched_detections_2018.csv")
+
+rm(pbsm_files, i)
