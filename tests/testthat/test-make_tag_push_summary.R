@@ -3,10 +3,10 @@ skip_if_offline()
 
 
 test_that("Non-ACT projects are summarized", {
-    make_tag_push_summary(
-      matched = pbsm$matched,
-      since = "2018-05-06"
-    ) |>
+  make_tag_push_summary(
+    matched = pbsm$matched,
+    since = "2018-05-06"
+  ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
     expect_output("processing file.*Output created") |>
@@ -18,4 +18,3 @@ test_that("Non-ACT projects are summarized", {
 test_that("summarizes with no new detections", {
   skip("Bug still exists")
 })
-

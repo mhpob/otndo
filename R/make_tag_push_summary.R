@@ -18,7 +18,7 @@
 #'   paste0(
 #'     "https://members.oceantrack.org/data/repository/",
 #'     "pbsm/detection-extracts/pbsm_matched_detections_2018.zip/",
-#'     "@@download/file"
+#'     "@download/file"
 #'   ),
 #'   destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
 #'   mode = "wb"

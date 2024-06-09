@@ -45,13 +45,15 @@ remaining_transmitters <- function(matched, push_log, release = NULL) {
   matched <- data.table::data.table(matched)
   push_log <- data.table::data.table(push_log)
 
-  if(is.null(release)) {
+  if (is.null(release)) {
     release <- matched[receiver == "release"]
 
-    if(nrow(release) == 0) {
+    if (nrow(release) == 0) {
       stop(
-        paste("Release date must be supplied by having a \"release\" receiver in",
-              "the matched data or through the \"release\" argument.")
+        paste(
+          "Release date must be supplied by having a \"release\" receiver in",
+          "the matched data or through the \"release\" argument."
+        )
       )
     }
   } else {
@@ -71,7 +73,7 @@ remaining_transmitters <- function(matched, push_log, release = NULL) {
   )]
 
   transmitter_life[, ":="(first_record = as.Date(first_record),
-                          last_record = as.Date(last_record))]
+    last_record = as.Date(last_record))]
 
   date_seq <- data.table::data.table(
     date = seq(

@@ -3,7 +3,6 @@ skip_if_offline()
 matched <- read.csv(pbsm$matched)
 
 test_that("returns correct class for tags", {
-
   expect_s3_class(
     pi_table <- project_contacts(matched, type = "tag"),
     c("data.table", "data.frame"),
