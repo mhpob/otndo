@@ -255,7 +255,7 @@ leaflet(station_spatial) %>%
   addLegendNumeric(
     pal = numPal, 
     title = 'Matched Detection',
-    shape = 'circle',
+    shape = 'stadium',
     values = station_spatial$Detections, 
     fillOpacity = .5,
     decreasing = TRUE,
