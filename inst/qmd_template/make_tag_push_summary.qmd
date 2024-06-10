@@ -608,11 +608,7 @@ station_spatial <- station_spatial[, .(station, Detections, Individuals, PI, Pro
 #| label: new-detection-map-leaflet
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
 #| 
-mapview::mapview(station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
-)
+
 
 # I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
 
