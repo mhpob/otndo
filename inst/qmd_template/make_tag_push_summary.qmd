@@ -251,7 +251,7 @@ leaflet(station_spatial) %>%
     fillOpacity = 0,
     breaks = 5,
     position = 'bottomright') %>%
-  addLegendNumeric(
+  addLegend(
     pal = numPal, 
     title = 'Matched Detection',
     shape = 'circle',
