@@ -29,7 +29,9 @@
 #' download.file(
 #'   paste0(
 #'     "https://members.oceantrack.org/data/repository/pbsm/",
-#'     "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"
+#'     "data-and-metadata/archived-records/2018/",
+#'     "pbsm-instrument-deployment-short-form-2018.xls/",
+#'     "@@download/file"
 #'   ),
 #'   destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
 #'   mode = "wb"
@@ -39,9 +41,11 @@
 #' download.file(
 #'   paste0(
 #'     "https://members.oceantrack.org/data/repository/pbsm/",
-#'     "detection-extracts/pbsm_qualified_detections_2018.zip"
+#'     "detection-extracts/pbsm_qualified_detections_2018.zip/",
+#'     "@@download/file"
 #'   ),
-#'   destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
+#'   destfile = file.path(td, "pbsm_qualified_detections_2018.zip"),
+#'   mode = "wb"
 #' )
 #' unzip(
 #'   file.path(td, "pbsm_qualified_detections_2018.zip"),
@@ -51,9 +55,11 @@
 #' download.file(
 #'   paste0(
 #'     "https://members.oceantrack.org/data/repository/pbsm/",
-#'     "detection-extracts/pbsm_unqualified_detections_2018.zip"
+#'     "detection-extracts/pbsm_unqualified_detections_2018.zip/",
+#'     "@@download/file"
 #'   ),
-#'   destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
+#'   destfile = file.path(td, "pbsm_unqualified_detections_2018.zip"),
+#'   mode = "wb"
 #' )
 #' unzip(
 #'   file.path(td, "pbsm_unqualified_detections_2018.zip"),
