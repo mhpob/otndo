@@ -14,12 +14,12 @@ test_that("expected classes", {
   expect_type(deployment_xl$stationname, "character")
   expect_type(deployment_xl$receiver, "character")
   expect_s3_class(deployment_xl$deploy_date_time, c("POSIXct", "POSIXt"),
-    exact = TRUE
+                  exact = TRUE
   )
   expect_type(deployment_xl$deploy_lat, "double")
   expect_type(deployment_xl$deploy_long, "double")
   expect_s3_class(deployment_xl$recover_date_time, c("POSIXct", "POSIXt"),
-    exact = TRUE
+                  exact = TRUE
   )
 })
 
@@ -102,12 +102,12 @@ test_that("accepts csv with header", {
   expect_type(deployment_csv$stationname, "character")
   expect_type(deployment_csv$receiver, "character")
   expect_s3_class(deployment_csv$deploy_date_time, c("POSIXct", "POSIXt"),
-    exact = TRUE
+                  exact = TRUE
   )
   expect_type(deployment_csv$deploy_lat, "double")
   expect_type(deployment_csv$deploy_long, "double")
   expect_s3_class(deployment_csv$recover_date_time, c("POSIXct", "POSIXt"),
-    exact = TRUE
+                  exact = TRUE
   )
 
   expect_equal(
@@ -162,6 +162,31 @@ test_that("accepts csv without header", {
     "UTC"
   )
 })
+
+
+
+
+test_that("Correct names when no internal transmitter columns", {
+  deployment_sheet1 <- file.path(
+    td,
+    "no_transmitter.xlsx"
+  )
+
+  dep <- readxl::read_excel(pbsm$deployment, sheet = 2, skip = 3)
+
+  writexl::write_xlsx(
+    dep[, !names(dep) %in% c('TRANSMITTER', 'TRANSMIT_MODEL')],
+    deployment_sheet1
+  )
+
+  expect_named(
+    clean_otn_deployment(deployment_sheet1),
+    c("stationname", "receiver", "deploy_date_time", "deploy_lat", "deploy_long",
+      "recover_date_time")
+  )
+})
+
+
 
 
 test_that("errors if not a CSV or XLS(X)", {
