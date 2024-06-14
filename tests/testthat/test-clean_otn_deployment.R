@@ -50,9 +50,13 @@ test_that("Works when no header present", {
 
   dep <- readxl::read_excel(pbsm$deployment, sheet = 2, skip = 3)
 
-  writexl::write_xlsx(list(readme = data.frame(),
-                           deployment = dep),
-                      deployment_sheet1)
+  writexl::write_xlsx(
+    list(
+      readme = data.frame(),
+      deployment = dep
+    ),
+    deployment_sheet1
+  )
 
   expect_equal(
     clean_otn_deployment(deployment_sheet1),
@@ -83,10 +87,14 @@ test_that("accepts csv with header", {
     td,
     "pbsm-instrument-deployment-short-form-2018.csv"
   )
-  readxl::read_excel(pbsm$deployment, sheet = 2, col_names = FALSE,
-                     .name_repair = "minimal") |>
-    write.table(deployment_csv, row.names = FALSE, col.names = FALSE,
-                sep = ",", na = "")
+  readxl::read_excel(pbsm$deployment,
+    sheet = 2, col_names = FALSE,
+    .name_repair = "minimal"
+  ) |>
+    write.table(deployment_csv,
+      row.names = FALSE, col.names = FALSE,
+      sep = ",", na = ""
+    )
 
   expect_s3_class(
     deployment_csv <- clean_otn_deployment(deployment_csv),
@@ -145,12 +153,12 @@ test_that("accepts csv without header", {
   expect_type(deployment_csv$stationname, "character")
   expect_type(deployment_csv$receiver, "character")
   expect_s3_class(deployment_csv$deploy_date_time, c("POSIXct", "POSIXt"),
-                  exact = TRUE
+    exact = TRUE
   )
   expect_type(deployment_csv$deploy_lat, "double")
   expect_type(deployment_csv$deploy_long, "double")
   expect_s3_class(deployment_csv$recover_date_time, c("POSIXct", "POSIXt"),
-                  exact = TRUE
+    exact = TRUE
   )
 
   expect_equal(
