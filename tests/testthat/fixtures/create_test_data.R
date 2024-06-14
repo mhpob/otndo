@@ -67,6 +67,8 @@ download.file("https://members.oceantrack.org/data/repository/pbsm/data-and-meta
   quiet = TRUE
 )
 
+# Fake header lines were added by hand for testing against sheets that contain
+#   a standard 3 line header
 
 
 
