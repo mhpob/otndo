@@ -37,7 +37,7 @@ test_that("Renders with RMarkdown", {
 test_that("No new detections since \"since\" date works", {
   make_tag_push_summary(
     matched = pbsm$matched,
-    since = Sys.Date()
+    since = Sys.Date() + 1
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
@@ -47,8 +47,34 @@ test_that("No new detections since \"since\" date works", {
 })
 
 
+test_that("Default \"since\" date works", {
+  make_tag_push_summary(
+    matched = pbsm$matched
+  ) |>
+    expect_message("Asking OTN GeoServer") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+
+  expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
 
 
-test_that("summarizes with no new detections", {
-  skip("Bug still exists")
+  # Make sure at least one detection is "new"
+  new_matched <- read.csv(pbsm$matched)
+  new_matched <- rbind(
+    new_matched,
+    new_matched[1,]
+  )
+
+  new_matched[nrow(new_matched),]$datelastmodified <- as.character(Sys.Date())
+  write.csv(new_matched, file.path(td, 'new_matched.csv'), row.names = FALSE)
+
+
+  make_tag_push_summary(
+    matched = file.path(td, 'new_matched.csv')
+  ) |>
+    expect_message("Asking OTN GeoServer") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+
+  expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
 })
