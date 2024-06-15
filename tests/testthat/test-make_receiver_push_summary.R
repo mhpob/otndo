@@ -99,3 +99,18 @@ test_that("errors with no input data", {
     "Must provide at least one each of qualified.*unqualified detections.*deployment"
   )
 })
+
+
+
+
+test_that("update_push_log arg works", {
+  make_receiver_push_summary(
+    qualified = pbsm$qualified,
+    unqualified = pbsm$unqualified,
+    deployment = pbsm$deployment,
+    update_push_log = TRUE
+  ) |>
+    expect_message("Asking OTN GeoServer for project information") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+})

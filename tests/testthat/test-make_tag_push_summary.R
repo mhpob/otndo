@@ -88,3 +88,16 @@ test_that("errors with no input data", {
     "Must provide at least one set of OTN-matched detections"
   )
 })
+
+
+
+
+test_that("update_push_log arg works", {
+  make_tag_push_summary(
+    matched = pbsm$matched,
+    update_push_log = TRUE
+  ) |>
+    expect_message("Asking OTN GeoServer") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+})
