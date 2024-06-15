@@ -17,6 +17,7 @@ test_that("Non-ACT projects are summarized", {
 
 
 
+
 test_that("Renders with RMarkdown", {
   make_tag_push_summary(
     matched = pbsm$matched,
@@ -29,6 +30,24 @@ test_that("Renders with RMarkdown", {
     expect_message("Done")
 
   expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
+})
+
+
+
+
+test_that("Zipped files are unzipped", {
+  zip(gsub("csv$", "zip", pbsm$matched), pbsm$matched, flags = "-q")
+
+  make_tag_push_summary(
+    matched = gsub("csv$", "zip", pbsm$matched),
+    since = "2018-05-06",
+    rmd = TRUE
+  ) |>
+    expect_message("zipped files detected") |>
+    expect_message("Unzipped") |>
+    expect_message("Asking OTN GeoServer") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
 })
 
 

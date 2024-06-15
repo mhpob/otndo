@@ -18,6 +18,27 @@ test_that("Projects are summarized", {
 
 
 
+test_that("Zipped files are unzipped", {
+  zip(gsub("csv$", "zip", pbsm$qualified), pbsm$qualified, flags = "-q")
+  zip(gsub("csv$", "zip", pbsm$unqualified), pbsm$unqualified, flags = "-q")
+
+  make_receiver_push_summary(
+    qualified = gsub("csv$", "zip", pbsm$qualified),
+    unqualified = gsub("csv$", "zip", pbsm$unqualified),
+    deployment = pbsm$deployment,
+    since = "2018-05-06"
+  ) |>
+    expect_message("zipped files detected") |>
+    expect_message("Unzipped") |>
+    expect_message("zipped files detected") |>
+    expect_message("Unzipped") |>
+    expect_message("Asking OTN GeoServer for project information") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+})
+
+
+
 test_that("Renders with RMarkdown", {
   make_receiver_push_summary(
     qualified = pbsm$qualified,
