@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">otndo</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,19 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2" id="otndo-02">otndo 0.2<a class="anchor" aria-label="anchor" href="#otndo-02"></a></h2>
 <div class="section level3">
-<h3 id="v-0-2">v 0.2.0<a class="anchor" aria-label="anchor" href="#v-0-2"></a></h3>
+<h3 id="v-0-2">v 0.2.1<a class="anchor" aria-label="anchor" href="#v-0-2"></a></h3>
+<ul><li>Fleshes out tests to get to 100% coverage (for now!). Note that this is an overestimate as I can’t actually get into the QMD files to test.</li>
+<li>Fix bug in <code>project_contacts</code> where the merge wasn’t actually joing on what I thought it was. <a href="https://github.com/mhpob/otndo/commit/ea26c56847645c94c4ba2bcb41c89faa0c254251" class="external-link">ea26c56</a>
+</li>
+<li>Fix bug in the QMD files that didn’t reference new data properly, resulting in repeated summary tables. <a href="https://github.com/mhpob/otndo/commit/e7d1368bba22863883e75957037a0973cab27436" class="external-link">e7d1368</a>
+</li>
+<li>Properly handles the situation where no new detections exist. <a href="https://github.com/mhpob/otndo/commit/07d9590c63706111a9b516ccec2c7400d08eaae5" class="external-link">07d9590</a>
+</li>
+<li>Fixed bug where CSV deployment metadata were not actually checked for the presence of a header. <a href="https://github.com/mhpob/otndo/commit/dc420e6c5bbcdcdde5cb2ef8420cbcbda8469a6e" class="external-link">dc420e6</a>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="v-0-2-1">v 0.2.0<a class="anchor" aria-label="anchor" href="#v-0-2-1"></a></h3>
 <ul><li>Breaks out all of the functions internal to the QMD template. Will allow for clearer errors and more-directed testing.</li>
 <li>As a result, there are <strong>new functions</strong>! But, be warned: names and arguments are likely to be going through quite a bit of flux as we figure out what each should really be doing.
 <ul><li><a href="https://otndo.obrien.page/reference/deployment_gantt.html"><code>deployment_gantt</code></a></li>
