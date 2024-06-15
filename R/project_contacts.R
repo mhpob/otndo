@@ -54,7 +54,7 @@ project_contacts <- function(extract, type = c("receiver", "tag")) {
       POC = strsplit(contact_poc, " \\(|\\)(, )?")
     )]
   } else {
-    pis <- unique(extract, by = c("trackercode"))
+    pis <- unique(extract, by = c("trackercode", "tag_contact_poc", "tag_contact_pi"))
     pis[, ":="(
       PI = strsplit(tag_contact_pi, " \\(|\\)(, )?"),
       POC = strsplit(tag_contact_poc, " \\(|\\)(, )?")
@@ -99,9 +99,10 @@ project_contacts <- function(extract, type = c("receiver", "tag")) {
       ),
       by = "trackercode"
       ]
-      pis <- merge(pis[, -c("PI", "POC", "PI_emails", "POC_emails")],
+      pis <- merge(
+        pis[, -c("PI", "POC", "PI_emails", "POC_emails")],
         pi_key,
-        on = "trackercode"
+        by = "trackercode"
       )
       pis <- unique(pis, by = "trackercode")
     }
