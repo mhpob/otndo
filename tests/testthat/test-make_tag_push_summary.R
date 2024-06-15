@@ -78,3 +78,13 @@ test_that("Default \"since\" date works", {
 
   expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
 })
+
+
+
+
+test_that("errors with no input data", {
+  expect_error(
+    make_tag_push_summary(),
+    "Must provide at least one set of OTN-matched detections"
+  )
+})

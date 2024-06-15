@@ -89,3 +89,13 @@ test_that("Default \"since\" date works", {
 
   expect_true(any(grepl("receiver_push_summary", list.files(getwd()))))
 })
+
+
+
+
+test_that("errors with no input data", {
+  expect_error(
+    make_receiver_push_summary(),
+    "Must provide at least one each of qualified.*unqualified detections.*deployment"
+  )
+})
