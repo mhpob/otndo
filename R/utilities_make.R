@@ -35,7 +35,8 @@ clean_otn_deployment <- function(deployment) {
     }
   } else if (grepl("^csv$", file_ext)) {
     # Check for OTN header
-    if (ncol(read.csv(deployment, nrows = 1)) == 0) {
+    check_head <- read.csv(deployment, nrows = 1, check.names = FALSE)
+    if (ncol(check_head) > length(unique(names(check_head)))) {
       deployment <- read.csv(deployment,
         skip = 3,
         na.strings = c("NA", "")

@@ -188,6 +188,7 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(matched[datelastmodified >
 #| column: page
 #| fig-cap: Table 2. Total newly-added detections and number of individual fish heard by other OTN node projects.
 #| fig-cap-location: top
+#| eval: !expr "nrow(new_matches) > 0"
 
 match_table(new_matches, type = "tag")
 ```
@@ -197,6 +198,7 @@ match_table(new_matches, type = "tag")
 ```{r}
 #| label: new-otn-match-map
 #| fig-cap: Figure 6. Bounding box of external projects providing detections added since the last data push. This does not necessarily reflect the distribution of fish heard by the project's receivers.
+#| eval: !expr "nrow(new_matches) > 0"
 
 new_otn_tables <- lapply(
   otn_tables,
@@ -215,15 +217,17 @@ match_map(new_otn_tables)
 #| label: new-station-summary-table
 #| fig-cap: Table 3. PIs, projects, and receivers providing the newly-added detections.
 #| fig-cap-location: top
+#| eval: !expr "nrow(new_matches) > 0"
 
-station_summary <- station_table(new_matches, "tag")
+new_station_summary <- station_table(new_matches, "tag")
 
-reactable(station_summary)
+reactable(new_station_summary)
 ```
 
 ```{r}
 #| label: new-detection-map-leaflet
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
+#| eval: !expr "nrow(new_matches) > 0"
 
 new_station_spatial <- prep_station_spatial(new_matches, type = "tag")
 

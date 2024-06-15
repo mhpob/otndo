@@ -205,6 +205,8 @@ make_receiver_push_summary <- function(
       )
     )
   } else {
+    cli::cli_alert_info("Rendering using RMarkdown...")
+
     rmarkdown::render(
       input = file.path(td, "make_receiver_push_summary.qmd"),
       params = list(
