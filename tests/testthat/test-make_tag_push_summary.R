@@ -34,6 +34,21 @@ test_that("Renders with RMarkdown", {
 
 
 
+test_that("No new detections since \"since\" date works", {
+  make_tag_push_summary(
+    matched = pbsm$matched,
+    since = Sys.Date()
+  ) |>
+    expect_message("Asking OTN GeoServer") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+
+  expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
+})
+
+
+
+
 test_that("summarizes with no new detections", {
   skip("Bug still exists")
 })
