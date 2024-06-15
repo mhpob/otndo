@@ -101,3 +101,21 @@ test_that("update_push_log arg works", {
     expect_message("Writing report") |>
     expect_message("Done")
 })
+
+
+
+test_that("Pre-existing directory is overwritten", {
+  dir.create(
+    file.path(tempdir(), "otndo_files")
+  )
+
+  make_tag_push_summary(
+    matched = pbsm$matched,
+    since = Sys.Date() + 1
+  ) |>
+    expect_message("Asking OTN GeoServer for project information") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+
+  expect_false(dir.exists(file.path(tempdir(), "otndo_files")))
+})
