@@ -62,15 +62,15 @@ test_that("Default \"since\" date works", {
   new_matched <- read.csv(pbsm$matched)
   new_matched <- rbind(
     new_matched,
-    new_matched[1,]
+    new_matched[1, ]
   )
 
-  new_matched[nrow(new_matched),]$datelastmodified <- as.character(Sys.Date())
-  write.csv(new_matched, file.path(td, 'new_matched.csv'), row.names = FALSE)
+  new_matched[nrow(new_matched), ]$datelastmodified <- as.character(Sys.Date())
+  write.csv(new_matched, file.path(td, "new_matched.csv"), row.names = FALSE)
 
 
   make_tag_push_summary(
-    matched = file.path(td, 'new_matched.csv')
+    matched = file.path(td, "new_matched.csv")
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>

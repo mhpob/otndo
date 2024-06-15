@@ -71,15 +71,15 @@ test_that("Default \"since\" date works", {
   new_qualified <- read.csv(pbsm$qualified)
   new_qualified <- rbind(
     new_qualified,
-    new_qualified[1,]
+    new_qualified[1, ]
   )
 
-  new_qualified[nrow(new_qualified),]$datelastmodified <- as.character(Sys.Date())
-  write.csv(new_qualified, file.path(td, 'new_qualified.csv'), row.names = FALSE)
+  new_qualified[nrow(new_qualified), ]$datelastmodified <- as.character(Sys.Date())
+  write.csv(new_qualified, file.path(td, "new_qualified.csv"), row.names = FALSE)
 
 
   make_receiver_push_summary(
-    qualified = file.path(td, 'new_qualified.csv'),
+    qualified = file.path(td, "new_qualified.csv"),
     unqualified = pbsm$unqualified,
     deployment = pbsm$deployment
   ) |>
