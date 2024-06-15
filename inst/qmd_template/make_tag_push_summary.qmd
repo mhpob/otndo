@@ -219,9 +219,9 @@ match_map(new_otn_tables)
 #| fig-cap-location: top
 #| eval: !expr "nrow(new_matches) > 0"
 
-station_summary <- station_table(new_matches, "tag")
+new_station_summary <- station_table(new_matches, "tag")
 
-reactable(station_summary)
+reactable(new_station_summary)
 ```
 
 ```{r}
