@@ -81,9 +81,10 @@ project_contacts <- function(extract, type = c("receiver", "tag")) {
       ),
       by = "detectedby"
       ]
-      pis <- merge(pis[, -c("PI", "POC", "PI_emails", "POC_emails")],
+      pis <- merge(
+        pis[, -c("PI", "POC", "PI_emails", "POC_emails")],
         pi_key,
-        on = "detectedby"
+        by = "detectedby"
       )
       pis <- unique(pis, by = "detectedby")
       # maybe need to also merge their geom?
