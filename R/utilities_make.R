@@ -91,10 +91,10 @@ clean_otn_deployment <- function(deployment) {
   }
 
   deployment[, c(
-      "stationname", "receiver", "internal_transmitter",
-      "deploy_date_time", "deploy_lat", "deploy_long",
-      "recover_date_time"
-    )]
+    "stationname", "receiver", "internal_transmitter",
+    "deploy_date_time", "deploy_lat", "deploy_long",
+    "recover_date_time"
+  )]
 }
 
 
