@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">otndo</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,14 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2" id="otndo-02">otndo 0.2<a class="anchor" aria-label="anchor" href="#otndo-02"></a></h2>
 <div class="section level3">
-<h3 id="v-0-2">v 0.2.1<a class="anchor" aria-label="anchor" href="#v-0-2"></a></h3>
+<h3 id="v-0-2">v 0.2.2<a class="anchor" aria-label="anchor" href="#v-0-2"></a></h3>
+<ul><li>Fixed behavior where <code>clean_otn_deployment</code> would return different columns if there was no internal transmitter logged. <a href="https://github.com/mhpob/otndo/issues/10" class="external-link">Issue </a><a href="https://github.com/mhpob/otndo/issues/10" class="external-link">#10</a>; <a href="https://github.com/mhpob/otndo/pull/31/commits/d58e2d46e05aed7ba4acc08b8d02672b28d79804" class="external-link">d58e2d4</a>
+</li>
+<li>Add internal function (<code>convert_times</code>) that checks for Excel-formatted date-times and converts accordingly <a href="https://github.com/mhpob/otndo/pull/31/commits/f13f360fe5e4438b6ba668039a6c94f04eeafe60" class="external-link">f13f360</a>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="v-0-2-1">v 0.2.1<a class="anchor" aria-label="anchor" href="#v-0-2-1"></a></h3>
 <ul><li>Fleshes out tests to get to 100% coverage (for now!). Note that this is an overestimate as I can’t actually get into the QMD files to test.</li>
 <li>Fix bug in <code>project_contacts</code> where the merge wasn’t actually joing on what I thought it was. <a href="https://github.com/mhpob/otndo/commit/ea26c56847645c94c4ba2bcb41c89faa0c254251" class="external-link">ea26c56</a>
 </li>
@@ -65,7 +72,7 @@
 </li>
 </ul></div>
 <div class="section level3">
-<h3 id="v-0-2-1">v 0.2.0<a class="anchor" aria-label="anchor" href="#v-0-2-1"></a></h3>
+<h3 id="v-0-2-2">v 0.2.0<a class="anchor" aria-label="anchor" href="#v-0-2-2"></a></h3>
 <ul><li>Breaks out all of the functions internal to the QMD template. Will allow for clearer errors and more-directed testing.</li>
 <li>As a result, there are <strong>new functions</strong>! But, be warned: names and arguments are likely to be going through quite a bit of flux as we figure out what each should really be doing.
 <ul><li><a href="https://otndo.obrien.page/reference/deployment_gantt.html"><code>deployment_gantt</code></a></li>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">otndo</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,8 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clean_otn_deployment</span><span class="op">(</span><span class="va">deployment</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">convert_times</span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">provided_file_unzip</span><span class="op">(</span><span class="va">files</span>, <span class="va">temp_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">write_to_tempdir</span><span class="op">(</span><span class="va">type</span>, <span class="va">files</span>, <span class="va">temp_dir</span><span class="op">)</span></span>
@@ -70,6 +72,10 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>deployment</dt>
 <dd><p>Character. File path of deployment metadata.</p></dd>
+
+
+<dt>date_time</dt>
+<dd><p>Character or numeric. Date-time to convert.</p></dd>
 
 
 <dt>files</dt>
