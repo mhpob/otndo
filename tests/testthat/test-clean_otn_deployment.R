@@ -190,7 +190,8 @@ test_that("Correct names when no internal transmitter columns", {
   expect_named(
     clean_otn_deployment(deployment_sheet1),
     c(
-      "stationname", "receiver", "deploy_date_time", "deploy_lat", "deploy_long",
+      "stationname", "receiver", "internal_transmitter",
+      "deploy_date_time", "deploy_lat", "deploy_long",
       "recover_date_time"
     )
   )
