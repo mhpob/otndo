@@ -45,8 +45,10 @@ test_that("converts Excel character", {
 
 test_that("works with vectors", {
   expect_equal(
-    convert_times(c("2020-04-09T11:04:59", "2020-04-09 11:04:59",
-                    "43930.461793981", 43930.461793981)),
+    convert_times(c(
+      "2020-04-09T11:04:59", "2020-04-09 11:04:59",
+      "43930.461793981", 43930.461793981
+    )),
     rep(test_datetime, 4)
   )
 })
