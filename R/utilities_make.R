@@ -86,20 +86,15 @@ clean_otn_deployment <- function(deployment) {
 
   if ("transmitter" %in% names(deployment)) {
     deployment$internal_transmitter <- deployment$transmitter
-    deployment[, c(
+  } else {
+    deployment$internal_transmitter <- NA
+  }
+
+  deployment[, c(
       "stationname", "receiver", "internal_transmitter",
       "deploy_date_time", "deploy_lat", "deploy_long",
       "recover_date_time"
     )]
-  } else {
-    (
-      deployment[, c(
-        "stationname", "receiver",
-        "deploy_date_time", "deploy_lat", "deploy_long",
-        "recover_date_time"
-      )]
-    )
-  }
 }
 
 
