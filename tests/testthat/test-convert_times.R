@@ -1,5 +1,7 @@
-test_datetime <- as.POSIXct("2020-04-09T11:04:59", tz = "UTC",
-                            format = "%Y-%m-%dT%H:%M:%S")
+test_datetime <- as.POSIXct("2020-04-09T11:04:59",
+  tz = "UTC",
+  format = "%Y-%m-%dT%H:%M:%S"
+)
 
 test_that("converts ISO 8601", {
   expect_equal(
