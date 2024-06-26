@@ -13,6 +13,7 @@ RoxygenNote: 7.3.1
 URL: https://mhpob.github.io/otndo/,
     https://otndo.obrien.page/
 BugReports: https://github.com/mhpob/otndo/issues
+Depends: R (>= 4.1.0)
 Imports: 
     cli,
     data.table,
