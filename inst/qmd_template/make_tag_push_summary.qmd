@@ -233,7 +233,7 @@ reactable(station_summary)
 #| 
 # I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
 
-df <- station_spatial %>% tidyr::extract(geometry, c('lat', 'lon'), '\\((.*), (.*)\\)', convert = TRUE) 
+df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE) 
 
 
 df %>%  as.data.frame()
