@@ -225,7 +225,7 @@ station_summary <- station_table(new_matches, "tag")
 reactable(station_summary)
 ```
 
-```{r, fig.cap="Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location."}
+```{r, fig.cap="Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where colors reflect  the number of detections  and sizes  reflect  the number of fish at that location."}
 # Make another label for individual
 # I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
 #| label: new-detection-map-leaflet
@@ -234,7 +234,7 @@ reactable(station_summary)
 df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE) 
 df %>%  as.data.frame()
 
-#summary(df )
+ summary(df )
 
 numPal <- colorNumeric('viridis', df $Detections)
 leaflet(data = df) %>%
