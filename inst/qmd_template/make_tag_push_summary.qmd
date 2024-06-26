@@ -30,6 +30,7 @@ library(mapview)
 library(reactable)
 library(leaflet)
 library(leaflegend)
+library(tidyr)
 ```
 
 
@@ -231,22 +232,25 @@ reactable(station_summary)
 #| 
 # I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
 
+df <- station_spatial %>% extract(geometry, c('lat', 'lon'), '\\((.*), (.*)\\)', convert = TRUE) 
 
 
-numPal <- colorNumeric('viridis', station_spatial$Detections)
+df %>%  as_data_frame()
+
+numPal <- colorNumeric('viridis', df $Detections)
 leaflet() %>%
   addTiles() %>%
-   addPolygons(data = station_spatial)%>%
+   addPolygons(data = df )%>%
   addSymbolsSize(values = ~Individuals,
-                 lat = ~ latitude, 
-                 lng = ~longitude,
+                 lat = ~ lat, 
+                 lng = ~lon,
                  shape = 'plus',
                  color = 'black',
                  fillColor = ~numPal(Detections),
                  opacity = .5,
                  baseSize = 10) %>%
   addLegendSize(
-    values = station_spatial$Individuals,
+    values = df $Individuals,
     color = 'black',
     title = 'Individual',
     shape = 'plus',
@@ -259,7 +263,7 @@ leaflet() %>%
     pal = numPal, 
     title = 'Matched Detection',
     shape = 'stadium',
-    values = station_spatial$Detections, 
+    values = df $Detections, 
     fillOpacity = .5,
     decreasing = TRUE,
     position = 'bottomright')
