@@ -265,7 +265,13 @@ leaflet(data = df) %>%
     values = df $Detections, 
     fillOpacity = .5,
     decreasing = TRUE,
-    position = 'bottomright')
+    position = 'bottomright')%>% 
+      addMarkers(data = df, lng = ~lon, lat = ~lat,
+                 popup =  paste("Station ", df$station , "<br>",
+                           "PI:", df$PI, "<br>",
+                           "PI:", df$PI, "<br>",
+                           "detectedby:", df$detectedby, "<br>",
+                           "Individuals:", df$Individuals))
 
 
 
