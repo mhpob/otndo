@@ -239,9 +239,8 @@ df <- station_spatial %>% tidyr::extract(geometry, c('lat', 'lon'), '\\((.*), (.
 df %>%  as.data.frame()
 
 numPal <- colorNumeric('viridis', df $Detections)
-leaflet() %>%
+leaflet(data = df) %>%
   addTiles() %>%
-   addPolygons(data = df )%>%
   addSymbolsSize(values = ~Individuals,
                  lat = ~ lat, 
                  lng = ~lon,
