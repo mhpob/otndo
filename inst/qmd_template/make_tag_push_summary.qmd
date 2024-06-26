@@ -225,13 +225,9 @@ station_summary <- station_table(new_matches, "tag")
 reactable(station_summary)
 ```
 
+
+
 ```{r}
-# Make another label for individual
-#| label: new-detection-map-leaflet
-#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
-
-# I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
-
 df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE) 
 df %>%  as.data.frame()
 
@@ -274,6 +270,14 @@ leaflet(data = df) %>%
 
 
 ```
+
+```{r}
+# Make another label for individual
+# I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
+#| label: new-detection-map-leaflet
+#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
+```
+
 
 ```{r results='asis', echo=FALSE}
 if (is.null(params$since)) {
