@@ -264,7 +264,7 @@ leaflet(data = df) %>%
   addLegendNumeric(
     pal = numPal, 
     title = 'Matched Detection',
-    shape = 'circle',
+    shape = 'stadium',
     values = df $Detections, 
     fillOpacity = .5,
     decreasing = TRUE,
