@@ -238,6 +238,8 @@ df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.
 
 df %>%  as.data.frame()
 
+summary(df )
+
 numPal <- colorNumeric('viridis', df $Detections)
 leaflet(data = df) %>%
   addTiles() %>%
