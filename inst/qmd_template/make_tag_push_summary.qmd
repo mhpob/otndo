@@ -240,8 +240,8 @@ df %>%  as.data.frame()
 numPal <- colorNumeric('viridis', df $Detections)
 leaflet(data = df) %>%
   addTiles() %>%
-  addCircleMarkers( lat = ~lat, lng = ~lon,
-                       color = ~numPal(Detections), popup =  paste("Station ", df$station , "<br>",
+  addCircleMarkers( lat = ~lat, lng = ~lon, Color= "black",
+                       fillColor = ~numPal(Detections), popup =  paste("Station ", df$station , "<br>",
                            "PI:", df$PI, "<br>",
                            "Detections:", df$Detections, "<br>",
                            "detectedby:", df$detectedby, "<br>",
