@@ -252,14 +252,15 @@ leaflet(data = df) %>%
                  opacity = .5,
                  baseSize = 1.5) %>%
   addLegendSize(
-    values = ((df $Individuals)/10),
+    values = df $Individuals,
+    baseSize = 1,
     color = 'black',
     title = 'Individual',
-    shape = 'stadium',
+    shape = 'cirle',
     orientation = 'horizontal',
     opacity = .5,
     fillOpacity = 0,
-    breaks = 10,
+    breaks = 5,
     position = 'bottomright') %>%
   addLegendNumeric(
     pal = numPal, 
