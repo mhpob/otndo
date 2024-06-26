@@ -3,12 +3,15 @@
 \name{utilities-make}
 \alias{utilities-make}
 \alias{clean_otn_deployment}
+\alias{convert_times}
 \alias{provided_file_unzip}
 \alias{write_to_tempdir}
 \alias{extract_proj_name}
 \title{Place where functions live for the make_*_summary family of functions}
 \usage{
 clean_otn_deployment(deployment)
+
+convert_times(date_time)
 
 provided_file_unzip(files, temp_dir)
 
@@ -18,6 +21,8 @@ extract_proj_name(detection_file)
 }
 \arguments{
 \item{deployment}{Character. File path of deployment metadata.}
+
+\item{date_time}{Character or numeric. Date-time to convert.}
 
 \item{files}{Character. File paths of files to be unzipped or written to a directory}
 

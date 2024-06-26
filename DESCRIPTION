@@ -1,6 +1,6 @@
 Package: otndo
 Title: Understand your OTN data
-Version: 0.2.0
+Version: 0.2.2
 Authors@R: 
     person("Michael", "O'Brien", , "mike@obrien.page", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1420-6395"))
@@ -13,6 +13,7 @@ RoxygenNote: 7.3.1
 URL: https://mhpob.github.io/otndo/,
     https://otndo.obrien.page/
 BugReports: https://github.com/mhpob/otndo/issues
+Depends: R (>= 4.1.0)
 Imports: 
     cli,
     data.table,

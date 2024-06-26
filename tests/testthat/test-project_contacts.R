@@ -107,3 +107,59 @@ test_that("right things are returned for receivers", {
     all(grepl("@|", pi_table$POC_emails))
   )
 })
+
+
+
+
+test_that("Multiple sets of tag PIs per project are summarized", {
+  matched_multiple_pis <- matched
+  matched_multiple_pis[matched_multiple_pis$detectedby == "HFX", ][1, "contact_pi"] <-
+    c("Matthew Apostle (matt@bible), Mary Mother (mary@bible)")
+
+
+  pi_table <- project_contacts(matched_multiple_pis, "tag")
+
+  expect_false(
+    any(
+      duplicated(pi_table$project_name)
+    )
+  )
+
+  expect_match(
+    pi_table[pi_table$project_name == "HFX", ]$PI,
+    "Matthew Apostle, Mary Mother, Dave Hebert, Fred Whoriskey",
+    fixed = TRUE
+  )
+
+  expect_match(
+    pi_table[pi_table$project_name == "HFX", ]$PI_emails,
+    "matt@bible,mary@bible,david.hebert@dfo-mpo.gc.ca,fwhoriskey@dal.ca",
+    fixed = TRUE
+  )
+})
+
+test_that("Multiple sets of receiver PIs per project are summarized", {
+  qual_multiple_pis <- qualified
+  qual_multiple_pis[qual_multiple_pis$trackercode == "TAG", ][1, "tag_contact_pi"] <-
+    c("Matthew Apostle (matt@bible), Mary Mother (mary@bible)")
+
+  pi_table <- project_contacts(qual_multiple_pis, "receiver")
+
+  expect_false(
+    any(
+      duplicated(pi_table$project_name)
+    )
+  )
+
+  expect_match(
+    pi_table[pi_table$project_name == "TAG", ]$PI,
+    "Matthew Apostle, Mary Mother, Barbara Block",
+    fixed = TRUE
+  )
+
+  expect_match(
+    pi_table[pi_table$project_name == "TAG", ]$PI_emails,
+    "matt@bible,mary@bible,bblock@stanford.edu",
+    fixed = TRUE
+  )
+})
