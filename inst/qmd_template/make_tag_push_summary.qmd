@@ -231,9 +231,12 @@ reactable(station_summary)
 #| 
 # I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
 
+
+
 numPal <- colorNumeric('viridis', station_spatial$Detections)
-leaflet(station_spatial) %>%
+leaflet() %>%
   addTiles() %>%
+   addPolygons(data = station_spatial)%>%
   addSymbolsSize(values = ~Individuals,
                  lat = ~ latitude, 
                  lng = ~longitude,
