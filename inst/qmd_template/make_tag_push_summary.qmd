@@ -31,6 +31,7 @@ library(reactable)
 library(leaflet)
 library(leaflegend)
 library(tidyr)
+library(tidyverse)
 ```
 
 
@@ -232,10 +233,10 @@ reactable(station_summary)
 #| 
 # I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
 
-df <- station_spatial %>% extract(geometry, c('lat', 'lon'), '\\((.*), (.*)\\)', convert = TRUE) 
+df <- station_spatial %>% tidyr::extract(geometry, c('lat', 'lon'), '\\((.*), (.*)\\)', convert = TRUE) 
 
 
-df %>%  as_data_frame()
+df %>%  as.data.frame()
 
 numPal <- colorNumeric('viridis', df $Detections)
 leaflet() %>%
