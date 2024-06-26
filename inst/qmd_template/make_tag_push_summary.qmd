@@ -271,7 +271,7 @@ leaflet(data = df) %>%
                            "PI:", df$PI, "<br>",
                            "Detections:", df$Detections, "<br>",
                            "detectedby:", df$detectedby, "<br>",
-                           "Individuals:", df$Individuals))
+                           "Individuals:", df$Individuals), popupOptions = popupOptions(autoClose = FALSE, closeOnClick = FALSE))
 
 
 
