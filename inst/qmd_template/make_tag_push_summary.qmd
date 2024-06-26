@@ -240,14 +240,14 @@ df %>%  as.data.frame()
 numPal <- colorNumeric('viridis', df $Detections)
 leaflet(data = df) %>%
   addTiles() %>%
-  addSymbolsSize(values = ~Individuals,
-                 lat = ~ lat, 
-                 lng = ~lon,
-                 shape = 'circle',
-                 color = 'black',
-                 fillColor = ~numPal(Detections),
-                 opacity = .5,
-                 baseSize = 1.5) %>%
+  addCircleMarkers( lat = ~lat, lng = ~lon,
+                       color = ~numPal(Detections), popup =  paste("Station ", df$station , "<br>",
+                           "PI:", df$PI, "<br>",
+                           "Detections:", df$Detections, "<br>",
+                           "detectedby:", df$detectedby, "<br>",
+                           "Individuals:", df$Individuals),
+                       radius = ~Individuals) %>%
+  
   addLegendSize(
     values = df $Individuals,
     baseSize = 1,
@@ -266,13 +266,7 @@ leaflet(data = df) %>%
     values = df $Detections, 
     fillOpacity = .5,
     decreasing = TRUE,
-    position = 'bottomright')%>% 
-      addPopups(data = df, lng = ~lon, lat = ~lat,
-                 popup =  paste("Station ", df$station , "<br>",
-                           "PI:", df$PI, "<br>",
-                           "Detections:", df$Detections, "<br>",
-                           "detectedby:", df$detectedby, "<br>",
-                           "Individuals:", df$Individuals),  options = popupOptions(autoClose = FALSE, closeOnClick = FALSE))
+    position = 'bottomright')
 
 
 
