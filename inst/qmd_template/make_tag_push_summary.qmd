@@ -32,6 +32,7 @@ library(leaflet)
 library(leaflegend)
 library(tidyr)
 library(tidyverse)
+library(leafpop)
 ```
 
 
@@ -271,7 +272,7 @@ leaflet(data = df) %>%
                            "PI:", df$PI, "<br>",
                            "Detections:", df$Detections, "<br>",
                            "detectedby:", df$detectedby, "<br>",
-                           "Individuals:", df$Individuals), popupOptions = popupOptions(autoClose = FALSE, closeOnClick = FALSE))
+                           "Individuals:", df$Individuals),  options = popupOptions(autoClose = FALSE, closeOnClick = FALSE))
 
 
 
