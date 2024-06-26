@@ -230,7 +230,8 @@ reactable(station_summary)
 #| label: new-detection-map-leaflet
 
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
-#| 
+#| fig-cap-location: top
+
 # I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
 
 df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE) 
@@ -238,7 +239,7 @@ df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.
 
 df %>%  as.data.frame()
 
-summary(df )
+#summary(df )
 
 numPal <- colorNumeric('viridis', df $Detections)
 leaflet(data = df) %>%
