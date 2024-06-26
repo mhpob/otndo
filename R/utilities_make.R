@@ -5,7 +5,7 @@
 #' @param files Character. File paths of files to be unzipped or written to a directory
 #' @param temp_dir Character. File path of temporary directory
 #' @param detection_file Character. File path of detections.
-#'
+#' @param date_time Character or numeric. Date-time to convert.
 #'
 #' @name utilities-make
 #' @keywords internal
@@ -35,7 +35,8 @@ clean_otn_deployment <- function(deployment) {
     }
   } else if (grepl("^csv$", file_ext)) {
     # Check for OTN header
-    if (ncol(read.csv(deployment, nrows = 1)) == 0) {
+    check_head <- read.csv(deployment, nrows = 1, check.names = FALSE)
+    if (ncol(check_head) > length(unique(names(check_head)))) {
       deployment <- read.csv(deployment,
         skip = 3,
         na.strings = c("NA", "")
@@ -58,22 +59,8 @@ clean_otn_deployment <- function(deployment) {
   deployment <- deployment[!is.na(deployment$deploy_date_time), ]
   deployment <- deployment[!deployment$recovered %in% c("l", "failed", NA), ]
 
-  deployment$deploy_date_time <- as.POSIXct(
-    deployment$deploy_date_time,
-    tz = "UTC",
-    tryFormats = c(
-      "%Y-%m-%dT%H:%M:%S",
-      "%Y-%m-%d %H:%M:%S"
-    )
-  )
-  deployment$recover_date_time <- as.POSIXct(
-    deployment$recover_date_time,
-    tz = "UTC",
-    tryFormats = c(
-      "%Y-%m-%dT%H:%M:%S",
-      "%Y-%m-%d %H:%M:%S"
-    )
-  )
+  deployment$deploy_date_time <- convert_times(deployment$deploy_date_time)
+  deployment$recover_date_time <- convert_times(deployment$recover_date_time)
 
   deployment <- deployment[!is.na(deployment$deploy_date_time) &
     !is.na(deployment$recover_date_time), ]
@@ -85,22 +72,44 @@ clean_otn_deployment <- function(deployment) {
 
   if ("transmitter" %in% names(deployment)) {
     deployment$internal_transmitter <- deployment$transmitter
-    deployment[, c(
-      "stationname", "receiver", "internal_transmitter",
-      "deploy_date_time", "deploy_lat", "deploy_long",
-      "recover_date_time"
-    )]
   } else {
-    (
-      deployment[, c(
-        "stationname", "receiver",
-        "deploy_date_time", "deploy_lat", "deploy_long",
-        "recover_date_time"
-      )]
-    )
+    deployment$internal_transmitter <- NA
   }
+
+  deployment[, c(
+    "stationname", "receiver", "internal_transmitter",
+    "deploy_date_time", "deploy_lat", "deploy_long",
+    "recover_date_time"
+  )]
 }
 
+
+#' @rdname utilities-make
+#' @keywords internal
+convert_times <- function(date_time) {
+  check_times <- function(x) {
+    # check if Excel format
+    #   Assumes that it starts with 5 numbers
+    if (grepl("^\\d{5}", x)) {
+      as.POSIXct(
+        as.numeric(x) * (60 * 60 * 24),
+        tz = "UTC",
+        origin = "1899-12-30"
+      )
+    } else {
+      as.POSIXct(
+        x,
+        tz = "UTC",
+        tryFormats = c(
+          "%Y-%m-%dT%H:%M:%S",
+          "%Y-%m-%d %H:%M:%S"
+        )
+      )
+    }
+  }
+
+  do.call("c", lapply(date_time, check_times))
+}
 
 #' @rdname utilities-make
 #' @keywords internal

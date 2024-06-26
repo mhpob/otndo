@@ -167,6 +167,7 @@ Since `r format(since_date, '%B %Y')`, `r format(nrow(new_matches), big.mark = '
 #| column: page
 #| fig-cap: Table 3. Total number of new detections and individual fish heard per project receiver.
 #| fig-cap-location: top
+#| eval: !expr "nrow(new_matches) > 0"
 
 match_table(new_matches, type = "receiver")
 ```
@@ -174,6 +175,7 @@ match_table(new_matches, type = "receiver")
 ```{r}
 #| label: new-otn-match-map
 #| fig-cap: Figure 5. Bounding box of external projects detected since the last data push. This does not necessarily reflect the distribution of fish heard by this project's receivers.
+#| eval: !expr "nrow(new_matches) > 0"
 
 new_otn_tables <- lapply(
   otn_tables,
@@ -193,10 +195,11 @@ match_map(new_otn_tables)
 #| label: new-station-summary-table
 #| fig-cap: Table 4. Total number of detections and number of individual fish heard per project receiver since the last data push.
 #| fig-cap-location: top
+#| eval: !expr "nrow(new_matches) > 0"
 
 new_station_summary <- station_table(new_matches, "receiver")
 
-reactable::reactable(station_summary)
+reactable::reactable(new_station_summary)
 ```
 </figure>
 
