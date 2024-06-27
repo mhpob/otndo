@@ -1,10 +1,7 @@
 #' @param extract OTN station_spatial
 #' @export
 #'
-library(leaflet)
-library(leaflegend)
-library(tidyr)
-library(tidyverse)
+
 
 
 leaflet_graph <- function(station_spatial) {

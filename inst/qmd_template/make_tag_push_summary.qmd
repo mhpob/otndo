@@ -235,42 +235,8 @@ reactable(new_station_summary)
 
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
 
-df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE) 
-df %>%  as.data.frame()
 
- summary(df )
-
-numPal <- colorNumeric('viridis', df $Detections)
-leaflet(data = df) %>%
-  addTiles() %>%
-  addCircleMarkers( lat = ~lat, lng = ~lon,
-                      color= ~numPal(Detections), fillColor = ~numPal(Detections),fillOpacity = 0.7, popup =  paste("Station ", df$station , "<br>",
-                           "PI:", df$PI, "<br>",
-                           "Detections:", df$Detections, "<br>",
-                           "detectedby:", df$detectedby, "<br>",
-                           "Individuals:", df$Individuals),
-                       radius = ~Individuals) %>%
-  
-  addLegendSize(
-    values = df $Individuals,
-    baseSize = 1,
-    color = 'black',
-    title = 'Individual',
-    shape = 'circle',
-    orientation = 'horizontal',
-    opacity = .5,
-    fillOpacity = 0,
-    breaks = 5,
-    position = 'bottomright') %>%
-  addLegendNumeric(
-    pal = numPal, 
-    title = 'Matched Detection',
-    shape = 'stadium',
-    values = df $Detections, 
-    fillOpacity = .5,
-    decreasing = TRUE,
-    position = 'bottomright')
-
+leaflet_graph(station_spatial)
 
 
 
