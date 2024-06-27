@@ -28,9 +28,7 @@ library(otndo)
 library(data.table)
 library(mapview)
 library(reactable)
-library(leaflet)
-library(leaflegend)
-library(tidyr)
+
 
 ```
 
