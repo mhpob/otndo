@@ -1,8 +1,6 @@
-#' @param extract OTN station_spatial
-#' @export 
-#'
-
-
+#' Plot the leaflet graphs for detection and individual
+#' @param   station_spatial
+#' @export
 
 leaflet_graph <- function(station_spatial) {
   df <- station_spatial %>% tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE)
