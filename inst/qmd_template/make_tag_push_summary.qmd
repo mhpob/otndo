@@ -31,8 +31,7 @@ library(reactable)
 library(leaflet)
 library(leaflegend)
 library(tidyr)
-library(tidyverse)
-library(leafpop)
+
 ```
 
 
