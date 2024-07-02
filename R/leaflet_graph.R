@@ -5,7 +5,7 @@
 leaflet_graph <- function(station_spatial) {
   df <- station_spatial |> tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE)
   df |>  as.data.frame()
-  numPal <- colorNumeric('viridis', df $Detections)
+  numPal <- leaflet::colorNumeric('viridis', df $Detections)
   leaflet::leaflet(data = df) |>
     addTiles() |>
     addCircleMarkers( lat = ~lat, lng = ~lon,
