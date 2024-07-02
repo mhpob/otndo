@@ -5,42 +5,41 @@
 #' @export
 
 leaflet_graph <- function(station_spatial) {
-  geometry <- NULL
-  df <- station_spatial |> tidyr::extract(geometry, c("lon", "lat"), "\\((.*), (.*)\\)", convert = TRUE)
-  numPal <- leaflet::colorNumeric("viridis", df$Detections)
-  leaflet::leaflet(data = df) |>
+  numPal <- leaflet::colorNumeric(
+    "viridis",
+    station_spatial$Detections,
+    reverse = FALSE
+  )
+
+  numPal_rev <- leaflet::colorNumeric(
+    "viridis",
+    station_spatial$Detections,
+    reverse = TRUE
+  )
+
+
+  leaflet::leaflet(data = station_spatial) |>
     leaflet::addTiles() |>
     leaflet::addCircleMarkers(
-      lat = ~lat, lng = ~lon,
-      color = ~ numPal(Detections), fillColor = ~ numPal(Detections), fillOpacity = 0.7,
+      color = ~ numPal(Detections),
+      fillColor = ~ numPal(Detections),
+      fillOpacity = 0.7,
+      radius = ~ Individuals,
       popup = paste(
-        "Station ", df$station, "<br>",
-        "PI:", df$PI, "<br>",
-        "Detections:", df$Detections, "<br>",
-        "detectedby:", df$detectedby, "<br>",
-        "Individuals:", df$Individuals
-      ),
-      radius = ~Individuals
+        "Station:", station_spatial$station, "<br>",
+        "PI:", station_spatial$PI, "<br>",
+        "Detections:", station_spatial$Detections, "<br>",
+        "Project:", station_spatial$detectedby, "<br>",
+        "Individuals:", station_spatial$Individuals
+      )
     ) |>
-    leaflegend::addLegendSize(
-      values = df$Individuals,
-      baseSize = 1,
-      color = "black",
-      title = "Individual",
-      shape = "circle",
-      orientation = "horizontal",
-      opacity = .5,
-      fillOpacity = 0,
-      breaks = 5,
-      position = "bottomright"
-    ) |>
-    leaflegend::addLegendNumeric(
-      pal = numPal,
-      title = "Matched Detection",
-      shape = "stadium",
-      values = df$Detections,
-      fillOpacity = .5,
-      decreasing = TRUE,
-      position = "bottomright"
+    leaflet::addLegend(
+      position = "bottomright",
+      pal = numPal_rev,
+      values = ~ Detections,
+      title = "Matched Detections",
+      labFormat = leaflet::labelFormat(
+        transform = function(x) sort(x, decreasing = TRUE)
+      )
     )
 }
