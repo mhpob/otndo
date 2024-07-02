@@ -139,15 +139,11 @@ station_summary <- station_table(matched, type = "tag")
 
 ```{r}
 #| label: detection-map-leaflet
-#| fig-cap: Figure 4. Number of detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
+#| fig-cap: Figure 4. Number of detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
 
 station_spatial <- prep_station_spatial(matched, type = "tag")
 
-mapview::mapview(station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
-)
+leaflet_graph(station_spatial)
 ```
 
 
