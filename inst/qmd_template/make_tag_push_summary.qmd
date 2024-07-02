@@ -225,7 +225,7 @@ reactable(new_station_summary)
 ```{r}
 #| label: new-detection-map-leaflet
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
- #| eval: !expr "nrow(new_matches) > 0"
+#| eval: !expr "nrow(new_matches) > 0"
 
 
 leaflet_graph(station_spatial)
