@@ -9,7 +9,7 @@ leaflet_graph <- function(station_spatial) {
   leaflet::leaflet(data = df) |>
     leaflet::addTiles() |>
     leaflet::addCircleMarkers( lat = ~lat, lng = ~lon,
-                      color= ~numPal(Detections), fillColor = ~numPal(Detections),fillOpacity = 0.7,
+                      color= 'black', fillColor = ~numPal(Detections),fillOpacity = 0.7,
                       popup =  paste("Station ", df$station , "<br>",
                                      "PI:", df$PI, "<br>",
                                     "Detections:", df$Detections, "<br>",
