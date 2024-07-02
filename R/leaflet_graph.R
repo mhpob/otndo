@@ -9,7 +9,7 @@ leaflet_graph <- function(station_spatial) {
   leaflet::leaflet(data = df) |>
     leaflet::addTiles() |>
     leaflet::addCircleMarkers( lat = ~lat, lng = ~lon,
-                      color= 'black', fillColor = ~numPal(df$Detections),fillOpacity = 0.7,
+                      color= ~numPal(df$Detections), fillColor = ~numPal(df$Detections),fillOpacity = 0.7,
                       popup =  paste("Station ", df$station , "<br>",
                                      "PI:", df$PI, "<br>",
                                     "Detections:", df$Detections, "<br>",
@@ -19,15 +19,16 @@ leaflet_graph <- function(station_spatial) {
 
     leaflegend::addLegendSize(
       values = df $Individuals,
-      baseSize = 5,
+      baseSize = round(df $Individuals),
       color = 'black',
       title = 'Individual',
       shape = 'circle',
       orientation = 'horizontal',
       opacity = .5,
       fillOpacity = 0,
-      breaks = 5,
-      position = 'bottomright') |>
+      breaks = round(df $Individuals),
+      position = 'bottomright',
+      stacked = TRUE) |>
     leaflegend::addLegendNumeric(
       pal = numPal,
       title = 'Matched Detection',
