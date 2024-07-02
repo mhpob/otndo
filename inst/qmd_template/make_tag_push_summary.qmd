@@ -23,10 +23,8 @@ knitr::opts_chunk$set(
 ```{r}
 #| label: packages
 #| message: false
-
-library(otndo)
 library(data.table)
-library(mapview)
+library(otndo)
 library(reactable)
 ```
 
@@ -226,17 +224,14 @@ reactable(new_station_summary)
 
 ```{r}
 #| label: new-detection-map-leaflet
-#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
+#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
 #| eval: !expr "nrow(new_matches) > 0"
 
-new_station_spatial <- prep_station_spatial(new_matches, type = "tag")
-
-mapview::mapview(new_station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
-)
+leaflet_graph(station_spatial)
 ```
+
+
+
 
 ```{r results='asis', echo=FALSE}
 if (is.null(params$since)) {

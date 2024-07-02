@@ -24,7 +24,10 @@ Imports:
     quarto,
     readxl,
     rmarkdown,
-    utils
+    utils,
+    leaflet,
+    leaflegend,
+    tidyr
 Suggests: 
     curl,
     knitr,
