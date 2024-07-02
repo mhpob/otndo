@@ -18,7 +18,7 @@ Imports:
     cli,
     data.table,
     ggplot2,
-    leaflet
+    leaflet,
     mapview,
     quarto,
     reactable,
