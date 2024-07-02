@@ -1,8 +1,9 @@
 #' Plot the leaflet graphs for detection and individual
-#' @param   station_spatial
+#' @param   station_spatial Default is NULL
 #' @export
 
 leaflet_graph <- function(station_spatial) {
+  geometry<- NULL
   df <- station_spatial |> tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE)
   df |>  as.data.frame()
   numPal <- leaflet::colorNumeric('viridis', df $Detections)
