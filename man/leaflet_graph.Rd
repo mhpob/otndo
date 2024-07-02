@@ -2,13 +2,45 @@
 % Please edit documentation in R/leaflet_graph.R
 \name{leaflet_graph}
 \alias{leaflet_graph}
-\title{Plot the leaflet graphs for detection and individual}
+\title{Plot leaflet graphs for detection and individual}
 \usage{
 leaflet_graph(station_spatial)
 }
 \arguments{
-\item{station_spatial}{is created by prep_station_spatial,which is a spatial object with the geometry}
+\item{station_spatial}{sf spatial data/frame created by prep_station_spatial}
 }
 \description{
-Plot the leaflet graphs for detection and individual
+Plot leaflet graphs for detection and individual
+}
+\examples{
+\dontrun{
+# Get some data
+td <- file.path(tempdir(), "matos_test_files")
+dir.create(td)
+
+## Get an extract file
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/",
+    "pbsm/detection-extracts/pbsm_matched_detections_2018.zip/",
+    "@download/file"
+  ),
+  destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
+  mode = "wb"
+)
+unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+  exdir = td
+)
+
+matched_dets <- data.table::fread(
+  file.path(td, "pbsm_matched_detections_2018.csv")
+)
+
+# Convert to spatial
+station_spatial <- prep_station_spatial(matched_dets, "tag")
+
+# Create leaflet map
+leaflet_graph(station_spatial)
+}
+
 }

@@ -17,6 +17,9 @@ Create a reactable table of matched detections
 }
 \examples{
 \dontrun{
+td <- file.path(tempdir(), "matos_test_files")
+dir.create(td)
+
 # Receiver
 download.file(
   paste0(
