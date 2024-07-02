@@ -23,9 +23,8 @@ knitr::opts_chunk$set(
 ```{r}
 #| label: packages
 #| message: false
-
+library(data.table)
 library(otndo)
-library(reactable)
 ```
 
 
