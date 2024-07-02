@@ -19,14 +19,14 @@ leaflet_graph <- function(station_spatial) {
 
     leaflegend::addLegendSize(
       values = df $Individuals,
-      baseSize = round(df $Individuals),
+      baseSize =  max(quakes$mag)/1.5,
       color = 'black',
       title = 'Individual',
       shape = 'circle',
       orientation = 'horizontal',
       opacity = .5,
       fillOpacity = 0,
-      breaks = round(df $Individuals),
+      breaks = 10,
       position = 'bottomright',
       stacked = TRUE) |>
     leaflegend::addLegendNumeric(
