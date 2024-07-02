@@ -28,8 +28,6 @@ library(otndo)
 library(data.table)
 library(mapview)
 library(reactable)
-
-
 ```
 
 
@@ -226,18 +224,13 @@ new_station_summary <- station_table(new_matches, "tag")
 reactable(new_station_summary)
 ```
 
-```{r, fig.cap="Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where colors reflect  the number of detections  and sizes  reflect  the number of fish at that location."}
-# Make another label for individual
-# I find mapview has limitations in legend and it cannot show the size values. Here I use leaflet  
+```{r}
 #| label: new-detection-map-leaflet
-
 #| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections  and size  reflects the number of fish at that location.
+ #| eval: !expr "nrow(new_matches) > 0"
 
 
 leaflet_graph(station_spatial)
-
-
-
 ```
 
 
