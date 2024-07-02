@@ -1,5 +1,7 @@
 #' Plot the leaflet graphs for detection and individual
-#' @param   station_spatial is created by prep_station_spatial,which is a spatial object with the geometry
+#'
+#' @param station_spatial sf spatial data/frame created by prep_station_spatial
+#'
 #' @export
 
 leaflet_graph <- function(station_spatial) {
