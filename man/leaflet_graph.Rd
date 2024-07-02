@@ -7,7 +7,7 @@
 leaflet_graph(station_spatial)
 }
 \arguments{
-\item{station_spatial}{}
+\item{station_spatial}{Default is NULL}
 }
 \description{
 Plot the leaflet graphs for detection and individual
