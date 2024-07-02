@@ -5,7 +5,7 @@
 leaflet_graph <- function(station_spatial) {
   geometry<- NULL
   df <- station_spatial |> tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE)
-  numPal <- leaflet::colorNumeric('viridis', df $Detections)
+  numPal <- leaflet::colorNumeric('viridis', df $Detections, reverse = TRUE)
   leaflet::leaflet(data = df) |>
     leaflet::addTiles() |>
     leaflet::addCircleMarkers( lat = ~lat, lng = ~lon,
@@ -15,7 +15,7 @@ leaflet_graph <- function(station_spatial) {
                                     "Detections:", df$Detections, "<br>",
                                     "detectedby:", df$detectedby, "<br>",
                                     "Individuals:", df$Individuals),
-                      radius = ~Individuals) |>
+                      radius = ~(Individuals/10)) |>
 
     leaflegend::addLegendSize(
       values = df $Individuals,
