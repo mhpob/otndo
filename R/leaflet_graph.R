@@ -15,11 +15,11 @@ leaflet_graph <- function(station_spatial) {
                                     "Detections:", df$Detections, "<br>",
                                     "detectedby:", df$detectedby, "<br>",
                                     "Individuals:", df$Individuals),
-                      radius = ~sqrt(Individuals)) |>
+                      radius = ~(Individuals)) |>
 
     leaflegend::addLegendSize(
       values = df $Individuals,
-      baseSize = 3,
+      baseSize = 5,
       color = 'black',
       title = 'Individual',
       shape = 'circle',
