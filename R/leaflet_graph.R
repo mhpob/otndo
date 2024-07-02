@@ -1,6 +1,37 @@
-#' Plot the leaflet graphs for detection and individual
+#' Plot leaflet graphs for detection and individual
 #'
 #' @param station_spatial sf spatial data/frame created by prep_station_spatial
+#'
+#' @examples
+#' \dontrun{
+#' # Get some data
+#' td <- file.path(tempdir(), "matos_test_files")
+#' dir.create(td)
+#'
+#' ## Get an extract file
+#' download.file(
+#'   paste0(
+#'     "https://members.oceantrack.org/data/repository/",
+#'     "pbsm/detection-extracts/pbsm_matched_detections_2018.zip/",
+#'     "@@download/file"
+#'   ),
+#'   destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
+#'   mode = "wb"
+#' )
+#' unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+#'   exdir = td
+#' )
+#'
+#' matched_dets <- data.table::fread(
+#'   file.path(td, "pbsm_matched_detections_2018.csv")
+#' )
+#'
+#' # Convert to spatial
+#' station_spatial <- prep_station_spatial(matched_dets, "tag")
+#'
+#' # Create leaflet map
+#' leaflet_graph(station_spatial)
+#' }
 #'
 #' @export
 
