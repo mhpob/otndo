@@ -24,6 +24,7 @@ Imports:
     quarto,
     readxl,
     rmarkdown,
+    utils,
     leaflet,
     leaflegend,
     tidyr
