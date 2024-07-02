@@ -1,4 +1,7 @@
 ## otndo 0.2
+### v 0.2.3
+* Switched from using the `mapview` package for interactive maps to `leaflet` and `leaflet_legend`. Thanks to [@joyliujoyliu](https://github.com/joyliujoyliu) for their work here!
+
 ### v 0.2.2
 * Fixed behavior where `clean_otn_deployment` would return different columns if there was no internal transmitter logged. [Issue #10](https://github.com/mhpob/otndo/issues/10); [d58e2d4](https://github.com/mhpob/otndo/pull/31/commits/d58e2d46e05aed7ba4acc08b8d02672b28d79804)
 * Add internal function (`convert_times`) that checks for Excel-formatted date-times and converts accordingly [f13f360](https://github.com/mhpob/otndo/pull/31/commits/f13f360fe5e4438b6ba668039a6c94f04eeafe60)

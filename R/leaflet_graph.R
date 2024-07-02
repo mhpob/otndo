@@ -1,11 +1,13 @@
 #' Plot the leaflet graphs for detection and individual
-#' @param   station_spatial is created by prep_station_spatial,which is a spatial object with the geometry
+#'
+#' @param station_spatial sf spatial data/frame created by prep_station_spatial
+#'
 #' @export
 
 leaflet_graph <- function(station_spatial) {
-  geometry<- NULL
-  df <- station_spatial |> tidyr::extract(geometry, c('lon', 'lat'), '\\((.*), (.*)\\)', convert = TRUE)
-  numPal <- leaflet::colorNumeric('viridis', df $Detections)
+  geometry <- NULL
+  df <- station_spatial |> tidyr::extract(geometry, c("lon", "lat"), "\\((.*), (.*)\\)", convert = TRUE)
+  numPal <- leaflet::colorNumeric("viridis", df$Detections)
   leaflet::leaflet(data = df) |>
     leaflet::addTiles() |>
     leaflet::addCircleMarkers( lat = ~lat, lng = ~lon,
@@ -31,7 +33,7 @@ leaflet_graph <- function(station_spatial) {
       stacked = TRUE) |>
     leaflegend::addLegendNumeric(
       pal = numPal,
-      title = 'Matched Detection',
+      title = 'Matched Detections',
       values = df$Detections,
       fillOpacity = .5,
       decreasing = FALSE,
@@ -39,9 +41,6 @@ leaflet_graph <- function(station_spatial) {
       shape = 'rect',
       position = 'bottomright',
       height = 20,
-      width = 100)
-
-
-
+      width = 100
+    )
 }
-

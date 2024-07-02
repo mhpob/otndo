@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main, dev]
 
+concurrency:
+  group: rcmdcheck-${{ github.ref }}
+  cancel-in-progress: true
+
 name: R-CMD-check
 
 jobs:
@@ -46,4 +50,5 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
+          error-on: '"note"'
           upload-snapshots: true

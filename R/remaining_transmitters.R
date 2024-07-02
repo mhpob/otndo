@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' #' # Set up example data
+#' # Set up example data
 #' td <- file.path(tempdir(), "otndo_example")
 #' dir.create(td)
 #'
