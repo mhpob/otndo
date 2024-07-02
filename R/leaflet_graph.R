@@ -28,14 +28,17 @@ leaflet_graph <- function(station_spatial) {
       fillOpacity = 0,
       breaks = 5,
       position = 'bottomright') |>
-    leaflet::addLegend(
+    leaflegend::addLegendNumeric(
       pal = numPal,
       title = 'Matched Detection',
-      shape = 'stadium',
       values = df$Detections,
       fillOpacity = .5,
-      decreasing = TRUE,
-      position = 'bottomright')
+      decreasing = FALSE,
+      orientation = 'horizontal',
+      shape = 'rect',
+      position = 'bottomright',
+      height = 20,
+      width = 100)
 
 
 
