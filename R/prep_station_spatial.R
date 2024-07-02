@@ -5,6 +5,9 @@
 #'
 #' @examples
 #' \dontrun{
+#' td <- file.path(tempdir(), "matos_test_files")
+#' dir.create(td)
+#'
 #' # Get an extract file
 #' download.file(
 #'   paste0(
