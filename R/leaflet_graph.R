@@ -28,7 +28,7 @@ leaflet_graph <- function(station_spatial) {
       fillOpacity = 0,
       breaks = 5,
       position = 'bottomright') |>
-    leaflegend::addLegendNumeric(
+    leaflet::addLegend(
       pal = numPal,
       title = 'Matched Detection',
       shape = 'stadium',
