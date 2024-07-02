@@ -15,7 +15,7 @@ leaflet_graph <- function(station_spatial) {
                                     "Detections:", df$Detections, "<br>",
                                     "detectedby:", df$detectedby, "<br>",
                                     "Individuals:", df$Individuals),
-                      radius = ~(Individuals)) |>
+                      radius = ~(Individuals/2)) |>
 
     leaflegend::addLegendSize(
       values = df $Individuals,
