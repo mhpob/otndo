@@ -28,7 +28,6 @@ knitr::opts_chunk$set(
 
 library(otndo)
 library(data.table)
-library(mapview)
 library(reactable)
 ```
 
@@ -133,12 +132,7 @@ reactable::reactable(station_summary)
 
 station_spatial <- prep_station_spatial(qualified, type = "receiver")
 
-mapview::mapview(
-  station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
-)
+leaflet_graph(station_spatial)
 ```
 
 
