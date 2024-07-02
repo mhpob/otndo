@@ -18,16 +18,14 @@ Imports:
     cli,
     data.table,
     ggplot2,
-    reactable,
-    sf,
+    leaflet
     mapview,
     quarto,
+    reactable,
     readxl,
     rmarkdown,
-    utils,
-    leaflet,
-    leaflegend,
-    tidyr
+    sf,
+    utils
 Suggests: 
     curl,
     knitr,
