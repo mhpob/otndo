@@ -7,7 +7,7 @@
 leaflet_graph(station_spatial)
 }
 \arguments{
-\item{station_spatial}{is created by prep_station_spatial,which is a spatial object with the geometry}
+\item{station_spatial}{sf spatial data/frame created by prep_station_spatial}
 }
 \description{
 Plot the leaflet graphs for detection and individual

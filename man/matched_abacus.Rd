@@ -17,6 +17,9 @@ Create an abacus plot of matched detections
 }
 \examples{
 \dontrun{
+td <- file.path(tempdir(), "matos_test_files")
+dir.create(td)
+
 # Get a detection file
 download.file(
   paste0(
