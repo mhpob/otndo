@@ -10,8 +10,8 @@ leaflet_graph <- function(station_spatial) {
   numPal <- leaflet::colorNumeric("viridis", df$Detections)
   
   
-  if(max(df$Individuals)<31)
-  {leaflet::leaflet(data = df) |>
+  if(max(df$Individuals)<31){
+    leaflet::leaflet(data = df) |>
     leaflet::addTiles() |>
     leaflet::addCircleMarkers( lat = ~lat, lng = ~lon,
                       color= ~numPal(df$Detections), fillColor = ~numPal(df$Detections),fillOpacity = 0.7,
@@ -21,7 +21,6 @@ leaflet_graph <- function(station_spatial) {
                                     "detectedby:", df$detectedby, "<br>",
                                     "Individuals:", df$Individuals),
                       radius = ~(df$Individuals)) |>
-
     leaflegend::addLegendSize(
       values = df $Individuals,
       baseSize =  max(quakes$mag),
@@ -45,9 +44,8 @@ leaflet_graph <- function(station_spatial) {
       position = 'bottomright',
       height = 20,
       width = 100
-    )}
-  
-  else{leaflet::leaflet(data = df) |>
+    )}else{
+      leaflet::leaflet(data = df) |>
       leaflet::addTiles() |>
       leaflet::addCircleMarkers( lat = ~lat, lng = ~lon,
                                  color= ~numPal(df$Detections), fillColor = ~numPal(df$Detections),fillOpacity = 0.7,
@@ -57,7 +55,6 @@ leaflet_graph <- function(station_spatial) {
                                                 "detectedby:", df$detectedby, "<br>",
                                                 "Individuals:", df$Individuals),
                                  radius = ~(df$Individuals)) |>
-      
       leaflegend::addLegendSize(
         values = df $Individuals,
         baseSize =  max(quakes$mag),
@@ -82,7 +79,6 @@ leaflet_graph <- function(station_spatial) {
         height = 20,
         width = 100
       )
-    
   }
   
 }
