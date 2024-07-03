@@ -23,14 +23,14 @@ leaflet_graph <- function(station_spatial) {
                       radius = ~(df$Individuals)) |>
     leaflegend::addLegendSize(
       values = df $Individuals,
-      baseSize =  max(quakes$mag),
+      baseSize =  max(df$Individuals),
       color = 'black',
       title = 'Individual',
       shape = 'circle',
       orientation = 'horizontal',
       opacity = .5,
       fillOpacity = 0,
-      breaks = min((max(quakes$mag)-min((quakes$mag))),5),
+      breaks = min((max(df$Individuals)-min((df$Individuals))),5),
       position = 'bottomright',
       stacked = F) |>
     leaflegend::addLegendNumeric(
@@ -57,14 +57,14 @@ leaflet_graph <- function(station_spatial) {
                                  radius = ~(df$Individuals)) |>
       leaflegend::addLegendSize(
         values = df $Individuals,
-        baseSize =  max(quakes$mag),
+        baseSize =  max(df$Individuals),
         color = 'black',
         title = 'Individual',
         shape = 'circle',
         orientation = 'horizontal',
         opacity = .5,
         fillOpacity = 0,
-        breaks = min((max(quakes$mag)-min((quakes$mag))),7),
+        breaks = min((max(df$Individuals)-min((df$Individuals))),7),
         position = 'bottomright',
         stacked = T) |>
       leaflegend::addLegendNumeric(
