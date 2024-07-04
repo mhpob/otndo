@@ -23,11 +23,12 @@ leaflet_graph <- function(station_spatial) {
                    fillColor = ~numPal(Detections),
                    opacity = .5,
                    baseSize = 5,
-                   popup =  paste("Station ", df$station , "<br>",
-                                  "PI:", df$PI, "<br>",
-                                  "Detections:", df$Detections, "<br>",
-                                  "detectedby:", df$detectedby, "<br>",
-                                  "Individuals:", df$Individuals)) |>
+                   popup =  paste("<strong> Station:", df$station , "<br>",
+                                  "<strong> Location:", "(", df$lon, df$lat,  ")" , "<br>",
+                                  "<strong> PI:", df$PI, "<br>",
+                                  "<strong> Detectedby:", df$detectedby, "<br>",
+                                  "<strong> Detections:", df$Detections, "<br>",
+                                  "<strong> Individuals:", df$Individuals)) |>
     leaflegend::  addLegendSize(
       values =  df$Individuals,
       baseSize = 5,
