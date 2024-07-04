@@ -8,7 +8,7 @@ leaflet_graph <- function(station_spatial) {
   geometry <- NULL
   df <- station_spatial |> tidyr::extract(geometry, c("lon", "lat"), "\\((.*), (.*)\\)", convert = TRUE)
   numPal <- leaflet::colorNumeric("viridis", df$Detections)
-  
+  write.csv(df,"df.csv")
   
   if(max(df$Individuals)<31){
     leaflet::leaflet(data = df) |>
@@ -23,7 +23,7 @@ leaflet_graph <- function(station_spatial) {
                       radius = ~(df$Individuals)) |>
     leaflegend::addLegendSize(
       values = df $Individuals,
-      baseSize =  max(df$Individuals),
+      baseSize =  max(df$Individuals)/min((max(df$Individuals)-min((df$Individuals))),5),
       color = 'black',
       title = 'Individual',
       shape = 'circle',
@@ -57,7 +57,7 @@ leaflet_graph <- function(station_spatial) {
                                  radius = ~(df$Individuals)) |>
       leaflegend::addLegendSize(
         values = df $Individuals,
-        baseSize =  max(df$Individuals),
+        baseSize =  max(df$Individuals)/min((max(df$Individuals)-min((df$Individuals))),7),
         color = 'black',
         title = 'Individual',
         shape = 'circle',
