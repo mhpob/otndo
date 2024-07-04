@@ -9,7 +9,7 @@ leaflet_graph <- function(station_spatial) {
   df <- station_spatial |> tidyr::extract(geometry, c("lon", "lat"), "\\((.*), (.*)\\)", convert = TRUE)
   numPal <- leaflet::colorNumeric("viridis", df$Detections)
 
-  
+
 # test 3
 
 
@@ -29,7 +29,7 @@ leaflet_graph <- function(station_spatial) {
                                   "detectedby:", df$detectedby, "<br>",
                                   "Individuals:", df$Individuals)) |>
     leaflegend::  addLegendSize(
-      values =  quakes$Individuals,
+      values =  df$Individuals,
       baseSize = 5,
       color = 'black',
       title = 'Individual',
