@@ -8,7 +8,6 @@ leaflet_graph <- function(station_spatial) {
   geometry <- NULL
   df <- station_spatial |> tidyr::extract(geometry, c("lon", "lat"), "\\((.*), (.*)\\)", convert = TRUE)
   numPal <- leaflet::colorNumeric("viridis", df$Detections)
-  write.csv(df,"df.csv")
 
   #Test 1
   if(max(df$Individuals)<31){
@@ -165,7 +164,7 @@ leaflet_graph <- function(station_spatial) {
     leaflet::addTiles() |>
     leaflegend::addSymbolsSize(values = ~df$Individuals,
                    lat = ~lat,
-                   lng = ~long,
+                   lng = ~lon,
                    shape = 'circle',
                    color =  ~numPal(df$Detections),
                    fillColor = ~numPal(df$Detections),
