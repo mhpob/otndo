@@ -28,6 +28,7 @@ library(otndo)
 library(data.table)
 library(mapview)
 library(reactable)
+library(leaflet)
 ```
 
 
@@ -226,16 +227,39 @@ reactable(new_station_summary)
 
 ```{r}
 #| label: new-detection-map-leaflet
-#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
+#| fig-cap: Figure 7. Number of newly-added detections per receiver. Points represent receiver locations, where color reflects the number of detections and size reflects the number of fish at that location.
 #| eval: !expr "nrow(new_matches) > 0"
 
 new_station_spatial <- prep_station_spatial(new_matches, type = "tag")
 
-mapview::mapview(new_station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
-)
+numPal <- colorNumeric('viridis', new_station_spatial$Detections)
+
+leaflet(new_station_spatial) %>%
+  addTiles() %>%
+  addSymbolsSize(values = ~Individuals,
+                 shape = 'plus',
+                 color = 'black',
+                 fillColor = ~numPal(Detections),
+                 opacity = .5,
+                 baseSize = 10) %>%
+  addLegendSize(
+    values = ~ Individuals,
+    color = 'black',
+    title = 'Individual',
+    shape = 'plus',
+    orientation = 'horizontal',
+    opacity = .5,
+    fillOpacity = 0,
+    breaks = 5,
+    position = 'bottomright') %>%
+  addLegendNumeric(
+    pal = numPal, 
+    title = 'Matched Detection',
+    shape = 'circle',
+    values = ~ Detections, 
+    fillOpacity = .5,
+    decreasing = TRUE,
+    position = 'bottomright')
 ```
 
 ```{r results='asis', echo=FALSE}
