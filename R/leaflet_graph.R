@@ -55,7 +55,7 @@ leaflet_graph <- function(station_spatial) {
       color = ~ numPal(Detections),
       fillColor = ~ numPal(Detections),
       fillOpacity = 0.7,
-      radius = ~ Individuals,
+      radius = ~Individuals,
       popup = paste(
         "Station:", station_spatial$station, "<br>",
         "PI:", station_spatial$PI, "<br>",
@@ -67,7 +67,7 @@ leaflet_graph <- function(station_spatial) {
     leaflet::addLegend(
       position = "bottomright",
       pal = numPal_rev,
-      values = ~ Detections,
+      values = ~Detections,
       title = "Matched Detections",
       labFormat = leaflet::labelFormat(
         transform = function(x) sort(x, decreasing = TRUE)
