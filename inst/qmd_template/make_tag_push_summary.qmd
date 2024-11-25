@@ -71,7 +71,8 @@ otn_tables <- otn_query(projects)
 #                 params$project_number)
 # }else{
 act <- "https://matos.asascience.com/project"
-otn <- "https://members.oceantrack.org/OTN/projects"
+otn <- "https://members.oceantrack.org"
+fact <- "https://secoora.org/fact/projects"
 # }
 ```
 
@@ -81,7 +82,7 @@ These are data related to matched transmitter data from the `r format(push_log$d
 
 ## Overall
 
-A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(matched, by  = 'tagname')` individuals have been matched via [ACT](`r act`), [FACT](https://secoora.org/fact/projects/), and/or [OTN](`r otn`). The detections span across `r uniqueN(matched, by = 'detectedby')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
+A total of `r format(nrow(matched), big.mark = ',')` detections of `r uniqueN(matched, by  = 'tagname')` individuals have been matched via [ACT](`r act`), [FACT](`r fact`), and/or [OTN](`r otn`). The detections span across `r uniqueN(matched, by = 'detectedby')` different projects consisting of `r length(unique(unlist(strsplit(pis$PI, ',\\s?'))))` principal investigators.
 
 ```{r}
 #| label: otn-match-table
