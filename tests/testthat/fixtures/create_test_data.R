@@ -26,6 +26,13 @@ qual <- qual[, .(
 # sample a subset
 set.seed(8675309)
 qual <- qual[sample(1:.N, 100)]
+
+# Make a fake second individual to test that multiple indivs are summarized
+qual[grepl("A69-9001-246", fieldnumber)][1:2, "fieldnumber"] <- "A69-9001-24614"
+# Make a fake third individual that is a different species in the same project
+qual[grepl("A69-9001-246", fieldnumber)][3:4, "fieldnumber"] <- "A69-9001-24615"
+qual[fieldnumber == "A69-9001-24615", "scientificname"] <- "Acipenser brevirostrum"
+
 saveRDS(data.frame(qual), "tests/testthat/fixtures/pbsm_qualified.rds")
 
 
