@@ -127,13 +127,13 @@ test_that("Multiple sets of tag PIs per project are summarized", {
 
   expect_match(
     pi_table[pi_table$project_name == "HFX", ]$PI,
-    "Matthew Apostle, Mary Mother, Dave Hebert, Fred Whoriskey",
+    "Matthew Apostle, Mary Mother, Dave Hebert, Robert Lennox, Fred Whoriskey",
     fixed = TRUE
   )
 
   expect_match(
     pi_table[pi_table$project_name == "HFX", ]$PI_emails,
-    "matt@bible,mary@bible,david.hebert@dfo-mpo.gc.ca,fwhoriskey@dal.ca",
+    "matt@bible,mary@bible,david.hebert@dfo-mpo.gc.ca,robert.lennox@dal.ca,fwhoriskey@dal.ca",
     fixed = TRUE
   )
 })
