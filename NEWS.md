@@ -1,3 +1,8 @@
+## otndo 0.3
+### v 0.3.0
+* Summarize according to species for those projects/networks which provide species information. [Issue #41](https://github.com/mhpob/otndo/issues/41)
+* Update OTN URLs. [Issue #42](https://github.com/mhpob/otndo/issues/42)
+
 ## otndo 0.2
 ### v 0.2.2
 * Fixed behavior where `clean_otn_deployment` would return different columns if there was no internal transmitter logged. [Issue #10](https://github.com/mhpob/otndo/issues/10); [d58e2d4](https://github.com/mhpob/otndo/pull/31/commits/d58e2d46e05aed7ba4acc08b8d02672b28d79804)
