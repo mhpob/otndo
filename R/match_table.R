@@ -100,16 +100,16 @@ prep_match_table <- function(
   . <- collectioncode <- project_name <- resource_full_name <- PI <- POC <-
     network <- code <- detections <- individuals <- PI_emails <- POC_emails <-
     station <- Station <- Detections <- Individuals <- longitude <- latitude <-
-    detectedby <- NULL
+    detectedby <- scientificname <- NULL
 
   extract <- data.table::data.table(extract)
 
   if (type == "tag") {
     mt <- merge(
-      extract[, .(detections = .N), by = "detectedby"],
+      extract[, .(detections = .N), by = c("detectedby", "scientificname")],
       unique(extract, by = c("tagname", "detectedby"))[
         , .(individuals = .N),
-        by = "detectedby"
+        by = c("detectedby", "scientificname")
       ]
     )
 
@@ -118,9 +118,9 @@ prep_match_table <- function(
     otn <- otn_query(unique(extract$detectedby))
   } else {
     mt <- merge(
-      extract[, .(detections = .N), by = "trackercode"],
+      extract[, .(detections = .N), by = c("trackercode", "scientificname")],
       unique(extract, by = "fieldnumber")[, .(individuals = .N),
-        by = "trackercode"
+        by = c("trackercode", "scientificname")
       ]
     )
 
@@ -130,7 +130,7 @@ prep_match_table <- function(
   }
 
   pis <- project_contacts(extract, type = type)
-  mt <- merge(mt, pis)
+  mt <- merge(mt, pis, by = "project_name")
 
   mt[, collectioncode := gsub(".*\\.", "", project_name)]
 
@@ -155,11 +155,11 @@ prep_match_table <- function(
   mt[, network := data.table::fifelse(network == code, "", network)]
 
   mt <- mt[, .(
-    PI, POC, resource_full_name, network, code,
+    PI, POC, resource_full_name, network, code, scientificname,
     detections, individuals, PI_emails, POC_emails
   )]
   data.table::setnames(mt, c(
-    "PI", "POC", "Project name", "Network", "Project code",
+    "PI", "POC", "Project name", "Network", "Project code", "Species",
     "Detections", "Individuals", "PI_emails", "POC_emails"
   ))
 
