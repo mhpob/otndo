@@ -27,8 +27,10 @@ otn_query <- function(projects) {
     "&outputFormat=csv&CQL_FILTER=strMatches(collectioncode,'",
     paste(
       paste0(
-        ".*",
-        gsub(".*\\.", "", projects)
+        # "(.*\\.)?",
+        "((.*\\.)|^)",
+        gsub(".*\\.", "", projects),
+        "$"
       ),
       collapse = "|"
     ),

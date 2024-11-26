@@ -1,4 +1,10 @@
 ## otndo 0.3
+### v 0.3.2
+* Fix bug where `otn_query` could return multiple projects from one code, resulting in multiple identical reports being created.
+
+### v 0.3.1
+* Fix bug where internal helper functions would break if no H:M:S data was listed in deployment or recovery time metadata
+
 ### v 0.3.0
 * Summarize according to species for those projects/networks which provide species information. [Issue #41](https://github.com/mhpob/otndo/issues/41)
 * Update OTN URLs. [Issue #42](https://github.com/mhpob/otndo/issues/42)

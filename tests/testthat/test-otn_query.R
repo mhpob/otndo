@@ -59,3 +59,8 @@ test_that("is node agnostic", {
     without_network$project_metadata
   )
 })
+
+
+test_that("returns exact match or node-appended ONLY", {
+  expect_true(nrow(otn_query("KSC")[[1]]) == 1)
+})
