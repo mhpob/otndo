@@ -156,7 +156,7 @@ write_to_tempdir <- function(type, files, temp_dir) {
 
   ##  Write file to temporary directory
   filepath <- file.path(temp_dir, paste0(type, ".csv"))
-  write.csv(files, filepath,
+  data.table::fwrite(files, filepath,
     row.names = F
   )
 
