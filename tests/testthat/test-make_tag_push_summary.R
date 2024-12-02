@@ -5,7 +5,8 @@ skip_if_offline()
 test_that("Non-ACT projects are summarized", {
   make_tag_push_summary(
     matched = pbsm$matched,
-    since = "2018-05-06"
+    since = "2018-05-06",
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
@@ -22,7 +23,8 @@ test_that("Renders with RMarkdown", {
   make_tag_push_summary(
     matched = pbsm$matched,
     since = "2018-05-06",
-    rmd = TRUE
+    rmd = TRUE,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
@@ -41,7 +43,8 @@ test_that("Zipped files are unzipped", {
   make_tag_push_summary(
     matched = gsub("csv$", "zip", pbsm$matched),
     since = "2018-05-06",
-    rmd = TRUE
+    rmd = TRUE,
+    overwrite = TRUE
   ) |>
     expect_message("zipped files detected") |>
     expect_message("Unzipped") |>
@@ -56,7 +59,8 @@ test_that("Zipped files are unzipped", {
 test_that("No new detections since \"since\" date works", {
   make_tag_push_summary(
     matched = pbsm$matched,
-    since = Sys.Date() + 1
+    since = Sys.Date() + 1,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
@@ -68,7 +72,8 @@ test_that("No new detections since \"since\" date works", {
 
 test_that("Default \"since\" date works", {
   make_tag_push_summary(
-    matched = pbsm$matched
+    matched = pbsm$matched,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
@@ -89,7 +94,8 @@ test_that("Default \"since\" date works", {
 
 
   make_tag_push_summary(
-    matched = file.path(td, "new_matched.csv")
+    matched = file.path(td, "new_matched.csv"),
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
@@ -114,7 +120,8 @@ test_that("errors with no input data", {
 test_that("update_push_log arg works", {
   make_tag_push_summary(
     matched = pbsm$matched,
-    update_push_log = TRUE
+    update_push_log = TRUE,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer") |>
     expect_message("Writing report") |>
@@ -130,11 +137,30 @@ test_that("Pre-existing directory is overwritten", {
 
   make_tag_push_summary(
     matched = pbsm$matched,
-    since = Sys.Date() + 1
+    since = Sys.Date() + 1,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
     expect_message("Done")
 
   expect_false(dir.exists(file.path(tempdir(), "otndo_files")))
+})
+
+
+test_that("overwrite = FALSE works", {
+  make_tag_push_summary(
+    matched = pbsm$matched,
+    since = "2018-05-06",
+    overwrite = FALSE
+  ) |>
+    expect_message("Asking OTN GeoServer for project information") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+
+  expect_true(
+    length(
+      list.files(getwd(), pattern = "_\\d*_.*tag_push_summary")
+    ) >= 1
+  )
 })

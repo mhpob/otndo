@@ -6,7 +6,8 @@ test_that("Projects are summarized", {
     qualified = pbsm$qualified,
     unqualified = pbsm$unqualified,
     deployment = pbsm$deployment,
-    since = "2018-05-06"
+    since = "2018-05-06",
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
@@ -26,7 +27,8 @@ test_that("Zipped files are unzipped", {
     qualified = gsub("csv$", "zip", pbsm$qualified),
     unqualified = gsub("csv$", "zip", pbsm$unqualified),
     deployment = pbsm$deployment,
-    since = "2018-05-06"
+    since = "2018-05-06",
+    overwrite = TRUE
   ) |>
     expect_message("zipped files detected") |>
     expect_message("Unzipped") |>
@@ -45,7 +47,8 @@ test_that("Renders with RMarkdown", {
     unqualified = pbsm$unqualified,
     deployment = pbsm$deployment,
     since = "2018-05-06",
-    rmd = TRUE
+    rmd = TRUE,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
@@ -63,7 +66,8 @@ test_that("No new matches since \"since\" date works", {
     qualified = pbsm$qualified,
     unqualified = pbsm$unqualified,
     deployment = pbsm$deployment,
-    since = Sys.Date() + 1
+    since = Sys.Date() + 1,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
@@ -79,7 +83,8 @@ test_that("Default \"since\" date works", {
   make_receiver_push_summary(
     qualified = pbsm$qualified,
     unqualified = pbsm$unqualified,
-    deployment = pbsm$deployment
+    deployment = pbsm$deployment,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
@@ -102,7 +107,8 @@ test_that("Default \"since\" date works", {
   make_receiver_push_summary(
     qualified = file.path(td, "new_qualified.csv"),
     unqualified = pbsm$unqualified,
-    deployment = pbsm$deployment
+    deployment = pbsm$deployment,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
@@ -129,7 +135,8 @@ test_that("update_push_log arg works", {
     qualified = pbsm$qualified,
     unqualified = pbsm$unqualified,
     deployment = pbsm$deployment,
-    update_push_log = TRUE
+    update_push_log = TRUE,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
@@ -148,11 +155,32 @@ test_that("Pre-existing directory is overwritten", {
     qualified = pbsm$qualified,
     unqualified = pbsm$unqualified,
     deployment = pbsm$deployment,
-    since = Sys.Date() + 1
+    since = Sys.Date() + 1,
+    overwrite = TRUE
   ) |>
     expect_message("Asking OTN GeoServer for project information") |>
     expect_message("Writing report") |>
     expect_message("Done")
 
   expect_false(dir.exists(file.path(tempdir(), "otndo_files")))
+})
+
+
+test_that("overwrite = FALSE works", {
+  make_receiver_push_summary(
+    qualified = pbsm$qualified,
+    unqualified = pbsm$unqualified,
+    deployment = pbsm$deployment,
+    since = "2018-05-06",
+    overwrite = FALSE
+  ) |>
+    expect_message("Asking OTN GeoServer for project information") |>
+    expect_message("Writing report") |>
+    expect_message("Done")
+
+  expect_true(
+    length(
+      list.files(getwd(), pattern = "_\\d*_.*receiver_push_summary")
+    ) >= 1
+  )
 })

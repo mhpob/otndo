@@ -6,6 +6,9 @@
 #' @param temp_dir Character. File path of temporary directory
 #' @param detection_file Character. File path of detections.
 #' @param date_time Character or numeric. Date-time to convert.
+#' @param report Character. Type of report ("tag" or "receiver").
+#' @param out_dir Character. Output directory.
+#' @param code Character. Project code.
 #'
 #' @name utilities-make
 #' @keywords internal
@@ -15,7 +18,7 @@ clean_otn_deployment <- function(deployment) {
     # Find which sheet has deployment data. If none are explicitly labeled, assume
     #   it's sheet 1
     sheet_id <- grep("dep", readxl::excel_sheets(deployment),
-      ignore.case = T, value = T
+                     ignore.case = T, value = T
     )
     if (length(sheet_id) == 0) {
       sheet_id <- 1
@@ -23,12 +26,12 @@ clean_otn_deployment <- function(deployment) {
 
     # Check for header: If the first row has no columns, it likely contains it.
     if (ncol(readxl::read_excel(deployment,
-      sheet = sheet_id,
-      range = "A1"
+                                sheet = sheet_id,
+                                range = "A1"
     )) == 0) {
       deployment <- readxl::read_excel(deployment,
-        sheet = sheet_id,
-        skip = 3
+                                       sheet = sheet_id,
+                                       skip = 3
       )
     } else {
       deployment <- readxl::read_excel(deployment, sheet = sheet_id)
@@ -38,12 +41,12 @@ clean_otn_deployment <- function(deployment) {
     check_head <- read.csv(deployment, nrows = 1, check.names = FALSE)
     if (ncol(check_head) > length(unique(names(check_head)))) {
       deployment <- read.csv(deployment,
-        skip = 3,
-        na.strings = c("NA", "")
+                             skip = 3,
+                             na.strings = c("NA", "")
       )
     } else {
       deployment <- read.csv(deployment,
-        na.strings = c("NA", "")
+                             na.strings = c("NA", "")
       )
     }
   } else {
@@ -63,10 +66,10 @@ clean_otn_deployment <- function(deployment) {
   deployment$recover_date_time <- convert_times(deployment$recover_date_time)
 
   deployment <- deployment[!is.na(deployment$deploy_date_time) &
-    !is.na(deployment$recover_date_time), ]
+                             !is.na(deployment$recover_date_time), ]
   deployment$receiver <- paste(deployment$ins_model_no,
-    deployment$ins_serial_no,
-    sep = "-"
+                               deployment$ins_serial_no,
+                               sep = "-"
   )
   deployment$stationname <- deployment$station_no
 
@@ -122,8 +125,8 @@ provided_file_unzip <- function(files, temp_dir) {
     to_unzip,
     function(.) {
       unzip(.,
-        exdir = temp_dir,
-        setTimes = FALSE
+            exdir = temp_dir,
+            setTimes = FALSE
       )
     }
   )
@@ -157,7 +160,7 @@ write_to_tempdir <- function(type, files, temp_dir) {
   ##  Write file to temporary directory
   filepath <- file.path(temp_dir, paste0(type, ".csv"))
   data.table::fwrite(files, filepath,
-    row.names = F
+                     row.names = F
   )
 
 
@@ -176,5 +179,60 @@ extract_proj_name <- function(detection_file) {
   list(
     project_name = otn_response[[1]]$resource_full_name,
     project_code = gsub(".*\\.", "", otn_response[[1]]$collectioncode)
+  )
+}
+
+
+#' @rdname utilities-make
+#' @keywords internal
+copy_from_temp <- function(report, code, td, out_dir, overwrite) {
+  existing_files <- list.files(
+    out_dir,
+    pattern = paste(
+      Sys.Date(),
+      code,
+      report,
+      "push_summary.html",
+      sep = "_"
+    )
+  )
+
+  if (isFALSE(overwrite) & length(existing_files) != 0) {
+
+    to_path <- paste(
+      format(Sys.time(), "%Y-%m-%d_%H%M%S"),
+      code,
+      report,
+      "push_summary.html",
+      sep = "_"
+    )
+
+  } else {
+
+    to_path <- paste(
+      Sys.Date(),
+      code,
+      report,
+      "push_summary.html",
+      sep = "_"
+    )
+
+  }
+
+  if (isTRUE(overwrite)) {
+    file.remove(file.path(out_dir, to_path)) |>
+      suppressWarnings()
+  }
+
+  file.copy(
+    from = file.path(td,
+                     paste("make",
+                           report,
+                           "push_summary.html",
+                           sep = "_"
+                     )
+    ),
+    to = file.path(out_dir, to_path),
+    overwrite = TRUE
   )
 }

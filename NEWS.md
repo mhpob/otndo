@@ -1,4 +1,7 @@
 ## otndo 0.3
+### v 0.3.3
+* Fix bug where reports would be silently dropped if it matched a file name that already existed. [Issue #45](https://github.com/mhpob/otndo/issues/45)
+
 ### v 0.3.2
 * Fix bug where `otn_query` could return multiple projects from one code, resulting in multiple identical reports being created.
 

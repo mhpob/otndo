@@ -11,7 +11,8 @@ make_receiver_push_summary(
   deployment = NULL,
   out_dir = getwd(),
   since = NULL,
-  rmd = FALSE
+  rmd = FALSE,
+  overwrite = FALSE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ make_receiver_push_summary(
 \item{since}{Date in YYYY-MM-DD format. Summarizes what's new since the provided date.}
 
 \item{rmd}{Logical. Compile via RMarkdown rather than Quarto?}
+
+\item{overwrite}{Logical. Overwrite existing file?}
 }
 \description{
 Create summary reports of receiver project data from the OTN data push

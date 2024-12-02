@@ -7,6 +7,7 @@
 \alias{provided_file_unzip}
 \alias{write_to_tempdir}
 \alias{extract_proj_name}
+\alias{copy_from_temp}
 \title{Place where functions live for the make_*_summary family of functions}
 \usage{
 clean_otn_deployment(deployment)
@@ -18,6 +19,8 @@ provided_file_unzip(files, temp_dir)
 write_to_tempdir(type, files, temp_dir)
 
 extract_proj_name(detection_file)
+
+copy_from_temp(report, code, td, out_dir, overwrite)
 }
 \arguments{
 \item{deployment}{Character. File path of deployment metadata.}
@@ -31,6 +34,12 @@ extract_proj_name(detection_file)
 \item{type}{Character. Type of data (deployment, qualified, or unqualified).}
 
 \item{detection_file}{Character. File path of detections.}
+
+\item{report}{Character. Type of report ("tag" or "receiver").}
+
+\item{code}{Character. Project code.}
+
+\item{out_dir}{Character. Output directory.}
 }
 \description{
 Place where functions live for the make_*_summary family of functions

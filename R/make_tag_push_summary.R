@@ -6,6 +6,7 @@
 #' @param sensor_decoding Not yet implemented. Will be a place to provide information to decode and summarize sensor data,
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
 #' @param rmd Logical. Compile via RMarkdown rather than Quarto?
+#' @param overwrite Logical. Overwrite existing file?
 #'
 #' @export
 #' @examples
@@ -44,7 +45,8 @@ make_tag_push_summary <- function(
     since = NULL,
     sensor_decoding = NULL,
     out_dir = getwd(),
-    rmd = FALSE) {
+    rmd = FALSE,
+    overwrite = FALSE) {
   # Try to provide a helpful error if no files are provided.
   if (is.null(matched)) {
     cli::cli_abort("Must provide at least one set of {.href [OTN-matched detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-1)}.")
@@ -55,7 +57,7 @@ make_tag_push_summary <- function(
     push_log <- "https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv"
   } else {
     push_log <- system.file("push_log.csv",
-      package = "otndo"
+                            package = "otndo"
     )
   }
 
@@ -117,8 +119,8 @@ make_tag_push_summary <- function(
 
   file.copy(
     from = system.file("qmd_template",
-      "make_tag_push_summary.qmd",
-      package = "otndo"
+                       "make_tag_push_summary.qmd",
+                       package = "otndo"
     ),
     to = td
   )
@@ -149,14 +151,8 @@ make_tag_push_summary <- function(
     )
   }
 
-  file.copy(
-    from = file.path(td, "make_tag_push_summary.html"),
-    to = file.path(out_dir, paste(Sys.Date(),
-      project_code,
-      "tag_push_summary.html",
-      sep = "_"
-    ))
-  )
+  copy_from_temp(report = "tag", code = project_code, td = td,
+                 overwrite = overwrite, out_dir = out_dir)
 
   cli::cli_alert_success("   Done.")
 

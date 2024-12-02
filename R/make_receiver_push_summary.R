@@ -6,6 +6,7 @@
 #' @param out_dir Defaults to working directory. In which directory would you like to save the report?
 #' @param since Date in YYYY-MM-DD format. Summarizes what's new since the provided date.
 #' @param rmd Logical. Compile via RMarkdown rather than Quarto?
+#' @param overwrite Logical. Overwrite existing file?
 #'
 #' @section Push log:
 #'
@@ -85,7 +86,8 @@ make_receiver_push_summary <- function(
     deployment = NULL,
     out_dir = getwd(),
     since = NULL,
-    rmd = FALSE) {
+    rmd = FALSE,
+    overwrite = FALSE) {
   # Try to provide a helpful error if there are missing files.
   if (any(is.null(qualified), is.null(unqualified), is.null(deployment))) {
     cli::cli_abort("Must provide at least one each of {.href [qualified detections, unqualified detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)}, and deployment metadata.")
@@ -221,17 +223,8 @@ make_receiver_push_summary <- function(
     )
   }
 
-  file.copy(
-    from = file.path(td, "make_receiver_push_summary.html"),
-    to = file.path(
-      out_dir,
-      paste(Sys.Date(),
-        project_code,
-        "receiver_push_summary.html",
-        sep = "_"
-      )
-    )
-  )
+  copy_from_temp(report = "receiver", code = project_code,
+                 overwrite = overwrite, td = td, out_dir = out_dir)
 
   cli::cli_alert_success("   Done.")
 

@@ -10,7 +10,8 @@ make_tag_push_summary(
   since = NULL,
   sensor_decoding = NULL,
   out_dir = getwd(),
-  rmd = FALSE
+  rmd = FALSE,
+  overwrite = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ make_tag_push_summary(
 \item{out_dir}{Defaults to working directory. In which directory would you like to save the report?}
 
 \item{rmd}{Logical. Compile via RMarkdown rather than Quarto?}
+
+\item{overwrite}{Logical. Overwrite existing file?}
 }
 \description{
 Create summary reports of receiver project data from the OTN data push
