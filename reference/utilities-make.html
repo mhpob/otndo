@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">otndo</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,9 @@
 <span></span>
 <span><span class="fu">write_to_tempdir</span><span class="op">(</span><span class="va">type</span>, <span class="va">files</span>, <span class="va">temp_dir</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">extract_proj_name</span><span class="op">(</span><span class="va">detection_file</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">extract_proj_name</span><span class="op">(</span><span class="va">detection_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">copy_from_temp</span><span class="op">(</span><span class="va">report</span>, <span class="va">code</span>, <span class="va">td</span>, <span class="va">out_dir</span>, <span class="va">overwrite</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,6 +82,18 @@
 
 <dt id="arg-detection-file">detection_file<a class="anchor" aria-label="anchor" href="#arg-detection-file"></a></dt>
 <dd><p>Character. File path of detections.</p></dd>
+
+
+<dt id="arg-report">report<a class="anchor" aria-label="anchor" href="#arg-report"></a></dt>
+<dd><p>Character. Type of report ("tag" or "receiver").</p></dd>
+
+
+<dt id="arg-code">code<a class="anchor" aria-label="anchor" href="#arg-code"></a></dt>
+<dd><p>Character. Project code.</p></dd>
+
+
+<dt id="arg-out-dir">out_dir<a class="anchor" aria-label="anchor" href="#arg-out-dir"></a></dt>
+<dd><p>Character. Output directory.</p></dd>
 
 </dl></div>
 
