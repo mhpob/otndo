@@ -1,4 +1,7 @@
 ## otndo 0.3
+### v 0.3.4
+* Fix bug introduced in v 0.3.0 where receiver match tables couldn't be created if the source network does not share species data. [Issue #46](https://github.com/mhpob/otndo/issues/46)
+
 ### v 0.3.3
 * Fix bug where reports would be silently dropped if it matched a file name that already existed. [Issue #45](https://github.com/mhpob/otndo/issues/45)
 

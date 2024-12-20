@@ -85,7 +85,8 @@ match_table <- function(
       ),
       PI_emails = reactable::colDef(show = F),
       POC_emails = reactable::colDef(show = F),
-      `Project name` = reactable::colDef(minWidth = 200)
+      `Project name` = reactable::colDef(minWidth = 200),
+      Species = reactable::colDef(show = !all(is.na(mt_data$Species)))
     )
   )
 }
@@ -103,6 +104,10 @@ prep_match_table <- function(
     detectedby <- scientificname <- NULL
 
   extract <- data.table::data.table(extract)
+
+  if (isFALSE("scientificname" %in% names(extract))) {
+   extract[, scientificname := character()]
+  }
 
   if (type == "tag") {
     mt <- merge(

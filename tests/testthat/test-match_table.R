@@ -41,3 +41,17 @@ test_that("creates a js table for tag data", {
     )
   )
 })
+
+
+
+test_that("species columnn is dropped if no species present", {
+  qual <- read.csv(pbsm$qualified)
+  qual$scientificname <- NULL
+
+  tbl_qual <- match_table(qual, "receiver")
+
+  expect_false(tbl_qual$x$tag$attribs$columns[[6]]$show)
+
+  expect_s3_class(tbl_qual, c("reactable", "htmlwidget"), exact = TRUE)
+  expect_type(tbl_qual$x, "list")
+})
