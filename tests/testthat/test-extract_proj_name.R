@@ -1,6 +1,8 @@
 # Pings OTN GeoServer; skip if offline
 skip_if_offline()
 
+## TODO: add a test for camelCase (2025)
+
 test_that("extracts qualified", {
   qual <- extract_proj_name(pbsm$qualified)
 
@@ -64,7 +66,6 @@ test_that("is network agnostic", {
     act$project_code,
     "TAILWINDS"
   )
-
 
   write.csv(
     data.frame(collectioncode = "TAILWINDS"),
