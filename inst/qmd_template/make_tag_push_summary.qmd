@@ -34,7 +34,10 @@ library(reactable)
 ```{r}
 #| label: extraction-files-read
 
-matched <- fread(params$matched)
+matched <- fread(
+  params$matched,
+  col.names = tolower
+)
 matched[, day := as.Date(datecollected)]
 
 release <- matched[receiver == "release"]

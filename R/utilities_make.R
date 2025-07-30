@@ -17,22 +17,21 @@ clean_otn_deployment <- function(deployment) {
   if (grepl("^xls", file_ext)) {
     # Find which sheet has deployment data. If none are explicitly labeled, assume
     #   it's sheet 1
-    sheet_id <- grep("dep", readxl::excel_sheets(deployment),
-                     ignore.case = T, value = T
+    sheet_id <- grep(
+      "dep",
+      readxl::excel_sheets(deployment),
+      ignore.case = T,
+      value = T
     )
     if (length(sheet_id) == 0) {
       sheet_id <- 1
     }
 
     # Check for header: If the first row has no columns, it likely contains it.
-    if (ncol(readxl::read_excel(deployment,
-                                sheet = sheet_id,
-                                range = "A1"
-    )) == 0) {
-      deployment <- readxl::read_excel(deployment,
-                                       sheet = sheet_id,
-                                       skip = 3
-      )
+    if (
+      ncol(readxl::read_excel(deployment, sheet = sheet_id, range = "A1")) == 0
+    ) {
+      deployment <- readxl::read_excel(deployment, sheet = sheet_id, skip = 3)
     } else {
       deployment <- readxl::read_excel(deployment, sheet = sheet_id)
     }
@@ -40,14 +39,9 @@ clean_otn_deployment <- function(deployment) {
     # Check for OTN header
     check_head <- read.csv(deployment, nrows = 1, check.names = FALSE)
     if (ncol(check_head) > length(unique(names(check_head)))) {
-      deployment <- read.csv(deployment,
-                             skip = 3,
-                             na.strings = c("NA", "")
-      )
+      deployment <- read.csv(deployment, skip = 3, na.strings = c("NA", ""))
     } else {
-      deployment <- read.csv(deployment,
-                             na.strings = c("NA", "")
-      )
+      deployment <- read.csv(deployment, na.strings = c("NA", ""))
     }
   } else {
     cli::cli_abort("File type is not xls, xlsx, or csv.")
@@ -65,11 +59,14 @@ clean_otn_deployment <- function(deployment) {
   deployment$deploy_date_time <- convert_times(deployment$deploy_date_time)
   deployment$recover_date_time <- convert_times(deployment$recover_date_time)
 
-  deployment <- deployment[!is.na(deployment$deploy_date_time) &
-                             !is.na(deployment$recover_date_time), ]
-  deployment$receiver <- paste(deployment$ins_model_no,
-                               deployment$ins_serial_no,
-                               sep = "-"
+  deployment <- deployment[
+    !is.na(deployment$deploy_date_time) &
+      !is.na(deployment$recover_date_time),
+  ]
+  deployment$receiver <- paste(
+    deployment$ins_model_no,
+    deployment$ins_serial_no,
+    sep = "-"
   )
   deployment$stationname <- deployment$station_no
 
@@ -80,8 +77,12 @@ clean_otn_deployment <- function(deployment) {
   }
 
   deployment[, c(
-    "stationname", "receiver", "internal_transmitter",
-    "deploy_date_time", "deploy_lat", "deploy_long",
+    "stationname",
+    "receiver",
+    "internal_transmitter",
+    "deploy_date_time",
+    "deploy_lat",
+    "deploy_long",
     "recover_date_time"
   )]
 }
@@ -124,10 +125,7 @@ provided_file_unzip <- function(files, temp_dir) {
   unzipped <- lapply(
     to_unzip,
     function(.) {
-      unzip(.,
-            exdir = temp_dir,
-            setTimes = FALSE
-      )
+      unzip(., exdir = temp_dir, setTimes = FALSE)
     }
   )
 
@@ -151,18 +149,59 @@ write_to_tempdir <- function(type, files, temp_dir) {
     )
   } else {
     # Select and read in csv files for qualified and unqualified detections
-    files <- lapply(files, read.csv)
+    files <- lapply(files, data.table::fread, col.names = tolower)
   }
 
   #  Bind files together
-  files <- do.call(rbind, files)
+  files <- data.table::rbindlist(files)
+
+  # adjust names for camelCase (OTN 2025)
+  # for now, convert these back to old names
+  # THIS IS SO GROSS -- FIX ASAP
+  if ("uncorrecteddatecollectedutc" %in% names(files)) {
+    data.table::setnames(
+      files,
+      old = c(
+        "datecollectedutc",
+        "tagname",
+        "receiverserial",
+        "decimallongitude",
+        "decimallatitude",
+        "contactpoc",
+        "contactpi"
+      ),
+      new = c(
+        "datecollected",
+        "fieldnumber",
+        "collectornumber",
+        "longitude",
+        "latitude",
+        "tag_contact_poc",
+        "tag_contact_pi"
+      ),
+      skip_absent = TRUE
+    )
+
+    if ("bottomdepth" %in% names(files)) {
+      data.table::setnames(
+        files,
+        old = c(
+          "fieldnumber",
+          "tag_contact_poc",
+          "tag_contact_pi"
+        ),
+        new = c(
+          "tagname",
+          "contact_poc",
+          "contact_pi"
+        )
+      )
+    }
+  }
 
   ##  Write file to temporary directory
   filepath <- file.path(temp_dir, paste0(type, ".csv"))
-  data.table::fwrite(files, filepath,
-                     row.names = F
-  )
-
+  data.table::fwrite(files, filepath, row.names = F)
 
   filepath
 }
@@ -173,7 +212,11 @@ write_to_tempdir <- function(type, files, temp_dir) {
 
 extract_proj_name <- function(detection_file) {
   # Pull in the first row of the data in order to grab the collection code
-  project <- read.csv(detection_file, nrows = 1)$collectioncode
+  project <- data.table::fread(detection_file, nrows = 1)
+
+  # Catch collection[cC]ode for camelCase (2025)
+  proj_index <- grepl('collection', names(project))
+  project <- project[, ..proj_index]
 
   otn_response <- otn_query(project)
   list(
@@ -198,7 +241,6 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
   )
 
   if (isFALSE(overwrite) & length(existing_files) != 0) {
-
     to_path <- paste(
       format(Sys.time(), "%Y-%m-%d_%H%M%S"),
       code,
@@ -206,9 +248,7 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
       "push_summary.html",
       sep = "_"
     )
-
   } else {
-
     to_path <- paste(
       Sys.Date(),
       code,
@@ -216,7 +256,6 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
       "push_summary.html",
       sep = "_"
     )
-
   }
 
   if (isTRUE(overwrite)) {
@@ -225,13 +264,7 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
   }
 
   file.copy(
-    from = file.path(td,
-                     paste("make",
-                           report,
-                           "push_summary.html",
-                           sep = "_"
-                     )
-    ),
+    from = file.path(td, paste("make", report, "push_summary.html", sep = "_")),
     to = file.path(out_dir, to_path),
     overwrite = TRUE
   )

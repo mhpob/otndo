@@ -80,28 +80,27 @@
 #' )
 #' }
 make_receiver_push_summary <- function(
-    qualified = NULL,
-    unqualified = NULL,
-    update_push_log = FALSE,
-    deployment = NULL,
-    out_dir = getwd(),
-    since = NULL,
-    rmd = FALSE,
-    overwrite = FALSE) {
+  qualified = NULL,
+  unqualified = NULL,
+  update_push_log = FALSE,
+  deployment = NULL,
+  out_dir = getwd(),
+  since = NULL,
+  rmd = FALSE,
+  overwrite = FALSE
+) {
   # Try to provide a helpful error if there are missing files.
   if (any(is.null(qualified), is.null(unqualified), is.null(deployment))) {
-    cli::cli_abort("Must provide at least one each of {.href [qualified detections, unqualified detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)}, and deployment metadata.")
+    cli::cli_abort(
+      "Must provide at least one each of {.href [qualified detections, unqualified detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)}, and deployment metadata."
+    )
   }
-
-
 
   # Push log ----
   if (update_push_log == TRUE) {
     push_log <- "https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv"
   } else {
-    push_log <- system.file("push_log.csv",
-      package = "otndo"
-    )
+    push_log <- system.file("push_log.csv", package = "otndo")
   }
 
   if (is.null(since)) {
@@ -119,8 +118,6 @@ make_receiver_push_summary <- function(
 
   dir.create(td)
 
-
-
   # Qualified detections ----
   ## Unzip if zipped detections were provided
   if (any(grepl("\\.zip$", qualified))) {
@@ -136,9 +133,6 @@ make_receiver_push_summary <- function(
     files = qualified,
     temp_dir = td
   )
-
-
-
 
   # Unqualified detections ----
   ## Unzip if zipped detections were provided
@@ -156,9 +150,6 @@ make_receiver_push_summary <- function(
     temp_dir = td
   )
 
-
-
-
   # Deployment log ----
   ## Import and write to tempdir
   deployment_filepath <- write_to_tempdir(
@@ -166,10 +157,6 @@ make_receiver_push_summary <- function(
     files = deployment,
     temp_dir = td
   )
-
-
-
-
 
   # Ask OTN's GeoServer for name information ----
   cli::cli_alert_info("Asking OTN GeoServer for project information...")
@@ -181,12 +168,12 @@ make_receiver_push_summary <- function(
 
   project_number <- NULL
 
-
   # Write report ----
   cli::cli_alert_info("Writing report...")
 
   file.copy(
-    from = system.file("qmd_template",
+    from = system.file(
+      "qmd_template",
       "make_receiver_push_summary.qmd",
       package = "otndo"
     ),
@@ -223,14 +210,18 @@ make_receiver_push_summary <- function(
     )
   }
 
-  copy_from_temp(report = "receiver", code = project_code,
-                 overwrite = overwrite, td = td, out_dir = out_dir)
+  copy_from_temp(
+    report = "receiver",
+    code = project_code,
+    overwrite = overwrite,
+    td = td,
+    out_dir = out_dir
+  )
 
   cli::cli_alert_success("   Done.")
 
   unlink(td, recursive = T)
 }
-
 
 # matos_project <- 192
 # qualified <- c('proj192_qualified_detections_2021.csv',

@@ -17,7 +17,9 @@ author: "Created with the [`otndo` R package](https://otndo.obrien.page) (v. `r 
 ---
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo = FALSE, warning = FALSE, message = FALSE
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
@@ -35,13 +37,19 @@ library(reactable)
 ```{r}
 #| label: extraction-files-read
 
-qualified <- data.table::fread(params$qualified)
-unqualified <- data.table::fread(params$unqualified)
+qualified <- data.table::fread(
+  params$qualified
+)
+unqualified <- data.table::fread(
+  params$unqualified
+)
 
 push_log <- data.table::fread(params$push_log)
 
 if (!is.null(params$deployment)) {
-  deployment <- data.table::fread(params$deployment)
+  deployment <- data.table::fread(
+    params$deployment
+  )
 }
 ```
 
@@ -201,7 +209,8 @@ match_map(new_otn_tables)
 new_station_summary <- station_table(new_matches, "receiver")
 
 reactable::reactable(new_station_summary)
-```
+`
+``
 </figure>
 
 ```{r results='asis', echo=FALSE}
@@ -230,7 +239,6 @@ Some detections were not matched to other investigators via OTN nodes. There are
 
 ```{r}
 #| label: unqualified-false
-
 
 ## NOTE TO SELF START HERE
 reactable(unqual_f)

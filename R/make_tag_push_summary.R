@@ -40,32 +40,32 @@
 #' )
 #' }
 make_tag_push_summary <- function(
-    matched = NULL,
-    update_push_log = FALSE,
-    since = NULL,
-    sensor_decoding = NULL,
-    out_dir = getwd(),
-    rmd = FALSE,
-    overwrite = FALSE) {
+  matched = NULL,
+  update_push_log = FALSE,
+  since = NULL,
+  sensor_decoding = NULL,
+  out_dir = getwd(),
+  rmd = FALSE,
+  overwrite = FALSE
+) {
   # Try to provide a helpful error if no files are provided.
   if (is.null(matched)) {
-    cli::cli_abort("Must provide at least one set of {.href [OTN-matched detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-1)}.")
+    cli::cli_abort(
+      "Must provide at least one set of {.href [OTN-matched detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-1)}."
+    )
   }
 
   # Push log ----
   if (update_push_log == TRUE) {
     push_log <- "https://raw.githubusercontent.com/mhpob/otndo/master/inst/push_log.csv"
   } else {
-    push_log <- system.file("push_log.csv",
-                            package = "otndo"
-    )
+    push_log <- system.file("push_log.csv", package = "otndo")
   }
 
   if (is.null(since)) {
     since <- read.csv(push_log)
     since <- since[nrow(since) - 1, ]
   }
-
 
   # Set up temporary directory ----
   td <- file.path(tempdir(), "otndo_files")
@@ -76,8 +76,6 @@ make_tag_push_summary <- function(
   }
 
   dir.create(td)
-
-
 
   # Munge files ----
   ## Unzip if zipped detections were provided
@@ -95,12 +93,8 @@ make_tag_push_summary <- function(
     temp_dir = td
   )
 
-
-
   # Tag metadata ----
   ## Nothing here yet; a placeholder
-
-
 
   # Ask OTN's GeoServer for name information ----
   cli::cli_alert_info("Asking OTN GeoServer for project information...")
@@ -112,15 +106,14 @@ make_tag_push_summary <- function(
 
   project_number <- NULL
 
-
-
   # Write report ----
   cli::cli_alert_info("Writing report...")
 
   file.copy(
-    from = system.file("qmd_template",
-                       "make_tag_push_summary.qmd",
-                       package = "otndo"
+    from = system.file(
+      "qmd_template",
+      "make_tag_push_summary.qmd",
+      package = "otndo"
     ),
     to = td
   )
@@ -151,8 +144,13 @@ make_tag_push_summary <- function(
     )
   }
 
-  copy_from_temp(report = "tag", code = project_code, td = td,
-                 overwrite = overwrite, out_dir = out_dir)
+  copy_from_temp(
+    report = "tag",
+    code = project_code,
+    td = td,
+    overwrite = overwrite,
+    out_dir = out_dir
+  )
 
   cli::cli_alert_success("   Done.")
 
