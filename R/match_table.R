@@ -106,7 +106,7 @@ prep_match_table <- function(
   extract <- data.table::data.table(extract)
 
   if (isFALSE("scientificname" %in% names(extract))) {
-   extract[, scientificname := character()]
+    extract[, scientificname := character()]
   }
 
   if (type == "tag") {

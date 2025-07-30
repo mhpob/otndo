@@ -215,7 +215,7 @@ extract_proj_name <- function(detection_file) {
   project <- data.table::fread(detection_file, nrows = 1)
 
   # Catch collection[cC]ode for camelCase (2025)
-  proj_index <- grepl('collection', names(project))
+  proj_index <- grepl("collection", names(project))
   project <- project[, ..proj_index]
 
   otn_response <- otn_query(project)
