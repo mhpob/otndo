@@ -209,8 +209,7 @@ match_map(new_otn_tables)
 new_station_summary <- station_table(new_matches, "receiver")
 
 reactable::reactable(new_station_summary)
-`
-``
+```
 </figure>
 
 ```{r results='asis', echo=FALSE}
