@@ -40,14 +40,13 @@
 #' )
 #' }
 make_tag_push_summary <- function(
-  matched = NULL,
-  update_push_log = FALSE,
-  since = NULL,
-  sensor_decoding = NULL,
-  out_dir = getwd(),
-  rmd = FALSE,
-  overwrite = FALSE
-) {
+    matched = NULL,
+    update_push_log = FALSE,
+    since = NULL,
+    sensor_decoding = NULL,
+    out_dir = getwd(),
+    rmd = FALSE,
+    overwrite = FALSE) {
   # Try to provide a helpful error if no files are provided.
   if (is.null(matched)) {
     cli::cli_abort(
