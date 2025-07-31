@@ -36,5 +36,4 @@ test_that("networks without species info (ACT) work", {
   expect_true(
     all(is.na(tbl_no_spp$Species))
   )
-
 })

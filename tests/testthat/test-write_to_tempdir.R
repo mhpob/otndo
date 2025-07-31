@@ -36,7 +36,6 @@ test_that("writes and converts deployment data", {
     deployment$deploy_lon,
     "double"
   )
-
 })
 
 
