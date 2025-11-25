@@ -1,0 +1,189 @@
+# Data Push Summaries
+
+``` r
+library(otndo)
+```
+
+Oh, boy; oh, boy! Here it is: one of the [three yearly data
+pushes](https://members.oceantrack.org/faq#autotoc-item-autotoc-6) and
+you’re ready to see all of the new data that have been matched to other
+projects in OTN or one of its nodes
+([ACT](https://www.theactnetwork.com/),
+[FACT](https://secoora.org/fact/), *et al.*).
+
+What now? What’s been updated? Who might I contact for more information?
+Well, `make_receiver_push_summary` and `make_tag_push_summary` are here
+to help.
+
+## Getting your files
+
+The first thing you’ll want to do is gather up your OTN [matched
+detections](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-1)
+or [detection
+extract](https://members.oceantrack.org/data/otn-detection-extract-documentation-matched-to-animals#autotoc-item-autotoc-2)
+files.
+
+### OTN projects
+
+We’ll use data from [Trudel 2018](#references)
+(<https://members.oceantrack.org/data/repository/pbsm>) to show how this
+might work. First, we’ll download the files.
+
+``` r
+# Create a folder in your temporary directory to hold the sample files
+td <- file.path(tempdir(), "otndo_test_files")
+dir.create(td)
+
+# Download deployment metadata
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"
+  ),
+  destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
+  # Note "mode = 'wb' is needed to download Excel files
+  mode = "wb"
+)
+
+# Download qualified detections
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_qualified_detections_2018.zip"
+  ),
+  destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
+)
+
+# Download unqualified detections
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_unqualified_detections_2018.zip"
+  ),
+  destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
+)
+```
+
+Now, just note where the files are saved. This will make it easier to
+pass into the smmary functions later.
+
+``` r
+qualified_otn <- file.path(td, "pbsm_qualified_detections_2018.zip")
+unqualified_otn <- file.path(td, "pbsm_unqualified_detections_2018.zip")
+deployment_otn <- file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
+```
+
+We can do the same for matched detections
+
+``` r
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/",
+    "detection-extracts/pbsm_matched_detections_2018.zip"
+  ),
+  destfile = file.path(td, "pbsm_matched_detections_2018.zip")
+)
+
+matched_otn <- file.path(td, "pbsm_matched_detections_2018.zip")
+```
+
+### ACT/MATOS projects
+
+If you’re a member of ACT (your project lives in the MATOS database),
+you can access your files via the [`matos`
+package](https://matos.obrien.page). Two functions in `matos` wrap
+`otndo`’s `make_*_summary` functions and will automatically download the
+necessary files for you. See
+[`matos::matos_tag_summary`](https://matos.obrien.page/reference/matos_tag_summary.html)
+and
+[`matos::matos_receiver_summary`](https://matos.obrien.page/reference/matos_receiver_summary.html)
+for more details.
+
+### FACT projects
+
+At the time of this writing, there is no streamlined way to get FACT
+data from [Research Workspace](https://researchworkspace.com/). Before
+moving on to the next steps, make sure you have the necessary files
+downloaded.
+
+## Running the functions
+
+The summary functions conduct a bit of data cleaning on the front end
+and then run everything through a [Quarto](https://quarto.org/) or
+[RMarkdown](https://rmarkdown.rstudio.com/) template report. The
+functions use Quarto by default, but RMarkdown will be selected if:
+
+1.  Quarto is not installed on the computer, or
+2.  the `rmd` argument is set to `TRUE`.
+
+``` r
+# Compiles with Quarto (default)
+make_receiver_push_summary(
+  qualified = qualified_otn,
+  unqualified = unqualified_otn,
+  deployment = deployment_otn,
+  rmd = F
+)
+
+# Compiles with RMarkdown
+make_receiver_push_summary(
+  qualified = qualified_otn,
+  unqualified = unqualified_otn,
+  deployment = deployment_otn,
+  rmd = T
+)
+```
+
+Functionality is identical for `make_tag_push_summary`:
+
+``` r
+make_tag_push_summary(matched = matched_otn)
+```
+
+## New matches “since” a certain date
+
+Usually we want to know what has changed since the OTN nodes crossed
+over and talked to each other (a “data push”). This is usually when we
+get within-node detections, as well. These are nominally scheduled for
+February, July, and October. Crossover dates are stored within `otndo`;
+the package is updated with new dates when a data push occurs.
+
+You can also provide a date to the “since” argument to see a summary of
+all of the data that have been updated since that date.
+
+``` r
+make_tag_push_summary(
+  matched = matched_otn,
+  since = "2018-05-01"
+)
+```
+
+## Suggestions to improve the push summaries
+
+I am always open to suggestions on what could be added to change to make
+this more useful for you. Please [open an issue on
+GitHub](https://github.com/mhpob/matos/issues) or [email
+me](mailto:mike@obrien.page) with your thoughts.
+
+## Errors and how to fix them
+
+    Could not determine mime type for `~\Matcheddetections_layer.fgb'
+    Error: pandoc document conversion failed with error 63
+
+This error is created by an old version of the [`mapview`
+package](https://r-spatial.github.io/mapview/) (pre-June 2021) and has
+to do with the package’s switch to using a [file
+geodatabase](https://pro.arcgis.com/en/pro-app/latest/help/data/geodatabases/manage-file-gdb/file-geodatabases.htm)
+to increase plotting performance. To fix this, you have two options:
+
+1.  Update `mapview` (suggested), or
+2.  Run `mapviewOptions(fgb = FALSE)` before attempting to run
+    `make_receiver_push_summary` or `make_tag_push_summary`. Note that
+    this will make the report build more slowly.
+
+## References
+
+Trudel, Marc. “A Pilot Study to Investigate the Migration of Atlantic
+Salmon Post-Smolts and Their Interactions with Aquaculture in
+Passamaquoddy Bay, New Brunswick, Canada.” Ocean Tracking Network, 2018.
+<https://members.oceantrack.org/project?ccode=PBSM>.

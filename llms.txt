@@ -1,0 +1,227 @@
+# otndo
+
+*entiendo* /ˌenˈtjendo/ \[ˌẽn̪ˈt̪jẽn̪.̪o\]   
+Spanish, 1st person indicative; “*I understand*”
+
+***otndo*** /ˌoʊˈtjendo/ \[ˌoʊ̪ˈt̪jẽn̪.d̪o\]  
+English, bad pun; “*I understand (OTN data)*”
+
+The purpose of `otndo` is to provide a high-level summary of your
+acoustic telemetry transmitter matches from the Ocean Tracking Network,
+all while putting the “network” back in “tracking network” by noting the
+related projects and investigators.
+
+## Installation
+
+You can install the most-up-to-date version from
+[R-universe](https://mhpob.r-universe.dev/otndo) or
+[GitHub](https://github.com/mhpob/otndo).
+
+R-universe:
+
+``` r
+install.packages(
+  "otndo",
+  repos = c(
+    "https://mhpob.r-universe.dev",
+    "https://cloud.r-project.org"
+  )
+)
+```
+
+GitHub:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("mhpob/otndo")
+```
+
+## Tag push summary example
+
+This is a basic example of how you might use `otndo` to summarize your
+transmitter data:
+
+``` r
+# Download some example data
+td <- file.path(tempdir(), "otndo_test_files")
+dir.create(td)
+
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/detection-extracts/",
+    "pbsm_matched_detections_2018.zip/@@download/file"
+  ),
+  destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
+  mode = "wb"
+)
+unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
+  exdir = td
+)
+
+
+# Make a tag push summary
+library(otndo)
+
+make_tag_push_summary(
+  matched = file.path(td, "pbsm_matched_detections_2018.csv")
+)
+```
+
+You will get a report in your working directory with a few goodies!
+
+A summary of the number of matched individuals and detections by
+researcher and project:
+![](reference/figures/readme-tag_t1_detection_table.png)
+
+The overall extent of the projects to which your tags have been matched:
+![](reference/figures/README-tag_f1_geographic_extent.png)
+
+When your fish were heard in each project:
+![](reference/figures/README-tag_f2_time.png)
+
+The ever-ubiquitous “abacus plot”, showing when each tag was heard,
+colored by project: ![](reference/figures/README-tag_f3_abacus.png)
+
+An interactive map showing detections by receiver:
+![](reference/figures/README-tag_f4_leaflet.png)
+
+A general estimate of the number of transmitters that were active at a
+given date: ![](reference/figures/README-tag_f5_transmitter_loss.png)
+
+## Receiver push summary example
+
+This is a basic example of how you might use `otndo` to summarize your
+receiver data:
+
+``` r
+# Download some example data
+
+## Deployment metadata
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/data-and-metadata/",
+    "archived-records/2018/pbsm-instrument-deployment-short-form-2018.xls/@@download/file"
+  ),
+  destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
+  mode = "wb"
+)
+
+## Qualified detections
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/detection-extracts/",
+    "pbsm_qualified_detections_2018.zip/@@download/file"
+  ),
+  destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
+)
+unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
+  exdir = td
+)
+
+## Unqualified detections
+download.file(
+  paste0(
+    "https://members.oceantrack.org/data/repository/pbsm/detection-extracts/",
+    "pbsm_unqualified_detections_2018.zip/@@download/file"
+  ),
+  destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
+)
+unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"),
+  exdir = td
+)
+
+
+# Make a receiver push summary
+make_receiver_push_summary(
+  qualified = file.path(td, "pbsm_qualified_detections_2018.csv"),
+  unqualified = file.path(td, "pbsm_unqualified_detections_2018.csv"),
+  deployment = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
+)
+```
+
+A summary of the number of matched individuals and detections by
+researcher and project:
+
+![](reference/figures/README-rec_t1.png)
+
+The overall extent of the projects associated with the tags your
+receivers have heard:
+
+![](reference/figures/README-rec_f1.png)
+
+When your receivers heard each project’s fish:
+
+![](reference/figures/README-rec_f2.png)
+
+A Gantt chart of your receivers’ deployments:
+
+![](reference/figures/README-rec_f3.png)
+
+The number of detections and individuals per receiver:
+
+![](reference/figures/README-rec_t2.png)
+
+An interactive map showing detections by receiver:
+
+![](reference/figures/README-rec_f4.png)
+
+A summary of your unmatched detections, including those that are likely
+false…
+
+![](reference/figures/README-rec_t3.png)
+
+…and those that may be real!
+
+![](reference/figures/README-rec_t4.png)
+
+A summary of when the unmatched detections occurred, by receiver:
+
+![](reference/figures/README-rec_f6.png)
+
+## Getting in contact
+
+If something doesn’t work the way it should or if you just need a little
+help, feel free to [open an issue on
+GitHub](https://github.com/mhpob/otndo/issues) or [email me (Mike
+O’Brien: obrien@umces.edu) directly](mailto:obrien@umces.edu).
+
+# Package index
+
+## All functions
+
+- [`deployment_gantt()`](https://otndo.obrien.page/reference/deployment_gantt.md)
+  : Create a Gantt-like chart of receiver deployments and recoveries
+- [`make_receiver_push_summary()`](https://otndo.obrien.page/reference/make_receiver_push_summary.md)
+  : Create summary reports of receiver project data from the OTN data
+  push
+- [`make_tag_push_summary()`](https://otndo.obrien.page/reference/make_tag_push_summary.md)
+  : Create summary reports of receiver project data from the OTN data
+  push
+- [`match_map()`](https://otndo.obrien.page/reference/match_map.md) :
+  Plot the geographic extent of OTN projects
+- [`match_table()`](https://otndo.obrien.page/reference/match_table.md)
+  : Create a reactable table of matched detections
+- [`matched_abacus()`](https://otndo.obrien.page/reference/matched_abacus.md)
+  : Create an abacus plot of matched detections
+- [`otn_query()`](https://otndo.obrien.page/reference/otn_query.md) :
+  Query the OTN Geoserver
+- [`prep_match_table()`](https://otndo.obrien.page/reference/prep_match_table.md)
+  : Prepare the detection match summary data
+- [`prep_station_spatial()`](https://otndo.obrien.page/reference/prep_station_spatial.md)
+  : Summarize OTN extract data by station and convert to a spatial
+  object
+- [`project_contacts()`](https://otndo.obrien.page/reference/project_contacts.md)
+  : Extract and combine the contacts for matched projects
+- [`remaining_transmitters()`](https://otndo.obrien.page/reference/remaining_transmitters.md)
+  : Estimate transmitters remaining in the system
+- [`station_table()`](https://otndo.obrien.page/reference/station_table.md)
+  : Create the station summary table
+- [`temporal_distribution()`](https://otndo.obrien.page/reference/temporal_distribution.md)
+  : Create an abacus plot of detections by project
+
+# Articles
+
+### Articles
+
+- [Data Push
+  Summaries](https://otndo.obrien.page/articles/data-push-summaries.md):
