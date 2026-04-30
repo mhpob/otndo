@@ -20,6 +20,7 @@ You can install the most-up-to-date version from
 R-universe:
 
 ``` r
+
 install.packages(
   "otndo",
   repos = c(
@@ -32,6 +33,7 @@ install.packages(
 GitHub:
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("mhpob/otndo")
 ```
@@ -42,6 +44,7 @@ This is a basic example of how you might use `otndo` to summarize your
 transmitter data:
 
 ``` r
+
 # Download some example data
 td <- file.path(tempdir(), "otndo_test_files")
 dir.create(td)
@@ -94,6 +97,7 @@ This is a basic example of how you might use `otndo` to summarize your
 receiver data:
 
 ``` r
+
 # Download some example data
 
 ## Deployment metadata

@@ -1,6 +1,7 @@
 # Data Push Summaries
 
 ``` r
+
 library(otndo)
 ```
 
@@ -30,6 +31,7 @@ We’ll use data from [Trudel 2018](#references)
 might work. First, we’ll download the files.
 
 ``` r
+
 # Create a folder in your temporary directory to hold the sample files
 td <- file.path(tempdir(), "otndo_test_files")
 dir.create(td)
@@ -68,6 +70,7 @@ Now, just note where the files are saved. This will make it easier to
 pass into the smmary functions later.
 
 ``` r
+
 qualified_otn <- file.path(td, "pbsm_qualified_detections_2018.zip")
 unqualified_otn <- file.path(td, "pbsm_unqualified_detections_2018.zip")
 deployment_otn <- file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
@@ -76,6 +79,7 @@ deployment_otn <- file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"
 We can do the same for matched detections
 
 ``` r
+
 download.file(
   paste0(
     "https://members.oceantrack.org/data/repository/pbsm/",
@@ -117,6 +121,7 @@ functions use Quarto by default, but RMarkdown will be selected if:
 2.  the `rmd` argument is set to `TRUE`.
 
 ``` r
+
 # Compiles with Quarto (default)
 make_receiver_push_summary(
   qualified = qualified_otn,
@@ -137,6 +142,7 @@ make_receiver_push_summary(
 Functionality is identical for `make_tag_push_summary`:
 
 ``` r
+
 make_tag_push_summary(matched = matched_otn)
 ```
 
@@ -152,6 +158,7 @@ You can also provide a date to the “since” argument to see a summary of
 all of the data that have been updated since that date.
 
 ``` r
+
 make_tag_push_summary(
   matched = matched_otn,
   since = "2018-05-01"
