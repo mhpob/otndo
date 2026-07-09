@@ -146,14 +146,86 @@ write_to_tempdir <- function(type, files, temp_dir) {
     files <- lapply(
       files,
       clean_otn_deployment
-    )
-  } else {
+    ) |>
+      data.table::rbindlist()
+  } else if (all(grepl("\\.csv$", files))) {
     # Select and read in csv files for qualified and unqualified detections
-    files <- lapply(files, data.table::fread, col.names = tolower)
-  }
+    files <- lapply(files, data.table::fread, col.names = tolower) |>
+      data.table::rbindlist()
+  } else if (all(grepl("\\.parquet$", files))) {
+    if (type %in% c("qualified", "unqualified")) {
+      master_schema <- arrow::schema(
+        basisOfRecord = arrow::string(),
+        institutionCode = arrow::string(),
+        collectionCode = arrow::string(),
+        dateLastModified = arrow::timestamp("ms"),
+        dateCollectedUTC = arrow::timestamp("ms"),
+        uncorrectedDateCollectedUTC = arrow::timestamp("ms"),
+        trackerCode = arrow::string(), # Unique to qualified detections
+        tagName = arrow::string(),
+        catalogNumber = arrow::string(),
+        station = arrow::string(),
+        receiverSerial = arrow::string(),
+        decimalLongitude = arrow::float64(),
+        decimalLatitude = arrow::float64(),
+        geodeticDatum = arrow::string(),
+        rcvrCatNumber = arrow::string(),
+        sensorType = arrow::string(),
+        sensorName = arrow::string(),
+        sensorRaw = arrow::float64(),
+        geometry = arrow::binary(),
+        contactPI = arrow::string(), # Unique to qualified detections
+        contactPOC = arrow::string(), # Unique to qualified detections
+        scientificName = arrow::string() # Unique to qualified detections
+      )
+      if (type == "unqualified") {
+        master_schema <- master_schema[-c(7, 20, 21, 22)]
+      }
+    }
 
-  #  Bind files together
-  files <- data.table::rbindlist(files)
+    if (type == "matched") {
+      master_schema <- arrow::schema(
+        collectionCode = arrow::string(),
+        catalogNumber = arrow::string(),
+        organismID = arrow::string(),
+        scientificName = arrow::string(),
+        commonName = arrow::string(),
+        dateLastModified = arrow::timestamp("ms"),
+        detectedBy = arrow::string(),
+        station = arrow::string(),
+        receiver = arrow::string(),
+        bottomDepth = arrow::float64(),
+        receiverDepth = arrow::float64(),
+        tagName = arrow::string(),
+        codeSpace = arrow::string(),
+        sensorName = arrow::string(),
+        sensorRaw = arrow::float64(),
+        sensorType = arrow::string(),
+        sensorValue = arrow::float64(),
+        sensorUnit = arrow::string(),
+        dateCollectedUTC = arrow::timestamp("ms"),
+        uncorrectedDateCollectedUTC = arrow::timestamp("ms"),
+        decimalLongitude = arrow::float64(),
+        decimalLatitude = arrow::float64(),
+        geodeticDatum = arrow::string(),
+        geometry = arrow::binary(),
+        localArea = arrow::string(),
+        citation = arrow::string(),
+        unqDetecID = arrow::string(),
+        contactPI = arrow::string(),
+        contactPOC = arrow::string()
+      )
+    }
+
+    files <- files |>
+      arrow::open_dataset(schema = master_schema) |>
+      data.table::as.data.table()
+    data.table::setnames(files, tolower)
+    files[,
+      geometry := paste(unlist(geometry), collapse = ""),
+      by = 1:nrow(files)
+    ]
+  }
 
   # adjust names for camelCase (OTN 2025)
   # for now, convert these back to old names

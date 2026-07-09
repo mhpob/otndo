@@ -20,5 +20,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Michael O'Brien \email{mike@obrien.page} (\href{https://orcid.org/0000-0003-1420-6395}{ORCID})
 
+Authors:
+\itemize{
+  \item Michael O'Brien \email{mike@obrien.page} (\href{https://orcid.org/0000-0003-1420-6395}{ORCID})
+}
+
 }
 \keyword{internal}
