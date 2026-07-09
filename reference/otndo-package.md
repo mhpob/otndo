@@ -17,3 +17,8 @@ Useful links:
 
 **Maintainer**: Michael O'Brien <mike@obrien.page>
 ([ORCID](https://orcid.org/0000-0003-1420-6395))
+
+Authors:
+
+- Michael O'Brien <mike@obrien.page>
+  ([ORCID](https://orcid.org/0000-0003-1420-6395))

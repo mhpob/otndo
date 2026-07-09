@@ -1,5 +1,15 @@
 # Changelog
 
+## otndo 0.4
+
+### v 0.4.0
+
+- Miscellaneous updates necessary to collaborate with the budding
+  [otndata package](https://otndata.obrien.page)
+  - Depend on the [arrow package](https://arrow.apache.org/docs/r) to
+    interface with new(ish) OTN parquet files.
+  - Hard-code in parquet schemas
+
 ## otndo 0.3
 
 ### v 0.3.4
