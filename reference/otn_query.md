@@ -25,11 +25,11 @@ the given projects
 ``` r
 otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB", "MDBSB"))
 #> $otn_resources_metadata_points
-#>                                                            FID collectioncode
-#>                                                         <char>         <char>
-#> 1: otn_resources_metadata_points.fid-62d99a16_19f472f2332_4aad            EST
-#> 2: otn_resources_metadata_points.fid-62d99a16_19f472f2332_4bd1       SCDNRDFP
-#> 3: otn_resources_metadata_points.fid-62d99a16_19f472f2332_4d68          MDBSB
+#>                                                             FID collectioncode
+#>                                                          <char>         <char>
+#> 1: otn_resources_metadata_points.fid-6a0242ca_19fc8ff1392_-52db            EST
+#> 2: otn_resources_metadata_points.fid-6a0242ca_19fc8ff1392_-5034          MDBSB
+#> 3: otn_resources_metadata_points.fid-6a0242ca_19fc8ff1392_-4d9a       SCDNRDFP
 #>    report
 #>    <lgcl>
 #> 1:     NA
@@ -38,18 +38,18 @@ otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB", "MDBSB"))
 #>                                                                                                               resource_full_name
 #>                                                                                                                           <char>
 #> 1:                                                                        Shedd Aquarium Bahamas Sharks and Ray Research Program
-#> 2:                                                                                    Diadromous Fishes statewide movement in SC
-#> 3: Influence of Turbine Construction Noise on Black Sea Bass Displacement and Physiological Condition in the MD Wind Energy Area
+#> 2: Influence of Turbine Construction Noise on Black Sea Bass Displacement and Physiological Condition in the MD Wind Energy Area
+#> 3:                                                                                    Diadromous Fishes statewide movement in SC
 #>          ocean seriescode    status collaborationtype totalrecords    id
 #>         <char>     <char>    <char>            <char>       <lgcl> <int>
-#> 1: NW ATLANTIC  OTNGlobal   ongoing              Data           NA   391
-#> 2: NW ATLANTIC       FACT   ongoing        Deployment           NA   692
-#> 3: NW ATLANTIC        ACT completed              Data           NA  1100
+#> 1: NW ATLANTIC  OTNGlobal   ongoing              Data           NA   384
+#> 2: NW ATLANTIC        ACT completed              Data           NA  1064
+#> 3: NW ATLANTIC       FACT   ongoing        Deployment           NA  1779
 #>                                                                          the_geom
 #>                                                                            <char>
 #> 1: POLYGON ((-76.85 23.62, -76.85 24.83, -75.9 24.83, -75.9 23.62, -76.85 23.62))
-#> 2:     POLYGON ((-82.46 25.41, -82.46 35.99, -78 35.99, -78 25.41, -82.46 25.41))
-#> 3: POLYGON ((-79.53 33.88, -79.53 42.26, -68.1 42.26, -68.1 33.88, -79.53 33.88))
+#> 2: POLYGON ((-79.53 33.88, -79.53 42.26, -68.1 42.26, -68.1 33.88, -79.53 33.88))
+#> 3:     POLYGON ((-82.46 25.41, -82.46 35.99, -78 35.99, -78 25.41, -82.46 25.41))
 #> 
 #> $project_metadata
 #> Empty data.table (0 rows and 29 cols): FID,collectioncode,id,seriescode,collaborationtype,shortname...
