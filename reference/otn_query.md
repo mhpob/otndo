@@ -27,9 +27,9 @@ otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB", "MDBSB"))
 #> $otn_resources_metadata_points
 #>                                                             FID collectioncode
 #>                                                          <char>         <char>
-#> 1: otn_resources_metadata_points.fid-6a0242ca_19fc8ff1392_-52db            EST
-#> 2: otn_resources_metadata_points.fid-6a0242ca_19fc8ff1392_-5034          MDBSB
-#> 3: otn_resources_metadata_points.fid-6a0242ca_19fc8ff1392_-4d9a       SCDNRDFP
+#> 1: otn_resources_metadata_points.fid-4955a833_1a06893e7bc_-7a95            EST
+#> 2: otn_resources_metadata_points.fid-4955a833_1a06893e7bc_-77ee          MDBSB
+#> 3: otn_resources_metadata_points.fid-4955a833_1a06893e7bc_-7554       SCDNRDFP
 #>    report
 #>    <lgcl>
 #> 1:     NA
