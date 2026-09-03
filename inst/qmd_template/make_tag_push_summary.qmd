@@ -146,7 +146,7 @@ station_summary <- station_table(matched, type = "tag")
 ```{r}
 #| label: detection-map-leaflet
 #| fig-cap: Figure 4. Number of detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
-
+options("mapviewBasemaps" = c("Esri.WorldGrayCanvas","Stadia.AlidadeSmoothDark","OpenStreetMap", "Esri.WorldImagery", "OpenTopoMap"))
 station_spatial <- prep_station_spatial(matched, type = "tag")
 
 mapview::mapview(station_spatial,

@@ -139,7 +139,7 @@ reactable::reactable(station_summary)
 ```{r}
 #| label: detection-map-leaflet
 #| fig-cap: Figure 4. Number of detections per project receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
-
+options("mapviewBasemaps", c("Esri.WorldGrayCanvas","Stadia.AlidadeSmoothDark","OpenStreetMap","Esri.WorldImagery", "OpenTopoMap"))
 station_spatial <- prep_station_spatial(qualified, type = "receiver")
 
 mapview::mapview(
