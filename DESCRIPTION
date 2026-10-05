@@ -1,6 +1,6 @@
 Package: otndo
 Title: Understand your OTN data
-Version: 0.4.0
+Version: 0.5.0
 Authors@R: 
     person("Michael", "O'Brien", , "mike@obrien.page", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1420-6395"))
@@ -18,12 +18,12 @@ Imports:
     cli,
     data.table,
     ggplot2,
-    reactable,
-    sf,
-    mapview,
+    htmlwidgets,
     quarto,
+    reactable,
     readxl,
     rmarkdown,
+    sf,
     utils
 Suggests: 
     curl,

@@ -1,0 +1,12 @@
+# dependencies:
+#  - name: maplibre-gl
+#    version: 6.12.0
+#   #  src: "htmlwidgets/lib/maplibre"
+#    src:
+#     href: "https://unpkg.com/maplibre-gl@6.12.0/dist/"
+#    stylesheet: "maplibre-gl.css"
+#   #  attachment: 
+#   #   - "maplibre-gl.mjs"
+#   #   - "maplibre-gl-shared.mjs"
+#   #   - "maplibre-gl-worker.mjs"
+
