@@ -16,9 +16,6 @@ test_that("Non-ACT projects are summarized", {
 })
 
 
-
-
-
 test_that("Renders with RMarkdown", {
   make_tag_push_summary(
     matched = pbsm$matched,
@@ -33,8 +30,6 @@ test_that("Renders with RMarkdown", {
 
   expect_true(any(grepl("tag_push_summary", list.files(getwd()))))
 })
-
-
 
 
 test_that("Zipped files are unzipped", {
@@ -52,8 +47,6 @@ test_that("Zipped files are unzipped", {
     expect_message("Writing report") |>
     expect_message("Done")
 })
-
-
 
 
 test_that("No new detections since \"since\" date works", {
@@ -105,16 +98,12 @@ test_that("Default \"since\" date works", {
 })
 
 
-
-
 test_that("errors with no input data", {
   expect_error(
     make_tag_push_summary(),
     "Must provide at least one set of OTN-matched detections"
   )
 })
-
-
 
 
 test_that("update_push_log arg works", {
@@ -127,7 +116,6 @@ test_that("update_push_log arg works", {
     expect_message("Writing report") |>
     expect_message("Done")
 })
-
 
 
 test_that("Pre-existing directory is overwritten", {

@@ -36,8 +36,6 @@ qual[fieldnumber == "A69-9001-24615", "scientificname"] <- "Acipenser brevirostr
 saveRDS(data.frame(qual), "tests/testthat/fixtures/pbsm_qualified.rds")
 
 
-
-
 ## Unqualified detections
 download.file("https://members.oceantrack.org/data/repository/pbsm/detection-extracts/pbsm_unqualified_detections_2018.zip/@@download/file",
   destfile = file.path(td, "pbsm_unqualified_detections_2018.zip"),
@@ -60,8 +58,6 @@ unqual <- unqual[, .(
 set.seed(8675309)
 unqual <- unqual[sample(1:.N, 100)]
 saveRDS(data.frame(unqual), "tests/testthat/fixtures/pbsm_unqualified.rds")
-
-
 
 
 ## Deployment records

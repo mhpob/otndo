@@ -24,7 +24,7 @@ receiver_map <- function(
 
   x <- list(
     geojson = readLines(file.path(tempdir(), "temporary_data.geojson")) |>
-      paste(collapse = ''),
+      paste(collapse = ""),
     center = as.numeric(
       sf::st_coordinates(
         sf::st_centroid(
@@ -45,11 +45,11 @@ receiver_map <- function(
 
   # create widget
   htmlwidgets::createWidget(
-    name = 'receiver_map',
+    name = "receiver_map",
     x,
     width = width,
     height = height,
-    package = 'otndo',
+    package = "otndo",
     elementId = elementId,
     sizingPolicy = htmlwidgets::sizingPolicy(
       viewer.fill = TRUE,
