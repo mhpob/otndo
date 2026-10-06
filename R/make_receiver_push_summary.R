@@ -80,14 +80,15 @@
 #' )
 #' }
 make_receiver_push_summary <- function(
-    qualified = NULL,
-    unqualified = NULL,
-    update_push_log = FALSE,
-    deployment = NULL,
-    out_dir = getwd(),
-    since = NULL,
-    rmd = FALSE,
-    overwrite = FALSE) {
+  qualified = NULL,
+  unqualified = NULL,
+  update_push_log = FALSE,
+  deployment = NULL,
+  out_dir = getwd(),
+  since = NULL,
+  rmd = FALSE,
+  overwrite = FALSE
+) {
   # Try to provide a helpful error if there are missing files.
   if (any(is.null(qualified), is.null(unqualified), is.null(deployment))) {
     cli::cli_abort(

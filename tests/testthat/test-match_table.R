@@ -20,7 +20,6 @@ test_that("creates a js table for receiver data", {
 })
 
 
-
 test_that("creates a js table for tag data", {
   matched <- read.csv(pbsm$matched)
 
@@ -41,7 +40,6 @@ test_that("creates a js table for tag data", {
     )
   )
 })
-
 
 
 test_that("species columnn is dropped if no species present", {

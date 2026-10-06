@@ -17,8 +17,6 @@ test_that("Projects are summarized", {
 })
 
 
-
-
 test_that("Zipped files are unzipped", {
   zip(gsub("csv$", "zip", pbsm$qualified), pbsm$qualified, flags = "-q")
   zip(gsub("csv$", "zip", pbsm$unqualified), pbsm$unqualified, flags = "-q")
@@ -40,7 +38,6 @@ test_that("Zipped files are unzipped", {
 })
 
 
-
 test_that("Renders with RMarkdown", {
   make_receiver_push_summary(
     qualified = pbsm$qualified,
@@ -59,8 +56,6 @@ test_that("Renders with RMarkdown", {
 })
 
 
-
-
 test_that("No new matches since \"since\" date works", {
   make_receiver_push_summary(
     qualified = pbsm$qualified,
@@ -75,8 +70,6 @@ test_that("No new matches since \"since\" date works", {
 
   expect_true(any(grepl("receiver_push_summary", list.files(getwd()))))
 })
-
-
 
 
 test_that("Default \"since\" date works", {
@@ -118,16 +111,12 @@ test_that("Default \"since\" date works", {
 })
 
 
-
-
 test_that("errors with no input data", {
   expect_error(
     make_receiver_push_summary(),
     "Must provide at least one each of qualified.*unqualified detections.*deployment"
   )
 })
-
-
 
 
 test_that("update_push_log arg works", {
@@ -142,8 +131,6 @@ test_that("update_push_log arg works", {
     expect_message("Writing report") |>
     expect_message("Done")
 })
-
-
 
 
 test_that("Pre-existing directory is overwritten", {
