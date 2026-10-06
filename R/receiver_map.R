@@ -6,25 +6,25 @@
 receiver_map <- function(
   data,
   styles = list(
-    "Positron" = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    "Dark Matter" = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-    "Voyager" = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-    "OpenStreetMap" = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    "Open Waters Bathymetry" = "https://tiles.openwaters.io/seascape/{z}/{x}/{y}.webp",
+    "Esri Light Gray" = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    "Esri Street Map" = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    "Esri World Imagery" = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
   ),
   width = "100%",
   height = "100vh",
   elementId = NULL
 ) {
+  tmp <- tempfile(fileext = ".geojson")
   sf::st_write(
     data,
-    file.path(tempdir(), "temporary_data.geojson"),
+    tmp,
     quiet = TRUE,
     delete_dsn = TRUE
   )
 
   x <- list(
-    geojson = readLines(file.path(tempdir(), "temporary_data.geojson")) |>
-      paste(collapse = ""),
+    geojson = jsonlite::fromJSON(tmp, simplifyVector = FALSE),
     center = as.numeric(
       sf::st_coordinates(
         sf::st_centroid(
@@ -39,6 +39,8 @@ receiver_map <- function(
     min_indiv = min(data$Individuals, na.rm = TRUE),
     max_indiv = max(data$Individuals, na.rm = TRUE)
   )
+
+  unlink(tmp)
 
   # create widget
   htmlwidgets::createWidget(
