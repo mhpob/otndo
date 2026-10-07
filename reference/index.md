@@ -25,6 +25,8 @@
   object
 - [`project_contacts()`](https://otndo.obrien.page/reference/project_contacts.md)
   : Extract and combine the contacts for matched projects
+- [`receiver_map()`](https://otndo.obrien.page/reference/receiver_map.md)
+  : Receiver map
 - [`remaining_transmitters()`](https://otndo.obrien.page/reference/remaining_transmitters.md)
   : Estimate transmitters remaining in the system
 - [`station_table()`](https://otndo.obrien.page/reference/station_table.md)

@@ -55,7 +55,6 @@ matched <- read.csv(file.path(
 prep_station_table(matched, type = "tag")
 
 
-
 # For receiver data
 download.file(
   paste0(
