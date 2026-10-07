@@ -51,7 +51,8 @@ test_that("extracts matched", {
 test_that("is network agnostic", {
   write.csv(
     data.frame(collectioncode = "ACT.TAILWINDS"),
-    file.path(td, "testfile.csv")
+    file.path(td, "testfile.csv"),
+    row.names = FALSE
   )
 
   act <- extract_proj_name(file.path(td, "testfile.csv"))
@@ -69,7 +70,8 @@ test_that("is network agnostic", {
 
   write.csv(
     data.frame(collectioncode = "TAILWINDS"),
-    file.path(td, "testfile2.csv")
+    file.path(td, "testfile2.csv"),
+    row.names = FALSE
   )
 
   act2 <- extract_proj_name(file.path(td, "testfile.csv"))
