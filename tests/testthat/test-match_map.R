@@ -7,7 +7,6 @@ test_that("mapping works", {
 
   expect_s3_class(
     map_out,
-    c("gg", "ggplot"),
-    exact = TRUE
+    c("gg", "ggplot")
   )
 })

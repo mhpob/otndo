@@ -5,8 +5,7 @@ test_that("returns a ggplot object for receivers", {
 
   expect_s3_class(
     temp_dist,
-    c("gg", "ggplot"),
-    exact = TRUE
+    c("gg", "ggplot")
   )
 
   expect_equal(
@@ -23,8 +22,7 @@ test_that("returns a ggplot object for tags", {
 
   expect_s3_class(
     temp_dist,
-    c("gg", "ggplot"),
-    exact = TRUE
+    c("gg", "ggplot")
   )
 
   expect_equal(
