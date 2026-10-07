@@ -54,7 +54,6 @@ test_that("right things are returned for tags", {
 })
 
 
-
 qualified <- read.csv(pbsm$qualified)
 
 test_that("returns correct class for receivers", {
@@ -107,8 +106,6 @@ test_that("right things are returned for receivers", {
     all(grepl("@|", pi_table$POC_emails))
   )
 })
-
-
 
 
 test_that("Multiple sets of tag PIs per project are summarized", {

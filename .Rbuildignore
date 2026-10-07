@@ -8,3 +8,4 @@
 ^LICENSE\.md$
 ^CNAME$
 ^\files_for_testing\$
+^inst/htmlwidgets/Dockerfile$

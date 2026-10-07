@@ -141,6 +141,8 @@ provided_file_unzip <- function(files, temp_dir) {
 #' @rdname utilities-make
 #' @keywords internal
 write_to_tempdir <- function(type, files, temp_dir) {
+  geometry <- NULL
+
   if (type == "deployment") {
     # Read in and clean deployment data
     files <- lapply(

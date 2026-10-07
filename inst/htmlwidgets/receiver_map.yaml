@@ -1,0 +1,6 @@
+dependencies:
+  - name: leaflet
+    version: 1.9.4
+    src: "htmlwidgets/lib/leaflet"
+    script: "leaflet.js"
+    stylesheet: "leaflet.css"

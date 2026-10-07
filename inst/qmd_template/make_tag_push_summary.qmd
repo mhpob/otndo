@@ -28,7 +28,6 @@ knitr::opts_chunk$set(
 
 library(otndo)
 library(data.table)
-library(mapview)
 library(reactable)
 ```
 
@@ -148,23 +147,9 @@ station_summary <- station_table(matched, type = "tag")
 ```{r}
 #| label: detection-map-leaflet
 #| fig-cap: Figure 4. Number of detections per receiver. Points represent receiver locations, while size and color reflect the number of detections at that location.
-mapview::mapviewOptions(
-  basemaps = c(
-    "Esri.WorldGrayCanvas",
-    "OpenStreetMap",
-    "Esri.WorldImagery",
-    "OpenTopoMap"
-  )
-)
-
 station_spatial <- prep_station_spatial(matched, type = "tag")
 
-mapview::mapview(
-  station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
-)
+receiver_map(station_spatial)
 ```
 
 
@@ -246,12 +231,7 @@ reactable(new_station_summary)
 
 new_station_spatial <- prep_station_spatial(new_matches, type = "tag")
 
-mapview::mapview(
-  new_station_spatial,
-  zcol = "Detections",
-  cex = "Individuals",
-  layer.name = "Matched detections"
-)
+receiver_map(new_station_spatial)
 ```
 
 ```{r results='asis', echo=FALSE}

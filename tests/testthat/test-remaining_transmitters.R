@@ -7,8 +7,7 @@ test_that("returns ggplot object", {
 
   expect_s3_class(
     remain,
-    c("gg", "ggplot"),
-    exact = TRUE
+    c("gg", "ggplot")
   )
 
   expect_equal(

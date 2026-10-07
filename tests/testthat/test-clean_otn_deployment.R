@@ -24,8 +24,6 @@ test_that("expected classes", {
 })
 
 
-
-
 test_that("date times are parsed", {
   deployment_xl <- clean_otn_deployment(pbsm$deployment)
 
@@ -38,8 +36,6 @@ test_that("date times are parsed", {
     "UTC"
   )
 })
-
-
 
 
 test_that("Works when no header present", {
@@ -79,7 +75,6 @@ test_that("guesses sheet", {
     clean_otn_deployment(pbsm$deployment)
   )
 })
-
 
 
 test_that("accepts csv with header", {
@@ -129,8 +124,6 @@ test_that("accepts csv with header", {
 })
 
 
-
-
 test_that("accepts csv without header", {
   deployment_csv <- file.path(
     td,
@@ -172,8 +165,6 @@ test_that("accepts csv without header", {
 })
 
 
-
-
 test_that("Correct names when no internal transmitter columns", {
   deployment_sheet1 <- file.path(
     td,
@@ -196,8 +187,6 @@ test_that("Correct names when no internal transmitter columns", {
     )
   )
 })
-
-
 
 
 test_that("errors if not a CSV or XLS(X)", {

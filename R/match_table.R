@@ -56,8 +56,9 @@
 #'
 #' @export
 match_table <- function(
-    extract,
-    type = c("tag", "receiver")) {
+  extract,
+  type = c("tag", "receiver")
+) {
   mt_data <- prep_match_table(extract, type)
 
   reactable::reactable(
@@ -96,8 +97,9 @@ match_table <- function(
 #'
 #' @inheritParams match_table
 prep_match_table <- function(
-    extract,
-    type = c("tag", "receiver")) {
+  extract,
+  type = c("tag", "receiver")
+) {
   . <- collectioncode <- project_name <- resource_full_name <- PI <- POC <-
     network <- code <- detections <- individuals <- PI_emails <- POC_emails <-
     station <- Station <- Detections <- Individuals <- longitude <- latitude <-
