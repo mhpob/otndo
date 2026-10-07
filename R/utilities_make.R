@@ -285,8 +285,6 @@ write_to_tempdir <- function(type, files, temp_dir) {
 #' @keywords internal
 
 extract_proj_name <- function(detection_file) {
-  `..proj_index` <- NULL
-
   # Pull in the first row of the data in order to grab the collection code
   project <- data.table::fread(detection_file, nrows = 1)
 
