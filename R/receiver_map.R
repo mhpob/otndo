@@ -33,16 +33,16 @@ receiver_map <- function(
     center = as.numeric(
       sf::st_coordinates(
         sf::st_centroid(
-          sf::st_combine(data)
+          sf::st_combine(sf_data)
         )
       )
     ),
-    bbox = as.numeric(sf::st_bbox(data)),
+    bbox = as.numeric(sf::st_bbox(sf_data)),
     backgrounds = backgrounds,
-    min_det = min(data$Detections, na.rm = TRUE),
-    max_det = max(data$Detections, na.rm = TRUE),
-    min_indiv = min(data$Individuals, na.rm = TRUE),
-    max_indiv = max(data$Individuals, na.rm = TRUE)
+    min_det = min(sf_data$Detections, na.rm = TRUE),
+    max_det = max(sf_data$Detections, na.rm = TRUE),
+    min_indiv = min(sf_data$Individuals, na.rm = TRUE),
+    max_indiv = max(sf_data$Individuals, na.rm = TRUE)
   )
 
   unlink(tmp)
