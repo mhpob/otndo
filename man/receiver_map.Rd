@@ -5,8 +5,8 @@
 \title{Receiver map}
 \usage{
 receiver_map(
-  data,
-  styles = list(`Open Waters Bathymetry` =
+  sf_data,
+  backgrounds = list(`Open Waters Bathymetry` =
     "https://tiles.openwaters.io/seascape/{z}/{x}/{y}.webp", `Esri Light Gray` =
     "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
     `Esri Street Map` =
@@ -17,6 +17,17 @@ receiver_map(
   height = "100vh",
   elementId = NULL
 )
+}
+\arguments{
+\item{sf_data}{spatial data in sf format.}
+
+\item{backgrounds}{list of URLs to XYZ endpoints of raster tile backgrounds}
+
+\item{width}{width of the widget. Defaults to 100\%.}
+
+\item{height}{height of the widget. Defaults to 100vh.}
+
+\item{elementId}{ID of the widget. Defaults to randomly-generated ID.}
 }
 \description{
 Create a simple interactive map of receivers using Leaflet.

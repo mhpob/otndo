@@ -184,9 +184,9 @@ HTMLWidgets.widget({
 
           // Add basemap layers dynamically
           const baseMaps = {};
-          if (x.styles && Object.keys(x.styles).length > 0) {
+          if (x.backgrounds && Object.keys(x.backgrounds).length > 0) {
             let isFirst = true;
-            for (const [name, url] of Object.entries(x.styles)) {
+            for (const [name, url] of Object.entries(x.backgrounds)) {
               const layer = createTileLayer(url);
               baseMaps[name] = layer;
               if (isFirst) {
