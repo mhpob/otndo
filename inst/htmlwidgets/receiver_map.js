@@ -136,45 +136,9 @@ HTMLWidgets.widget({
       });
     }
 
-    // Interpolate radius based on detections
-    function getRadius(val, minVal, maxVal) {
-      if (maxVal === minVal || isNaN(val)) return 6;
-      const norm = Math.max(0, Math.min(1, (val - minVal) / (maxVal - minVal)));
-      return 4 + norm * 11;
-    }
-
-    // Interpolate color based on individuals
-    function getColor(val, minVal, maxVal) {
-      if (maxVal === minVal || isNaN(val)) return "#cc4678";
-      const norm = Math.max(0, Math.min(1, (val - minVal) / (maxVal - minVal)));
-
-      let c1, c2, factor;
-      if (norm < 0.5) {
-        c1 = [13, 8, 135];    // #0d0887
-        c2 = [204, 70, 120];  // #cc4678
-        factor = norm * 2;
-      } else {
-        c1 = [204, 70, 120];  // #cc4678
-        c2 = [240, 249, 33];  // #f0f921
-        factor = (norm - 0.5) * 2;
-      }
-      const r = Math.round(c1[0] + factor * (c2[0] - c1[0]));
-      const g = Math.round(c1[1] + factor * (c2[1] - c1[1]));
-      const b = Math.round(c1[2] + factor * (c2[2] - c1[2]));
-      return `rgb(${r},${g},${b})`;
-    }
-
     return {
 
       renderValue: function (x) {
-
-        let geojson;
-        try {
-          geojson = typeof x.geojson === 'string' ? JSON.parse(x.geojson) : x.geojson;
-        } catch (err) {
-          console.error("❌ Failed to parse GeoJSON:", err);
-          return;
-        }
 
         if (!map) {
           map = L.map(el.id, {
@@ -182,7 +146,7 @@ HTMLWidgets.widget({
             attributionControl: true
           });
 
-          // Add basemap layers dynamically
+          // Add basemap
           const baseMaps = {};
           if (x.backgrounds && Object.keys(x.backgrounds).length > 0) {
             let isFirst = true;
@@ -200,41 +164,70 @@ HTMLWidgets.widget({
             }
           }
 
-          // Add GeoJSON receiver points
-          L.geoJSON(geojson, {
-            pointToLayer: function (feature, latlng) {
-              const props = feature.properties || {};
-              const det = props.Detections;
-              const indiv = props.Individuals;
-
-              const marker = L.circleMarker(latlng, {
-                radius: getRadius(det, x.min_det, x.max_det),
-                fillColor: getColor(indiv, x.min_indiv, x.max_indiv),
+          /// Add data, iterating over station
+          L.layerGroup(
+            x.station.map((stationName, i) =>
+              L.circleMarker([x.lat[i], x.lon[i]], {
+                radius: x.ind_radius[i],
+                fillColor: x.det_colors[i],
                 color: '#ffffff',
                 weight: 1.5,
                 opacity: 1,
                 fillOpacity: 0.85
-              });
+              }).bindTooltip(`
+      <div style="font-family: system-ui, sans-serif; font-size: 12px; padding: 2px;">
+        <div><strong>Station:</strong> ${stationName || 'N/A'}</div>
+        <div><strong>Detections:</strong> ${x.Detections[i] ?? 'N/A'}</div>
+        <div><strong>Individuals:</strong> ${x.Individuals[i] ?? 'N/A'}</div>
+      </div>
+    `, { sticky: true })
+            )
+          ).addTo(map);
 
-              const tooltipContent = `
-                <div style="font-family: system-ui, sans-serif; font-size: 12px; padding: 2px;">
-                  <div><strong>Station:</strong> ${props.station ?? 'N/A'}</div>
-                  <div><strong>Detections:</strong> ${props.Detections ?? 'N/A'}</div>
-                  <div><strong>Individuals:</strong> ${props.Individuals ?? 'N/A'}</div>
-                </div>
-              `;
+          const legend = L.control({ position: 'bottomright' });
 
-              marker.bindTooltip(tooltipContent, { sticky: true });
-              return marker;
-            }
-          }).addTo(map);
+          legend.onAdd = function () {
+            const div = L.DomUtil.create('div', 'info legend');
+            div.style.cssText = 'background: white; padding: 10px; border-radius: 5px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-family: system-ui, sans-serif; font-size: 12px; line-height: 1.4;';
+
+            const leg = x.legend;
+            const gradientCss = `${leg.color_min}, #2A4880, #008194, #00BE7D, ${leg.color_max}`;
+
+            div.innerHTML = `  
+  <!-- Detections (Color) -->
+  <div style="margin-bottom: 8px;">
+    <div style="font-size: 11px; color: #555;">Detections</div>
+    <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+      <span>${leg.det_min}</span>
+      <div style="background: linear-gradient(to right, ${gradientCss}); height: 10px; width: 90px; border-radius: 2px; border: 1px solid #ccc;"></div>
+      <span>${leg.det_max}</span>
+    </div>
+  </div>
+
+  <!-- Individuals (Radius) -->
+  <div>
+    <div style="font-size: 11px; color: #555; margin-bottom: 4px;">Individuals</div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <span style="display: inline-block; width: ${leg.rad_min * 2}px; height: ${leg.rad_min * 2}px; border-radius: 50%; border: 1px solid #666; background: #ccc;"></span>
+        <span>${leg.ind_min}</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <span style="display: inline-block; width: ${leg.rad_max * 2}px; height: ${leg.rad_max * 2}px; border-radius: 50%; border: 1px solid #666; background: #ccc;"></span>
+        <span>${leg.ind_max}</span>
+      </div>
+    </div>
+  </div>
+`;
+
+            return div;
+          };
+
+          legend.addTo(map);
 
           // Set viewport bounds
-          if (x.bbox && x.bbox.length === 4) {
-            map.fitBounds([
-              [x.bbox[1], x.bbox[0]],
-              [x.bbox[3], x.bbox[2]]
-            ], { padding: [20, 20] });
+          if (x.bbox?.length === 4) {
+            map.fitBounds([[x.bbox[1], x.bbox[0]], [x.bbox[3], x.bbox[2]]], { padding: [20, 20] });
           } else if (x.center) {
             map.setView([x.center[1], x.center[0]], 10);
           }
