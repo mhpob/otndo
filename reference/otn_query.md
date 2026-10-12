@@ -25,11 +25,11 @@ the given projects
 ``` r
 otn_query(c("EST", "FACT.SCDNRDFP", "ACT.MDBSB", "MDBSB"))
 #> $otn_resources_metadata_points
-#>                                                              FID collectioncode
-#>                                                           <char>         <char>
-#> 1: otn_resources_metadata_points.fid--4e516ab0_1a131b2d4ef_-78a6            EST
-#> 2: otn_resources_metadata_points.fid--4e516ab0_1a131b2d4ef_-75ff          MDBSB
-#> 3: otn_resources_metadata_points.fid--4e516ab0_1a131b2d4ef_-7365       SCDNRDFP
+#>                                                             FID collectioncode
+#>                                                          <char>         <char>
+#> 1: otn_resources_metadata_points.fid--4e516ab0_1a131c38968_-f07            EST
+#> 2: otn_resources_metadata_points.fid--4e516ab0_1a131c38968_-c60          MDBSB
+#> 3: otn_resources_metadata_points.fid--4e516ab0_1a131c38968_-9c6       SCDNRDFP
 #>    report
 #>    <lgcl>
 #> 1:     NA
