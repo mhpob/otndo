@@ -174,14 +174,7 @@ HTMLWidgets.widget({
                 weight: 1.5,
                 opacity: 1,
                 fillOpacity: 0.85
-              }).bindTooltip(`
-  <div style="font-family: system-ui, sans-serif; font-size: 12px; padding: 2px; max-width: 260px;">
-    <div><strong>Station:</strong> ${stationName || 'N/A'}</div>
-    <div><strong>Detections:</strong> ${x.Detections[i] ?? 'N/A'}</div>
-    <div><strong>Individuals:</strong> ${x.Individuals[i] ?? 'N/A'}</div>
-    ${x.Species?.[i] ? `<div><strong>Species:</strong> ${x.Species[i]}</div>` : ''}
-  </div>
-`, { sticky: true })
+              }).bindTooltip(x.tooltip[i], { sticky: true })
             )
           ).addTo(map);
 
@@ -190,37 +183,7 @@ HTMLWidgets.widget({
           legend.onAdd = function () {
             const div = L.DomUtil.create('div', 'info legend');
             div.style.cssText = 'background: white; padding: 10px; border-radius: 5px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-family: system-ui, sans-serif; font-size: 12px; line-height: 1.4;';
-
-            const leg = x.legend;
-            const gradientCss = `${leg.color_min}, #2A4880, #008194, #00BE7D, ${leg.color_max}`;
-
-            div.innerHTML = `  
-  <!-- Detections (Color) -->
-  <div style="margin-bottom: 8px;">
-    <div style="font-size: 11px; color: #555;">Detections</div>
-    <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
-      <span>${leg.det_min}</span>
-      <div style="background: linear-gradient(to right, ${gradientCss}); height: 10px; width: 90px; border-radius: 2px; border: 1px solid #ccc;"></div>
-      <span>${leg.det_max}</span>
-    </div>
-  </div>
-
-  <!-- Individuals (Radius) -->
-  <div>
-    <div style="font-size: 11px; color: #555; margin-bottom: 4px;">Individuals</div>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <div style="display: flex; align-items: center; gap: 4px;">
-        <span style="display: inline-block; width: ${leg.rad_min * 2}px; height: ${leg.rad_min * 2}px; border-radius: 50%; border: 1px solid #666; background: #ccc;"></span>
-        <span>${leg.ind_min}</span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 4px;">
-        <span style="display: inline-block; width: ${leg.rad_max * 2}px; height: ${leg.rad_max * 2}px; border-radius: 50%; border: 1px solid #666; background: #ccc;"></span>
-        <span>${leg.ind_max}</span>
-      </div>
-    </div>
-  </div>
-`;
-
+            div.innerHTML = x.legend;
             return div;
           };
 

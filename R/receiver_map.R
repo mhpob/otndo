@@ -49,9 +49,81 @@ receiver_map <- function(
       4 + normalize(indivs) * 10
     }
   }
-
-  det_palette <- colorRampPalette(hcl.colors(7))(256)
   ind_radii <- ind_radius(sf_df$Individuals)
+
+  ## Build tooltip HTML
+  species_html <- if ("Species" %in% names(sf_df)) {
+    spec_vals <- as.character(sf_df$Species)
+    has_spec <- !is.na(spec_vals) & spec_vals != "" & spec_vals != "NA"
+    ifelse(
+      has_spec,
+      paste0("<div><strong>Species:</strong> ", spec_vals, "</div>"),
+      ""
+    )
+  } else {
+    character(nrow(sf_df))
+  }
+
+  tooltip_html <- paste0(
+    '<div style="font-family: system-ui, sans-serif; font-size: 12px; padding: 2px; max-width: 260px;">',
+    '<div><strong>Station:</strong> ',
+    ifelse(
+      is.na(sf_df$station) | sf_df$station == "",
+      "N/A",
+      as.character(sf_df$station)
+    ),
+    '</div>',
+    '<div><strong>Detections:</strong> ',
+    ifelse(is.na(sf_df$Detections), "N/A", as.character(sf_df$Detections)),
+    '</div>',
+    '<div><strong>Individuals:</strong> ',
+    ifelse(is.na(sf_df$Individuals), "N/A", as.character(sf_df$Individuals)),
+    '</div>',
+    species_html,
+    '</div>'
+  )
+
+  ## Build legend HTML
+  det_range <- range(sf_df$Detections, na.rm = TRUE)
+  ind_range <- range(sf_df$Individuals, na.rm = TRUE)
+  rad_range <- range(ind_radii, na.rm = TRUE) * 2
+
+  legend_html <- sprintf(
+    '
+  <div style="font-weight: bold; margin-bottom: 6px;">Legend</div>
+  
+  <div style="margin-bottom: 8px;">
+    <div style="font-size: 11px; color: #555;">Detections</div>
+    <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+      <span>%d</span>
+      <div style="background: linear-gradient(to right, %s); height: 10px; width: 90px; border-radius: 2px; border: 1px solid #ccc;"></div>
+      <span>%d</span>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size: 11px; color: #555; margin-bottom: 4px;">Individuals</div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <span style="display: inline-block; width: %.1fpx; height: %.1fpx; border-radius: 50%%; border: 1px solid #666; background: #ccc;"></span>
+        <span>%d</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <span style="display: inline-block; width: %.1fpx; height: %.1fpx; border-radius: 50%%; border: 1px solid #666; background: #ccc;"></span>
+        <span>%d</span>
+      </div>
+    </div>
+  </div>',
+    det_range[1],
+    paste(det_palette[round(seq(1, 256, length.out = 5))], collapse = ", "),
+    det_range[2],
+    rad_range[1],
+    rad_range[1],
+    ind_range[1],
+    rad_range[2],
+    rad_range[2],
+    ind_range[2]
+  )
 
   x <- c(
     sf_df,
@@ -68,16 +140,8 @@ receiver_map <- function(
       det_colors = det_colors(sf_df$Detections),
       ind_radius = ind_radii,
 
-      legend = list(
-        det_min = min(sf_df$Detections, na.rm = TRUE),
-        det_max = max(sf_df$Detections, na.rm = TRUE),
-        color_min = det_palette[1],
-        color_max = det_palette[256],
-        ind_min = min(sf_df$Individuals, na.rm = TRUE),
-        ind_max = max(sf_df$Individuals, na.rm = TRUE),
-        rad_min = min(ind_radii, na.rm = TRUE),
-        rad_max = max(ind_radii, na.rm = TRUE)
-      )
+      tooltip = tooltip_html,
+      legend = legend_html
     )
   )
 
