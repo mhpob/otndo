@@ -175,12 +175,13 @@ HTMLWidgets.widget({
                 opacity: 1,
                 fillOpacity: 0.85
               }).bindTooltip(`
-      <div style="font-family: system-ui, sans-serif; font-size: 12px; padding: 2px;">
-        <div><strong>Station:</strong> ${stationName || 'N/A'}</div>
-        <div><strong>Detections:</strong> ${x.Detections[i] ?? 'N/A'}</div>
-        <div><strong>Individuals:</strong> ${x.Individuals[i] ?? 'N/A'}</div>
-      </div>
-    `, { sticky: true })
+  <div style="font-family: system-ui, sans-serif; font-size: 12px; padding: 2px; max-width: 260px;">
+    <div><strong>Station:</strong> ${stationName || 'N/A'}</div>
+    <div><strong>Detections:</strong> ${x.Detections[i] ?? 'N/A'}</div>
+    <div><strong>Individuals:</strong> ${x.Individuals[i] ?? 'N/A'}</div>
+    ${x.Species?.[i] ? `<div><strong>Species:</strong> ${x.Species[i]}</div>` : ''}
+  </div>
+`, { sticky: true })
             )
           ).addTo(map);
 

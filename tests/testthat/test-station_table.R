@@ -4,7 +4,7 @@ test_that("makes correct classes and names for receivers", {
   tbl_qual <- station_table(qual, type = "receiver")
 
   expect_s3_class(tbl_qual, c("data.table", "data.frame"), exact = TRUE)
-  expect_named(tbl_qual, c("Station", "Detections", "Individuals"))
+  expect_named(tbl_qual, c("Station", "Detections", "Individuals", "Species"))
 
   expect_type(tbl_qual$Station, "character")
   expect_type(tbl_qual$Detections, "integer")
@@ -18,7 +18,10 @@ test_that("makes correct classes and names for tags", {
   tbl_matched <- station_table(matched, type = "tag")
 
   expect_s3_class(tbl_matched, c("data.table", "data.frame"), exact = TRUE)
-  expect_named(tbl_matched, c("PI", "Project", "Station", "Detections", "Individuals"))
+  expect_named(
+    tbl_matched,
+    c("PI", "Project", "Station", "Detections", "Individuals", "Species")
+  )
 
   expect_type(tbl_matched$PI, "character")
   expect_type(tbl_matched$Project, "character")
@@ -45,5 +48,27 @@ test_that("is the right length for tags", {
   expect_equal(
     length(unique(matched$station)),
     nrow(tbl_match)
+  )
+})
+
+test_that("drops species if none present (receivers)", {
+  qual <- read.csv(pbsm$qualified)
+  qual$scientificname <- NA
+
+  tbl_qual <- station_table(qual, type = "receiver")
+  expect_named(
+    tbl_qual,
+    c("Station", "Detections", "Individuals")
+  )
+})
+
+test_that("makes correct classes and names for tags", {
+  matched <- read.csv(pbsm$matched)
+  matched$scientificname <- NA
+
+  tbl_matched <- station_table(matched, type = "tag")
+  expect_named(
+    tbl_matched,
+    c("PI", "Project", "Station", "Detections", "Individuals")
   )
 })

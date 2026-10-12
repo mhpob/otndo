@@ -66,20 +66,38 @@ station_table <- function(extract, type = c("tag", "receiver")) {
     detections <- individuals <- NULL
 
   extract <- data.table::data.table(extract)
+  has_species <- any(!is.na(extract$scientificname))
 
   if (type == "tag") {
     pis <- project_contacts(extract, type = type)
 
     station_summary <- merge(
       extract[, list(detections = .N), by = c("station", "detectedby")],
-      unique(extract, by = c("tagname", "station"))[, list(
-        individuals = .N,
-        long = mean(longitude),
-        lat = mean(latitude)
-      ),
-      by = "station"
+      unique(extract, by = c("tagname", "station"))[,
+        list(
+          individuals = .N,
+          long = mean(longitude),
+          lat = mean(latitude)
+        ),
+        by = "station"
       ]
     )
+
+    if (has_species) {
+      station_summary <- merge(
+        station_summary,
+        unique(extract, by = c("station", "scientificname"))[, c(
+          "station",
+          "scientificname"
+        )] |>
+          _[
+            scientificname != "",
+            .(scientificname = paste(scientificname, collapse = "; ")),
+            by = "station"
+          ],
+        all = TRUE
+      )
+    }
 
     data.table::setnames(station_summary, "detectedby", "project_name")
 
@@ -91,30 +109,61 @@ station_table <- function(extract, type = c("tag", "receiver")) {
   } else {
     station_summary <- merge(
       extract[, list(detections = .N), by = "station"],
-      unique(extract, by = c("fieldnumber", "station"))[, list(
-        individuals = .N,
-        long = mean(longitude),
-        lat = mean(latitude)
-      ),
-      by = "station"
+      unique(extract, by = c("fieldnumber", "station"))[,
+        list(
+          individuals = .N,
+          long = mean(longitude),
+          lat = mean(latitude)
+        ),
+        by = "station"
       ]
     )
+
+    if (has_species) {
+      station_summary <- merge(
+        station_summary,
+        unique(extract, by = c("station", "scientificname"))[, c(
+          "station",
+          "scientificname"
+        )] |>
+          _[
+            scientificname != "",
+            .(scientificname = paste(scientificname, collapse = "; ")),
+            by = "station"
+          ],
+        all = TRUE
+      )
+    }
   }
 
   data.table::setorder(station_summary, -lat, long)
 
   if (type == "tag") {
-    station_summary <- station_summary[, list(
-      PI, project_name, station,
-      detections, individuals
-    )]
-    data.table::setnames(station_summary, c(
-      "PI", "Project", "Station",
-      "Detections", "Individuals"
-    ))
+    col_names <- c("PI", "project_name", "station", "detections", "individuals")
+    col_names_pretty <- c(
+      "PI",
+      "Project",
+      "Station",
+      "Detections",
+      "Individuals"
+    )
+    if (has_species) {
+      col_names <- c(col_names, "scientificname")
+      col_names_pretty <- c(col_names_pretty, "Species")
+    }
+
+    station_summary <- station_summary[, ..col_names]
+    data.table::setnames(station_summary, col_names_pretty)
   } else {
-    station_summary <- station_summary[, list(station, detections, individuals)]
-    data.table::setnames(station_summary, c("Station", "Detections", "Individuals"))
+    col_names <- c("station", "detections", "individuals")
+    col_names_pretty <- c("Station", "Detections", "Individuals")
+    if (has_species) {
+      col_names <- c(col_names, "scientificname")
+      col_names_pretty <- c(col_names_pretty, "Species")
+    }
+
+    station_summary <- station_summary[, ..col_names]
+    data.table::setnames(station_summary, col_names_pretty)
   }
 
   station_summary[]

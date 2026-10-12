@@ -21,6 +21,9 @@ receiver_map <- function(
   elementId = NULL
 ) {
   sf_df <- as.data.frame(sf::st_drop_geometry(sf_data))
+  if ("Species" %in% names(sf_df)) {
+    sf_df$Species <- gsub("; ", "<br>", sf_df$Species)
+  }
   coords <- sf::st_coordinates(sf_data)
   sf_df$lat <- coords[, 2]
   sf_df$lon <- coords[, 1]
