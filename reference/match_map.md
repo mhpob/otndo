@@ -21,5 +21,5 @@ match_map(otn_tables)
 match_map(
   otn_query("MDWEA")
 )
-#> Error in fortify(data): object 'natural_earth_110m' not found
+
 ```
