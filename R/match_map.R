@@ -42,11 +42,11 @@ match_map <- function(otn_tables) {
       deg <- abs(x)
 
       if (type == "lon") {
-        dir <- ifelse(x < 0, "\u00B0W", ifelse(x > 0, "\u00B0E", "°"))
-        dir[x == 0 | abs(x) == 180] <- "°"
+        dir <- ifelse(x < 0, "\u00B0W", ifelse(x > 0, "\u00B0E", "\u00B0"))
+        dir[x == 0 | abs(x) == 180] <- "\u00B0"
       } else {
-        dir <- ifelse(x < 0, "\u00B0S", ifelse(x > 0, "\u00B0N", "°"))
-        dir[x == 0] <- "°"
+        dir <- ifelse(x < 0, "\u00B0S", ifelse(x > 0, "\u00B0N", "\u00B0"))
+        dir[x == 0] <- "\u00B0"
       }
 
       paste0(deg, dir)
