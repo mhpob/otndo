@@ -18,6 +18,7 @@ Imports:
     cli,
     data.table,
     ggplot2,
+    grDevices,
     htmlwidgets,
     jsonlite,
     quarto,

@@ -4,13 +4,20 @@ test_that("receiver data gives correct classes", {
 
   expect_s3_class(
     rec_spat,
-    c("sf", "data.table", "data.frame"),
+    c("data.table", "data.frame"),
     exact = TRUE
   )
 
   expect_named(
     rec_spat,
-    c("station", "Detections", "Individuals", "Species", "geometry")
+    c(
+      "station",
+      "Detections",
+      "Individuals",
+      "longitude",
+      "latitude",
+      "Species"
+    )
   )
 })
 
@@ -21,7 +28,7 @@ test_that("tag data gives correct classes", {
 
   expect_s3_class(
     tag_spat,
-    c("sf", "data.table", "data.frame"),
+    c("data.table", "data.frame"),
     exact = TRUE
   )
 
@@ -31,10 +38,11 @@ test_that("tag data gives correct classes", {
       "station",
       "Detections",
       "Individuals",
+      "longitude",
+      "latitude",
       "PI",
       "detectedby",
-      "Species",
-      "geometry"
+      "Species"
     )
   )
 })
@@ -46,7 +54,7 @@ test_that("Species column dropped if no species (receivers)", {
 
   expect_named(
     rec_spat,
-    c("station", "Detections", "Individuals", "geometry")
+    c("station", "Detections", "Individuals", "longitude", "latitude")
   )
 })
 
@@ -61,9 +69,10 @@ test_that("Species column dropped if no species (tag)", {
       "station",
       "Detections",
       "Individuals",
+      "longitude",
+      "latitude",
       "PI",
-      "detectedby",
-      "geometry"
+      "detectedby"
     )
   )
 })

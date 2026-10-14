@@ -63,7 +63,7 @@
 #' @export
 station_table <- function(extract, type = c("tag", "receiver")) {
   longitude <- latitude <- project_name <- PI <- lat <- long <- station <-
-    detections <- individuals <- NULL
+    detections <- individuals <- scientificname <- NULL
 
   extract <- data.table::data.table(extract)
   has_species <- any(!is.na(extract$scientificname))

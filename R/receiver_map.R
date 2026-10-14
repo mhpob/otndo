@@ -29,7 +29,7 @@ receiver_map <- function(
       (max(x) - min(x))
   }
 
-  det_palette <- colorRampPalette(hcl.colors(5))(256)
+  det_palette <- grDevices::colorRampPalette(grDevices::hcl.colors(5))(256)
   det_colors <- function(dets) {
     if (length(dets) <= 1) {
       "#0800ff"

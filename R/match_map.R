@@ -11,6 +11,8 @@
 #' @export
 
 match_map <- function(otn_tables) {
+  latitude <- longitude <- id <- NULL
+
   # Convert WKT to data.table
   strip_coords <- function(geom) {
     coords <- gsub("^POLYGON \\(\\((.*)\\)\\)$", "\\1", geom) |>
@@ -56,7 +58,7 @@ match_map <- function(otn_tables) {
 
   ggplot2::ggplot() +
     ggplot2::geom_path(
-      data = natural_earth_110m,
+      data = otndo:::natural_earth_110m,
       ggplot2::aes(x = longitude, y = latitude, group = id)
     ) +
     ggplot2::geom_path(
