@@ -16,6 +16,8 @@
   : Create a reactable table of matched detections
 - [`matched_abacus()`](https://otndo.obrien.page/reference/matched_abacus.md)
   : Create an abacus plot of matched detections
+- [`natural_earth_110m`](https://otndo.obrien.page/reference/natural_earth_110m.md)
+  : Natural Earth's 110m coastline
 - [`otn_query()`](https://otndo.obrien.page/reference/otn_query.md) :
   Query the OTN Geoserver
 - [`prep_match_table()`](https://otndo.obrien.page/reference/prep_match_table.md)
