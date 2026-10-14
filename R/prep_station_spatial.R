@@ -73,13 +73,5 @@ prep_station_spatial <- function(extract, type = c("tag", "receiver")) {
     station_spatial <- station_spatial[, ..col_names]
   }
 
-  sf::st_as_sf(
-    station_spatial,
-    coords = c("longitude", "latitude"),
-    crs = 4326
-  )
-
-  # For use if switching to leaflet
-  # station_center <- st_centroid(st_union(station_spatial))
-  # station_center <- st_coordinates(station_center)
+  station_spatial
 }

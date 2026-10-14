@@ -11,24 +11,69 @@
 #' @export
 
 match_map <- function(otn_tables) {
-  natural_earth <- sf::st_read(
-    system.file("ne_110m_coastline.gpkg",
-      package = "otndo"
-    ),
-    quiet = T
-  )
+  # Convert WKT to data.table
+  strip_coords <- function(geom) {
+    coords <- gsub("^POLYGON \\(\\((.*)\\)\\)$", "\\1", geom) |>
+      strsplit(split = ", ") |>
+      lapply(function(.) {
+        do.call(rbind, strsplit(., split = " ")) |>
+          data.frame()
+      }) |>
+      data.table::rbindlist(idcol = "id")
 
-  otn_sf <- otn_tables$otn_resources_metadata_points |>
-    sf::st_as_sf(wkt = "the_geom", crs = 4326)
-  otn_limits <- sf::st_bbox(otn_sf)
+    names(coords) <- c("id", "longitude", "latitude")
+
+    coords[, longitude := as.numeric(longitude)]
+    coords[, latitude := as.numeric(latitude)]
+
+    coords
+  }
+
+  fmt_degree <- function(type = c("lon", "lat")) {
+    type <- match.arg(type)
+
+    function(x) {
+      if (length(x) == 0) {
+        return(character(0))
+      }
+
+      deg <- abs(x)
+
+      if (type == "lon") {
+        dir <- ifelse(x < 0, "°W", ifelse(x > 0, "°E", "°"))
+        dir[x == 0 | abs(x) == 180] <- "°"
+      } else {
+        dir <- ifelse(x < 0, "°S", ifelse(x > 0, "°N", "°"))
+        dir[x == 0] <- "°"
+      }
+
+      paste0(deg, dir)
+    }
+  }
+
+  otn_bboxes <- otn_tables$otn_resources_metadata_points$the_geom |>
+    strip_coords()
 
   ggplot2::ggplot() +
-    ggplot2::geom_sf(data = natural_earth) +
-    ggplot2::geom_sf(data = otn_sf, fill = NA, color = "blue") +
-    ggplot2::coord_sf(
-      xlim = c(otn_limits["xmin"] - 5, otn_limits["xmax"] + 5),
-      ylim = c(otn_limits["ymin"] - 5, otn_limits["ymax"] + 5)
+    ggplot2::geom_path(
+      data = natural_earth_110m,
+      ggplot2::aes(x = longitude, y = latitude, group = id)
     ) +
-    ggplot2::labs(title = "Geographic extent of detected projects") +
+    ggplot2::geom_path(
+      data = otn_bboxes,
+      ggplot2::aes(x = longitude, y = latitude, group = id),
+      color = "blue"
+    ) +
+    ggplot2::coord_quickmap(
+      xlim = range(otn_bboxes$longitude) + c(-5, 5),
+      ylim = range(otn_bboxes$latitude) + c(-5, 5)
+    ) +
+    ggplot2::scale_x_continuous(labels = fmt_degree("lon")) +
+    ggplot2::scale_y_continuous(labels = fmt_degree("lat")) +
+    ggplot2::labs(
+      title = "Geographic extent of detected projects",
+      x = NULL,
+      y = NULL
+    ) +
     ggplot2::theme_minimal()
 }

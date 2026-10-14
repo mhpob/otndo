@@ -2,14 +2,14 @@
 #'
 #' Create a simple interactive map of receivers using Leaflet.
 #'
-#' @param sf_data spatial data in sf format.
+#' @param spatial_data spatial data in sf format.
 #' @param backgrounds list of URLs to XYZ endpoints of raster tile backgrounds
 #' @param width width of the widget. Defaults to 100%.
 #' @param height height of the widget. Defaults to 100vh.
 #' @param elementId ID of the widget. Defaults to randomly-generated ID.
 #' @export
 receiver_map <- function(
-  sf_data,
+  spatial_data,
   backgrounds = list(
     "Open Waters Bathymetry" = "https://tiles.openwaters.io/seascape/{z}/{x}/{y}.webp",
     "Esri Light Gray" = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
@@ -20,13 +20,9 @@ receiver_map <- function(
   height = "100vh",
   elementId = NULL
 ) {
-  sf_df <- as.data.frame(sf::st_drop_geometry(sf_data))
-  if ("Species" %in% names(sf_df)) {
-    sf_df$Species <- gsub("; ", "<br>", sf_df$Species)
+  if ("Species" %in% names(spatial_data)) {
+    spatial_data$Species <- gsub("; ", "<br>", spatial_data$Species)
   }
-  coords <- sf::st_coordinates(sf_data)
-  sf_df$lat <- coords[, 2]
-  sf_df$lon <- coords[, 1]
 
   normalize <- function(x) {
     (x - min(x)) /
@@ -49,11 +45,11 @@ receiver_map <- function(
       4 + normalize(indivs) * 10
     }
   }
-  ind_radii <- ind_radius(sf_df$Individuals)
+  ind_radii <- ind_radius(spatial_data$Individuals)
 
   ## Build tooltip HTML
-  species_html <- if ("Species" %in% names(sf_df)) {
-    spec_vals <- as.character(sf_df$Species)
+  species_html <- if ("Species" %in% names(spatial_data)) {
+    spec_vals <- as.character(spatial_data$Species)
     has_spec <- !is.na(spec_vals) & spec_vals != "" & spec_vals != "NA"
     ifelse(
       has_spec,
@@ -61,31 +57,39 @@ receiver_map <- function(
       ""
     )
   } else {
-    character(nrow(sf_df))
+    character(nrow(spatial_data))
   }
 
   tooltip_html <- paste0(
     '<div style="font-family: system-ui, sans-serif; font-size: 12px; padding: 2px; max-width: 260px;">',
     '<div><strong>Station:</strong> ',
     ifelse(
-      is.na(sf_df$station) | sf_df$station == "",
+      is.na(spatial_data$station) | spatial_data$station == "",
       "N/A",
-      as.character(sf_df$station)
+      as.character(spatial_data$station)
     ),
     '</div>',
     '<div><strong>Detections:</strong> ',
-    ifelse(is.na(sf_df$Detections), "N/A", as.character(sf_df$Detections)),
+    ifelse(
+      is.na(spatial_data$Detections),
+      "N/A",
+      as.character(spatial_data$Detections)
+    ),
     '</div>',
     '<div><strong>Individuals:</strong> ',
-    ifelse(is.na(sf_df$Individuals), "N/A", as.character(sf_df$Individuals)),
+    ifelse(
+      is.na(spatial_data$Individuals),
+      "N/A",
+      as.character(spatial_data$Individuals)
+    ),
     '</div>',
     species_html,
     '</div>'
   )
 
   ## Build legend HTML
-  det_range <- range(sf_df$Detections, na.rm = TRUE)
-  ind_range <- range(sf_df$Individuals, na.rm = TRUE)
+  det_range <- range(spatial_data$Detections, na.rm = TRUE)
+  ind_range <- range(spatial_data$Individuals, na.rm = TRUE)
   rad_range <- range(ind_radii, na.rm = TRUE) * 2
 
   legend_html <- sprintf(
@@ -126,18 +130,20 @@ receiver_map <- function(
   )
 
   x <- c(
-    sf_df,
+    spatial_data,
     list(
-      center = as.numeric(
-        sf::st_coordinates(
-          sf::st_centroid(
-            sf::st_combine(sf_data)
-          )
-        )
+      center = c(
+        mean(spatial_data$latitude),
+        mean(spatial_data$longitude)
       ),
-      bbox = as.numeric(sf::st_bbox(sf_data)),
+      bbox = c(
+        min(spatial_data$latitude),
+        min(spatial_data$longitude),
+        max(spatial_data$latitude),
+        max(spatial_data$longitude)
+      ),
       backgrounds = backgrounds,
-      det_colors = det_colors(sf_df$Detections),
+      det_colors = det_colors(spatial_data$Detections),
       ind_radius = ind_radii,
 
       tooltip = tooltip_html,

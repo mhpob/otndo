@@ -24,13 +24,14 @@ Imports:
     readxl,
     reactable,
     rmarkdown,
-    sf,
     utils
 Suggests: 
     curl,
     knitr,
+    sf,
     testthat (>= 3.0.0),
     writexl
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0
+LazyData: true

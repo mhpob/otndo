@@ -5,7 +5,7 @@
 \title{Receiver map}
 \usage{
 receiver_map(
-  sf_data,
+  spatial_data,
   backgrounds = list(`Open Waters Bathymetry` =
     "https://tiles.openwaters.io/seascape/{z}/{x}/{y}.webp", `Esri Light Gray` =
     "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
@@ -19,7 +19,7 @@ receiver_map(
 )
 }
 \arguments{
-\item{sf_data}{spatial data in sf format.}
+\item{spatial_data}{spatial data in sf format.}
 
 \item{backgrounds}{list of URLs to XYZ endpoints of raster tile backgrounds}
 

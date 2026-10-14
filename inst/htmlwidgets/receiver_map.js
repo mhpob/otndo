@@ -167,7 +167,7 @@ HTMLWidgets.widget({
           /// Add data, iterating over station
           L.layerGroup(
             x.station.map((stationName, i) =>
-              L.circleMarker([x.lat[i], x.lon[i]], {
+              L.circleMarker([x.latitude[i], x.longitude[i]], {
                 radius: x.ind_radius[i],
                 fillColor: x.det_colors[i],
                 color: '#ffffff',
@@ -191,9 +191,10 @@ HTMLWidgets.widget({
 
           // Set viewport bounds
           if (x.bbox?.length === 4) {
-            map.fitBounds([[x.bbox[1], x.bbox[0]], [x.bbox[3], x.bbox[2]]], { padding: [20, 20] });
+            map.fitBounds([[x.bbox[0], x.bbox[1]], [x.bbox[2], x.bbox[3]]], 
+              { padding: [20, 20] });
           } else if (x.center) {
-            map.setView([x.center[1], x.center[0]], 10);
+            map.setView([x.center[0], x.center[1]], 10);
           }
         }
       },
