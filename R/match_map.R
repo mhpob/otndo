@@ -42,10 +42,10 @@ match_map <- function(otn_tables) {
       deg <- abs(x)
 
       if (type == "lon") {
-        dir <- ifelse(x < 0, "°W", ifelse(x > 0, "°E", "°"))
+        dir <- ifelse(x < 0, "\u00B0W", ifelse(x > 0, "\u00B0E", "°"))
         dir[x == 0 | abs(x) == 180] <- "°"
       } else {
-        dir <- ifelse(x < 0, "°S", ifelse(x > 0, "°N", "°"))
+        dir <- ifelse(x < 0, "\u00B0S", ifelse(x > 0, "\u00B0N", "°"))
         dir[x == 0] <- "°"
       }
 
@@ -58,7 +58,7 @@ match_map <- function(otn_tables) {
 
   ggplot2::ggplot() +
     ggplot2::geom_path(
-      data = otndo:::natural_earth_110m,
+      data = natural_earth_110m,
       ggplot2::aes(x = longitude, y = latitude, group = id)
     ) +
     ggplot2::geom_path(
