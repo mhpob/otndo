@@ -13,10 +13,7 @@ receiver_map(
     `Esri Street Map` =
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     `Esri World Imagery` =
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"),
-  width = "100%",
-  height = "100vh",
-  elementId = NULL
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}")
 )
 ```
 
@@ -29,15 +26,3 @@ receiver_map(
 - backgrounds:
 
   list of URLs to XYZ endpoints of raster tile backgrounds
-
-- width:
-
-  width of the widget. Defaults to 100%.
-
-- height:
-
-  height of the widget. Defaults to 100vh.
-
-- elementId:
-
-  ID of the widget. Defaults to randomly-generated ID.
