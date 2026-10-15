@@ -4,9 +4,6 @@
 #'
 #' @param spatial_data spatial data in sf format.
 #' @param backgrounds list of URLs to XYZ endpoints of raster tile backgrounds
-#' @param width width of the widget. Defaults to 100%.
-#' @param height height of the widget. Defaults to 100vh.
-#' @param elementId ID of the widget. Defaults to randomly-generated ID.
 #' @export
 receiver_map <- function(
   spatial_data,
@@ -15,10 +12,7 @@ receiver_map <- function(
     "Esri Light Gray" = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
     "Esri Street Map" = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     "Esri World Imagery" = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-  ),
-  width = "100%",
-  height = "100vh",
-  elementId = NULL
+  )
 ) {
   if ("Species" %in% names(spatial_data)) {
     spatial_data$Species <- gsub("; ", "<br>", spatial_data$Species)
@@ -155,13 +149,10 @@ receiver_map <- function(
   htmlwidgets::createWidget(
     name = "receiver_map",
     x,
-    width = width,
-    height = height,
     package = "otndo",
-    elementId = elementId,
     sizingPolicy = htmlwidgets::sizingPolicy(
-      viewer.fill = TRUE,
-      browser.fill = TRUE,
+      viewer.fill = FALSE,
+      browser.fill = FALSE,
       padding = 0,
       viewer.padding = 0,
       browser.padding = 0

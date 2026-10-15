@@ -12,22 +12,13 @@ receiver_map(
     `Esri Street Map` =
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     `Esri World Imagery` =
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"),
-  width = "100\%",
-  height = "100vh",
-  elementId = NULL
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}")
 )
 }
 \arguments{
 \item{spatial_data}{spatial data in sf format.}
 
 \item{backgrounds}{list of URLs to XYZ endpoints of raster tile backgrounds}
-
-\item{width}{width of the widget. Defaults to 100\%.}
-
-\item{height}{height of the widget. Defaults to 100vh.}
-
-\item{elementId}{ID of the widget. Defaults to randomly-generated ID.}
 }
 \description{
 Create a simple interactive map of receivers using Leaflet.
