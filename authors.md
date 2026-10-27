@@ -11,12 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/mhpob/otndo/blob/main/DESCRIPTION)
 
 O'Brien M (2026). *otndo: Understand your OTN data*. R package version
-0.5.1, <https://mhpob.github.io/otndo/>.
+0.5.2, <https://mhpob.github.io/otndo/>.
 
     @Manual{,
       title = {otndo: Understand your OTN data},
       author = {Michael O'Brien},
       year = {2026},
-      note = {R package version 0.5.1},
+      note = {R package version 0.5.2},
       url = {https://mhpob.github.io/otndo/},
     }
