@@ -27,9 +27,14 @@ clean_otn_deployment <- function(deployment) {
       sheet_id <- 1
     }
 
-    # Check for header: If the first row has no columns, it likely contains it.
+    # Check for header: If cell A1 is empty, it likely contains a header.
     if (
-      ncol(readxl::read_excel(deployment, sheet = sheet_id, range = "A1")) == 0
+      is.na(readxl::read_excel(
+        deployment,
+        sheet = sheet_id,
+        range = "A1",
+        col_names = " "
+      )[1, 1])
     ) {
       deployment <- readxl::read_excel(deployment, sheet = sheet_id, skip = 3)
     } else {
