@@ -11,11 +11,11 @@
 #' @export
 
 match_map <- function(otn_tables) {
-  latitude <- longitude <- id <- NULL
+  latitude <- longitude <- id <- .N <- NULL
 
   # Convert WKT to data.table
   strip_coords <- function(geom) {
-    coords <- gsub("^POLYGON \\(\\((.*)\\)\\)$", "\\1", geom) |>
+    coords <- gsub("^(?:POLYGON|POINT) \\(\\(?([^()]+)\\)?\\)$", "\\1", geom) |>
       strsplit(split = ", ") |>
       lapply(function(.) {
         do.call(rbind, strsplit(., split = " ")) |>
@@ -55,16 +55,12 @@ match_map <- function(otn_tables) {
 
   otn_bboxes <- otn_tables$otn_resources_metadata_points$the_geom |>
     strip_coords()
+  otn_bboxes_size <- otn_bboxes[, .N, by = "id"]
 
-  ggplot2::ggplot() +
+  base_plot <- ggplot2::ggplot() +
     ggplot2::geom_path(
       data = natural_earth_110m,
       ggplot2::aes(x = longitude, y = latitude, group = id)
-    ) +
-    ggplot2::geom_path(
-      data = otn_bboxes,
-      ggplot2::aes(x = longitude, y = latitude, group = id),
-      color = "blue"
     ) +
     ggplot2::coord_quickmap(
       xlim = range(otn_bboxes$longitude) + c(-5, 5),
@@ -78,4 +74,24 @@ match_map <- function(otn_tables) {
       y = NULL
     ) +
     ggplot2::theme_minimal()
+
+  if (any(otn_bboxes_size$N == 5)) {
+    base_plot <- base_plot +
+      ggplot2::geom_path(
+        data = otn_bboxes[id %in% otn_bboxes_size[N == 5, id]],
+        ggplot2::aes(x = longitude, y = latitude, group = id),
+        color = "blue"
+      )
+  }
+  if (any(otn_bboxes_size$N == 1)) {
+    base_plot <- base_plot +
+      ggplot2::geom_point(
+        data = otn_bboxes[id %in% otn_bboxes_size[N == 1, id]],
+        ggplot2::aes(x = longitude, y = latitude),
+        size = 3,
+        color = "blue"
+      )
+  }
+
+  base_plot
 }
