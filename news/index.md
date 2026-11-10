@@ -6,6 +6,12 @@
 
 - Rename functions from `make_*_push_summary` to `make_*_summary`.
 
+## otndo 0.5
+
+### v 0.5.0
+
+- Convert `mapview`-based interactive map to smaller bespoke Javascript.
+
 ## otndo 0.4
 
 ### v 0.4.0
