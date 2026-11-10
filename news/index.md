@@ -1,5 +1,11 @@
 # Changelog
 
+## otndo 0.6
+
+### v 0.6.0
+
+- Rename functions from `make_*_push_summary` to `make_*_summary`.
+
 ## otndo 0.4
 
 ### v 0.4.0
