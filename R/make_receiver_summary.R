@@ -72,14 +72,14 @@
 #' deployment_files <- file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
 #'
 #'
-#' make_receiver_push_summary(
+#' make_receiver_summary(
 #'   qualified = qualified_files,
 #'   unqualified = unqualified_files,
 #'   deployment = deployment_files,
 #'   since = "2018-11-01"
 #' )
 #' }
-make_receiver_push_summary <- function(
+make_receiver_summary <- function(
   qualified = NULL,
   unqualified = NULL,
   update_push_log = FALSE,
@@ -174,7 +174,7 @@ make_receiver_push_summary <- function(
   file.copy(
     from = system.file(
       "qmd_template",
-      "make_receiver_push_summary.qmd",
+      "make_receiver_summary.qmd",
       package = "otndo"
     ),
     to = td
@@ -182,7 +182,7 @@ make_receiver_push_summary <- function(
 
   if (Sys.which("quarto") != "" & rmd == FALSE) {
     quarto::quarto_render(
-      input = file.path(td, "make_receiver_push_summary.qmd"),
+      input = file.path(td, "make_receiver_summary.qmd"),
       execute_params = list(
         project_name = project_name,
         project_number = project_number,
@@ -197,7 +197,7 @@ make_receiver_push_summary <- function(
     cli::cli_alert_info("Rendering using RMarkdown...")
 
     rmarkdown::render(
-      input = file.path(td, "make_receiver_push_summary.qmd"),
+      input = file.path(td, "make_receiver_summary.qmd"),
       params = list(
         project_name = project_name,
         project_number = project_number,
@@ -223,13 +223,17 @@ make_receiver_push_summary <- function(
   unlink(td, recursive = T)
 }
 
-# matos_project <- 192
-# qualified <- c('proj192_qualified_detections_2021.csv',
-#                'proj192_qualified_detections_2022.csv')
-# unqualified <- c('proj192_unqualified_detections_2021.csv',
-#                  'proj192_unqualified_detections_2022.csv')
-# act_push_summary(matos_project,
-#                  qualified,
-#                  unqualified,
-# deployment = c('NAVYKENN_metadata_deployment_202205.xlsx',
-#                'NAVYKENN_metadata_deployment_202210.xlsx'))
+#' Create summary reports of receiver project data from the OTN data push
+#'
+#' This function is deprecated. Please switch to [make_receiver_summary].
+#'
+#' @param ... Arguments passed to [make_receiver_summary]
+#' @export
+make_receiver_push_summary <- function(...) {
+  cli::cli_alert_danger(
+    "`make_receiver_push_summary` is deprecated and will be removed in future versions."
+  )
+  cli::cli_alert_info("Please switch to `make_receiver_summary`.")
+
+  make_receiver_summary(...)
+}

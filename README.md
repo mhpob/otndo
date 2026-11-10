@@ -10,17 +10,16 @@ has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/otndo)
 [![R-CMD-check](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mhpob/otndo/actions/workflows/R-CMD-check.yaml)
 [![otndo status
 badge](https://mhpob.r-universe.dev/badges/otndo)](https://mhpob.r-universe.dev/otndo)
 [![codecov](https://codecov.io/gh/mhpob/otndo/graph/badge.svg?token=A4JRJT7CFA)](https://codecov.io/gh/mhpob/otndo)
 <!-- badges: end -->
 
-*entiendo* /ˌenˈtjendo/ \[ˌẽn̪ˈt̪jẽn̪.̪o\]   
+*entiendo* /ˌenˈtjendo/ \[ˌẽn̪ˈt̪jẽn̪.̪o\] \
 Spanish, 1st person indicative; “*I understand*”
 
-***otndo*** /ˌoʊˈtjendo/ \[ˌoʊ̪ˈt̪jẽn̪.d̪o\]  
+***otndo*** /ˌoʊˈtjendo/ \[ˌoʊ̪ˈt̪jẽn̪.d̪o\]\
 English, bad pun; “*I understand (OTN data)*”
 
 The purpose of `otndo` is to provide a high-level summary of your
@@ -49,8 +48,8 @@ install.packages(
 GitHub:
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("mhpob/otndo")
+# install.packages("pak")
+pak::pak("mhpob/otndo")
 ```
 
 ## Tag push summary example
@@ -71,15 +70,13 @@ download.file(
   destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
   mode = "wb"
 )
-unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
-  exdir = td
-)
+unzip(file.path(td, "pbsm_matched_detections_2018.zip"), exdir = td)
 
 
 # Make a tag push summary
 library(otndo)
 
-make_tag_push_summary(
+make_tag_summary(
   matched = file.path(td, "pbsm_matched_detections_2018.csv")
 )
 ```
@@ -88,7 +85,7 @@ You will get a report in your working directory with a few goodies!
 
 A summary of the number of matched individuals and detections by
 researcher and project:
-![](man/figures/readme-tag_t1_detection_table.png)
+![](man/figures/README-tag_t1_detection_table.png)
 
 The overall extent of the projects to which your tags have been matched:
 ![](man/figures/README-tag_f1_geographic_extent.png)
@@ -131,9 +128,7 @@ download.file(
   ),
   destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
 )
-unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
-  exdir = td
-)
+unzip(file.path(td, "pbsm_qualified_detections_2018.zip"), exdir = td)
 
 ## Unqualified detections
 download.file(
@@ -143,13 +138,11 @@ download.file(
   ),
   destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
 )
-unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"),
-  exdir = td
-)
+unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"), exdir = td)
 
 
 # Make a receiver push summary
-make_receiver_push_summary(
+make_receiver_summary(
   qualified = file.path(td, "pbsm_qualified_detections_2018.csv"),
   unqualified = file.path(td, "pbsm_unqualified_detections_2018.csv"),
   deployment = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")

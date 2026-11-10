@@ -1,4 +1,4 @@
-#' Create summary reports of receiver project data from the OTN data push
+#' Create summary reports of transmitter project data from the OTN data push
 #'
 #' @param matched This argument also accepts a character vector of file paths of your matched detections. These can be CSVs or zipped folders.
 #' @param update_push_log Do you wish to use an updated push log? Default is FALSE, but switch to TRUE if you haven't updated this package since the push occurred.
@@ -31,7 +31,7 @@
 #' # Provide the detection file(s) to the \code{matched} argument, with an
 #' # optional date to the \code{since} argument to summarize what was new since
 #' # that date.
-#' make_tag_push_summary(
+#' make_tag_summary(
 #'   matched = file.path(
 #'     td,
 #'     "pbsm_matched_detections_2018.csv"
@@ -39,7 +39,7 @@
 #'   since = "2018-11-01"
 #' )
 #' }
-make_tag_push_summary <- function(
+make_tag_summary <- function(
   matched = NULL,
   update_push_log = FALSE,
   since = NULL,
@@ -112,7 +112,7 @@ make_tag_push_summary <- function(
   file.copy(
     from = system.file(
       "qmd_template",
-      "make_tag_push_summary.qmd",
+      "make_tag_summary.qmd",
       package = "otndo"
     ),
     to = td
@@ -120,7 +120,7 @@ make_tag_push_summary <- function(
 
   if (Sys.which("quarto") != "" & rmd == FALSE) {
     quarto::quarto_render(
-      input = file.path(td, "make_tag_push_summary.qmd"),
+      input = file.path(td, "make_tag_summary.qmd"),
       execute_params = list(
         project_name = project_name,
         project_number = project_number,
@@ -133,7 +133,7 @@ make_tag_push_summary <- function(
     cli::cli_alert_info("Rendering using RMarkdown...")
 
     rmarkdown::render(
-      input = file.path(td, "make_tag_push_summary.qmd"),
+      input = file.path(td, "make_tag_summary.qmd"),
       params = list(
         project_name = project_name,
         project_number = project_number,
@@ -155,4 +155,20 @@ make_tag_push_summary <- function(
   cli::cli_alert_success("   Done.")
 
   unlink(td, recursive = T)
+}
+
+
+#' Create summary reports of transmitter project data from the OTN data push
+#'
+#' This function is deprecated. Please switch to [make_tag_summary].
+#'
+#' @param ... Arguments passed to [make_tag_summary]
+#' @export
+make_tag_push_summary <- function(...) {
+  cli::cli_alert_danger(
+    "`make_tag_push_summary` is deprecated and will be removed in future versions."
+  )
+  cli::cli_alert_info("Please switch to `make_tag_summary`.")
+
+  make_tag_summary(...)
 }

@@ -314,7 +314,7 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
       Sys.Date(),
       code,
       report,
-      "push_summary.html",
+      "summary.html",
       sep = "_"
     )
   )
@@ -324,7 +324,7 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
       format(Sys.time(), "%Y-%m-%d_%H%M%S"),
       code,
       report,
-      "push_summary.html",
+      "summary.html",
       sep = "_"
     )
   } else {
@@ -332,7 +332,7 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
       Sys.Date(),
       code,
       report,
-      "push_summary.html",
+      "summary.html",
       sep = "_"
     )
   }
@@ -343,7 +343,7 @@ copy_from_temp <- function(report, code, td, out_dir, overwrite) {
   }
 
   file.copy(
-    from = file.path(td, paste("make", report, "push_summary.html", sep = "_")),
+    from = file.path(td, paste("make", report, "summary.html", sep = "_")),
     to = file.path(out_dir, to_path),
     overwrite = TRUE
   )
