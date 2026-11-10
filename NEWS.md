@@ -1,3 +1,11 @@
+## otndo 0.6
+### v 0.6.0
+  * Rename functions from `make_*_push_summary` to `make_*_summary`.
+
+## ontdo 0.5
+### v 0.5.0
+  * Convert `mapview`-based interactive map to smaller bespoke Javascript.
+
 ## otndo 0.4
 ### v 0.4.0
 * Miscellaneous updates necessary to collaborate with the budding [otndata package](https://otndata.obrien.page)
