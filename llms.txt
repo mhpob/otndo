@@ -34,8 +34,8 @@ GitHub:
 
 ``` r
 
-# install.packages("remotes")
-remotes::install_github("mhpob/otndo")
+# install.packages("pak")
+pak::pak("mhpob/otndo")
 ```
 
 ## Tag push summary example
@@ -57,15 +57,13 @@ download.file(
   destfile = file.path(td, "pbsm_matched_detections_2018.zip"),
   mode = "wb"
 )
-unzip(file.path(td, "pbsm_matched_detections_2018.zip"),
-  exdir = td
-)
+unzip(file.path(td, "pbsm_matched_detections_2018.zip"), exdir = td)
 
 
 # Make a tag push summary
 library(otndo)
 
-make_tag_push_summary(
+make_tag_summary(
   matched = file.path(td, "pbsm_matched_detections_2018.csv")
 )
 ```
@@ -74,7 +72,7 @@ You will get a report in your working directory with a few goodies!
 
 A summary of the number of matched individuals and detections by
 researcher and project:
-![](reference/figures/readme-tag_t1_detection_table.png)
+![](reference/figures/README-tag_t1_detection_table.png)
 
 The overall extent of the projects to which your tags have been matched:
 ![](reference/figures/README-tag_f1_geographic_extent.png)
@@ -118,9 +116,7 @@ download.file(
   ),
   destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
 )
-unzip(file.path(td, "pbsm_qualified_detections_2018.zip"),
-  exdir = td
-)
+unzip(file.path(td, "pbsm_qualified_detections_2018.zip"), exdir = td)
 
 ## Unqualified detections
 download.file(
@@ -130,13 +126,11 @@ download.file(
   ),
   destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
 )
-unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"),
-  exdir = td
-)
+unzip(file.path(td, "pbsm_unqualified_detections_2018.zip"), exdir = td)
 
 
 # Make a receiver push summary
-make_receiver_push_summary(
+make_receiver_summary(
   qualified = file.path(td, "pbsm_qualified_detections_2018.csv"),
   unqualified = file.path(td, "pbsm_unqualified_detections_2018.csv"),
   deployment = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls")
@@ -198,8 +192,14 @@ O’Brien: obrien@umces.edu) directly](mailto:obrien@umces.edu).
 - [`make_receiver_push_summary()`](https://otndo.obrien.page/reference/make_receiver_push_summary.md)
   : Create summary reports of receiver project data from the OTN data
   push
-- [`make_tag_push_summary()`](https://otndo.obrien.page/reference/make_tag_push_summary.md)
+- [`make_receiver_summary()`](https://otndo.obrien.page/reference/make_receiver_summary.md)
   : Create summary reports of receiver project data from the OTN data
+  push
+- [`make_tag_push_summary()`](https://otndo.obrien.page/reference/make_tag_push_summary.md)
+  : Create summary reports of transmitter project data from the OTN data
+  push
+- [`make_tag_summary()`](https://otndo.obrien.page/reference/make_tag_summary.md)
+  : Create summary reports of transmitter project data from the OTN data
   push
 - [`match_map()`](https://otndo.obrien.page/reference/match_map.md) :
   Plot the geographic extent of OTN projects

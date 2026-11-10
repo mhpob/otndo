@@ -7,8 +7,14 @@
 - [`make_receiver_push_summary()`](https://otndo.obrien.page/reference/make_receiver_push_summary.md)
   : Create summary reports of receiver project data from the OTN data
   push
-- [`make_tag_push_summary()`](https://otndo.obrien.page/reference/make_tag_push_summary.md)
+- [`make_receiver_summary()`](https://otndo.obrien.page/reference/make_receiver_summary.md)
   : Create summary reports of receiver project data from the OTN data
+  push
+- [`make_tag_push_summary()`](https://otndo.obrien.page/reference/make_tag_push_summary.md)
+  : Create summary reports of transmitter project data from the OTN data
+  push
+- [`make_tag_summary()`](https://otndo.obrien.page/reference/make_tag_summary.md)
+  : Create summary reports of transmitter project data from the OTN data
   push
 - [`match_map()`](https://otndo.obrien.page/reference/match_map.md) :
   Plot the geographic extent of OTN projects
