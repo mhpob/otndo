@@ -5,6 +5,8 @@
 ### v 0.6.0
 
 - Rename functions from `make_*_push_summary` to `make_*_summary`.
+- Dynamically scale the Y axis labels in the tag summary abacus plot so
+  that the labels don’t get all smushed together.
 
 ## otndo 0.5
 
