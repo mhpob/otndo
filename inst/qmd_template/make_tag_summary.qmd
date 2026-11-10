@@ -101,7 +101,7 @@ match_table(matched, type = "tag")
 #| label: otn-match-map
 #| fig-cap: Figure 1. Bounding box of external projects that recorded a transmitter from this project. This does not necessarily reflect the distribution of this project's fish.
 
-otn_sf <- match_map(otn_tables)
+match_map(otn_tables)
 ```
 
 ```{r}
