@@ -39,7 +39,8 @@ dir.create(td)
 download.file(
   paste0(
     "https://members.oceantrack.org/data/repository/pbsm/",
-    "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"
+    "data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls/",
+    "@@download/file"
   ),
   destfile = file.path(td, "pbsm-instrument-deployment-short-form-2018.xls"),
   # Note "mode = 'wb' is needed to download Excel files
@@ -50,7 +51,7 @@ download.file(
 download.file(
   paste0(
     "https://members.oceantrack.org/data/repository/pbsm/",
-    "detection-extracts/pbsm_qualified_detections_2018.zip"
+    "detection-extracts/pbsm_qualified_detections_2018.zip/@@download/file"
   ),
   destfile = file.path(td, "pbsm_qualified_detections_2018.zip")
 )
@@ -59,7 +60,7 @@ download.file(
 download.file(
   paste0(
     "https://members.oceantrack.org/data/repository/pbsm/",
-    "detection-extracts/pbsm_unqualified_detections_2018.zip"
+    "detection-extracts/pbsm_unqualified_detections_2018.zip/@@download/file"
   ),
   destfile = file.path(td, "pbsm_unqualified_detections_2018.zip")
 )
@@ -78,14 +79,14 @@ deployment_otn <- file.path(
 )
 ```
 
-We can do the same for matched detections
+We can do the same for matched detections:
 
 ``` r
 
 download.file(
   paste0(
     "https://members.oceantrack.org/data/repository/pbsm/",
-    "detection-extracts/pbsm_matched_detections_2018.zip"
+    "detection-extracts/pbsm_matched_detections_2018.zip/@@download/file"
   ),
   destfile = file.path(td, "pbsm_matched_detections_2018.zip")
 )
@@ -93,24 +94,22 @@ download.file(
 matched_otn <- file.path(td, "pbsm_matched_detections_2018.zip")
 ```
 
-### ACT/MATOS projects
+### OTN nodes that use Plone
 
-If you’re a member of ACT (your project lives in the MATOS database),
-you can access your files via the [`matos`
-package](https://matos.obrien.page). Two functions in `matos` wrap
-`otndo`’s `make_*_summary` functions and will automatically download the
-necessary files for you. See
-[`matos::matos_tag_summary`](https://matos.obrien.page/reference/matos_tag_summary.html)
-and
-[`matos::matos_receiver_summary`](https://matos.obrien.page/reference/matos_receiver_summary.html)
-for more details.
+If you’re a member of network that uses OTN’s Content Management System
+(OTN, ACT, ATAP, iTAG, MigraMar, NEP, N-PAcT, and PIRAT), you can access
+your files via the [`otndata` package](https://otndata.obrien.page). Two
+functions in `otndata` wrap `otndo`’s `make_*_summary` functions and
+will automatically download the necessary files for you. See the
+[`otndata` vignette on the
+topic](https://otndata.obrien.page/articles/quick_start.html) for more
+details.
 
-### FACT projects
+### ETN, FACT, GLATOS, and RAFT projects
 
-At the time of this writing, there is no streamlined way to get FACT
-data from [Research Workspace](https://researchworkspace.com/). Before
-moving on to the next steps, make sure you have the necessary files
-downloaded.
+At the time of this writing, there is no streamlined way to get data
+from these respective networks into `otndo`. Before moving on to the
+next steps, make sure you have the necessary files downloaded.
 
 ## Running the functions
 

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Data Push Summaries • otndo</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">otndo</a>
 
@@ -42,6 +42,14 @@
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/mhpob/otndo/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
+</li>
       </ul>
 </div>
 
@@ -92,7 +100,8 @@ show how this might work. First, we’ll download the files.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
-<span>    <span class="st">"data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls"</span></span>
+<span>    <span class="st">"data-and-metadata/2018/pbsm-instrument-deployment-short-form-2018.xls/"</span>,</span>
+<span>    <span class="st">"@@download/file"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm-instrument-deployment-short-form-2018.xls"</span><span class="op">)</span>,</span>
 <span>  <span class="co"># Note "mode = 'wb' is needed to download Excel files</span></span>
@@ -103,7 +112,7 @@ show how this might work. First, we’ll download the files.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
-<span>    <span class="st">"detection-extracts/pbsm_qualified_detections_2018.zip"</span></span>
+<span>    <span class="st">"detection-extracts/pbsm_qualified_detections_2018.zip/@@download/file"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_qualified_detections_2018.zip"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -112,7 +121,7 @@ show how this might work. First, we’ll download the files.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
-<span>    <span class="st">"detection-extracts/pbsm_unqualified_detections_2018.zip"</span></span>
+<span>    <span class="st">"detection-extracts/pbsm_unqualified_detections_2018.zip/@@download/file"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_unqualified_detections_2018.zip"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -125,12 +134,12 @@ pass into the smmary functions later.</p>
 <span>  <span class="va">td</span>,</span>
 <span>  <span class="st">"pbsm-instrument-deployment-short-form-2018.xls"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>We can do the same for matched detections</p>
+<p>We can do the same for matched detections:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>    <span class="st">"https://members.oceantrack.org/data/repository/pbsm/"</span>,</span>
-<span>    <span class="st">"detection-extracts/pbsm_matched_detections_2018.zip"</span></span>
+<span>    <span class="st">"detection-extracts/pbsm_matched_detections_2018.zip/@@download/file"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_matched_detections_2018.zip"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -138,23 +147,23 @@ pass into the smmary functions later.</p>
 <span><span class="va">matched_otn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">td</span>, <span class="st">"pbsm_matched_detections_2018.zip"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="actmatos-projects">ACT/MATOS projects<a class="anchor" aria-label="anchor" href="#actmatos-projects"></a>
+<h3 id="otn-nodes-that-use-plone">OTN nodes that use Plone<a class="anchor" aria-label="anchor" href="#otn-nodes-that-use-plone"></a>
 </h3>
-<p>If you’re a member of ACT (your project lives in the MATOS database),
-you can access your files via the <a href="https://matos.obrien.page" class="external-link"><code>matos</code> package</a>. Two
-functions in <code>matos</code> wrap <code>otndo</code>’s
+<p>If you’re a member of network that uses OTN’s Content Management
+System (OTN, ACT, ATAP, iTAG, MigraMar, NEP, N-PAcT, and PIRAT), you can
+access your files via the <a href="https://otndata.obrien.page" class="external-link"><code>otndata</code> package</a>. Two
+functions in <code>otndata</code> wrap <code>otndo</code>’s
 <code>make_*_summary</code> functions and will automatically download
-the necessary files for you. See <a href="https://matos.obrien.page/reference/matos_tag_summary.html" class="external-link"><code>matos::matos_tag_summary</code></a>
-and <a href="https://matos.obrien.page/reference/matos_receiver_summary.html" class="external-link"><code>matos::matos_receiver_summary</code></a>
-for more details.</p>
+the necessary files for you. See the <a href="https://otndata.obrien.page/articles/quick_start.html" class="external-link"><code>otndata</code>
+vignette on the topic</a> for more details.</p>
 </div>
 <div class="section level3">
-<h3 id="fact-projects">FACT projects<a class="anchor" aria-label="anchor" href="#fact-projects"></a>
+<h3 id="etn-fact-glatos-and-raft-projects">ETN, FACT, GLATOS, and RAFT projects<a class="anchor" aria-label="anchor" href="#etn-fact-glatos-and-raft-projects"></a>
 </h3>
-<p>At the time of this writing, there is no streamlined way to get FACT
-data from <a href="https://researchworkspace.com/" class="external-link">Research
-Workspace</a>. Before moving on to the next steps, make sure you have
-the necessary files downloaded.</p>
+<p>At the time of this writing, there is no streamlined way to get data
+from these respective networks into <code>otndo</code>. Before moving on
+to the next steps, make sure you have the necessary files
+downloaded.</p>
 </div>
 </div>
 <div class="section level2">
